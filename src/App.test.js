@@ -1,4 +1,4 @@
-import * as intel from './intel';
+import * as intel from "./intel";
 
 intel.fill("pinterid");
-console.log(intel.templateGetPlatform());
+//console.log(intel.templateGetPlatform());

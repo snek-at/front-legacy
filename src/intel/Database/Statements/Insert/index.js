@@ -116,7 +116,7 @@ export const contrib = `
 VALUES (?,?,?,?,?,?,?,?)
 `;
 
-export const platform_has_organization = `
+export const platformHasOrganization = `
 INSERT INTO platform_has_organization(
     platform_id,
     organization_id
@@ -124,7 +124,7 @@ INSERT INTO platform_has_organization(
 VALUES (?,?)
 `;
 
-export const platform_has_repository = `
+export const platformHasRepository = `
 INSERT INTO platform_has_repository(
     platform_id,
     repository_id
@@ -132,7 +132,7 @@ INSERT INTO platform_has_repository(
 VALUES (?,?)
 `;
 
-export const organization_has_member = `
+export const organizationHasMember = `
 INSERT INTO organization_has_member(
     organization_id,
     member_id
@@ -140,7 +140,7 @@ INSERT INTO organization_has_member(
 VALUES (?,?)
 `;
 
-export const repository_has_member = `
+export const repositoryHasMember = `
 INSERT INTO repository_has_member(
     repository_id,
     member_id

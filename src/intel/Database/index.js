@@ -1,15 +1,7 @@
-import * as create from './Statements/Create';
-var alasql = require('alasql');
-export function Database(db_name) {
-    let db = new alasql.Database(db_name);
+import * as create from "./Statements/Create";
+var alasql = require("alasql");
 
-    db.exec(init_tables);
-    console.log(init_tables);
-
-    return db;
-}
-
-const init_tables = `
+const initTables = `
     ${create.platform}
     ${create.organization}
     ${create.member}
@@ -21,8 +13,16 @@ const init_tables = `
     ${create.streak}
     ${create.calendar}
     ${create.contrib}
-    ${create.organization_has_member}
-    ${create.repository_has_member}
-    ${create.platform_has_organization}
-    ${create.platform_has_repository}
+    ${create.organizationHasMember}
+    ${create.repositoryHasMember}
+    ${create.platformHasOrganization}
+    ${create.platformHasRepository}
 `;
+
+export function Database(dbName) {
+    let db = new alasql.Database(dbName);
+
+    db.exec(initTables);
+
+    return db;
+}

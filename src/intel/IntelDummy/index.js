@@ -2,22 +2,22 @@ import * as insert from "../Database/Statements/Insert";
 import { Database } from "../Database";
 var faker = require("faker");
 
-let db = Database("dummy");
+let db = new Database("dummy");
 
 const count = table => db.exec(`SELECT COUNT(*) FROM ${table}`)[0]["COUNT(*)"];
 const random = base => Math.floor(Math.random() * base) + 1;
 const randomBtw = (max, min) =>
     Math.floor(Math.random() * (+max - +min)) + +min;
 
-const create_dummy = (table, entries, c) => {
+const createDummy = (table, entries, c) => {
 
     if (c) {
         try {
             for (let index = 0; index < c; index++) {
-                let entries_resolved = entries.map(entry =>
+                let entriesResolved = entries.map(entry =>
                     typeof entry == "function" ? entry() : entry
                 );
-                db.exec(table, entries_resolved);
+                db.exec(table, entriesResolved);
             }
         } catch (e) {
             if (
@@ -25,7 +25,7 @@ const create_dummy = (table, entries, c) => {
                 "Cannot insert record, because it already exists in primary key index" ||
                 "Cannot insert record, because it already exists in unique index"
             ) {
-                console.warn(e.message);
+                //console.warn(e.message);
             } else {
                 throw e;
             }
@@ -36,7 +36,7 @@ const create_dummy = (table, entries, c) => {
 export const exec = (value) => { return db.exec(value) };
 
 export function fill(user) {
-    create_dummy(
+    createDummy(
         insert.platform,
         [
             "GitHub",
@@ -54,7 +54,7 @@ export function fill(user) {
         ],
         3
     );
-    create_dummy(
+    createDummy(
         insert.organization,
         [
             faker.internet.avatar,
@@ -63,7 +63,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.member,
         [
             faker.internet.avatar,
@@ -73,7 +73,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.languagePie,
         [
             function () {
@@ -85,7 +85,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.repository,
         [
             faker.internet.avatar,
@@ -102,7 +102,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.languageSlice,
         [
             function () {
@@ -119,7 +119,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.busiestDay,
         [
             faker.date.recent,
@@ -129,7 +129,7 @@ export function fill(user) {
         ],
         20
     );
-    create_dummy(
+    createDummy(
         insert.statistic,
         [
             function () {
@@ -144,7 +144,7 @@ export function fill(user) {
         ],
         2
     );
-    create_dummy(
+    createDummy(
         insert.calendar,
         [
             faker.date.recent,
@@ -164,7 +164,7 @@ export function fill(user) {
         ],
         300
     );
-    create_dummy(
+    createDummy(
         insert.contrib,
         [
             faker.date.recent,
@@ -189,7 +189,7 @@ export function fill(user) {
         ],
         22
     );
-    create_dummy(
+    createDummy(
         insert.streak,
         [
             faker.date.recent,
@@ -204,8 +204,8 @@ export function fill(user) {
         20
     );
 
-    create_dummy(
-        insert.platform_has_organization,
+    createDummy(
+        insert.platformHasOrganization,
         [
             function () {
                 return random(count("platform"));
@@ -217,8 +217,8 @@ export function fill(user) {
         20
     );
 
-    create_dummy(
-        insert.organization_has_member,
+    createDummy(
+        insert.organizationHasMember,
         [
             function () {
                 return random(count("organization"));

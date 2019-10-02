@@ -159,7 +159,7 @@ export const contrib = `
     );
 `;
 
-export const organization_has_member = `
+export const organizationHasMember = `
     DROP TABLE IF EXISTS organization_has_member ;
     CREATE TABLE IF NOT EXISTS organization_has_member (
         organization_id INT NOT NULL,
@@ -174,7 +174,7 @@ export const organization_has_member = `
     );
 `;
 
-export const repository_has_member = `
+export const repositoryHasMember = `
     DROP TABLE IF EXISTS repository_has_member;
     CREATE TABLE IF NOT EXISTS repository_has_member (
         repository_id INT NOT NULL,
@@ -189,7 +189,7 @@ export const repository_has_member = `
     );
 `;
 
-export const platform_has_organization = `
+export const platformHasOrganization = `
     DROP TABLE IF EXISTS platform_has_organization;
     CREATE TABLE IF NOT EXISTS platform_has_organization (
         platform_id INT NOT NULL,
@@ -204,7 +204,7 @@ export const platform_has_organization = `
     );
 `;
 
-export const platform_has_repository = `
+export const platformHasRepository = `
     DROP TABLE IF EXISTS platform_has_repository ;
     CREATE TABLE IF NOT EXISTS platform_has_repository (
         platform_id INT NOT NULL,

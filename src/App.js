@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 //> Tests
 // Includes files in order to test their functionality
-import './App.test';
+import "./App.test";
 
 //> Components
 /**
