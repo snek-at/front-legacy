@@ -33,7 +33,7 @@ const createDummy = (table, entries, c) => {
     }
 };
 
-export const exec = (value) => { return db.exec(value) };
+export const exec = (value) => { return db.exec(value); };
 
 export function fill(user) {
     createDummy(
@@ -90,9 +90,6 @@ export function fill(user) {
         [
             faker.internet.avatar,
             faker.internet.userName,
-            function () {
-                return random(count("member"));
-            },
             function () {
                 return random(count("member"));
             },
@@ -222,6 +219,30 @@ export function fill(user) {
         [
             function () {
                 return random(count("organization"));
+            },
+            function () {
+                return random(count("member"));
+            }
+        ],
+        20
+    );
+    createDummy(
+        insert.platformHasRepository,
+        [
+            function () {
+                return random(count("platform"));
+            },
+            function () {
+                return random(count("repository"));
+            }
+        ],
+        20
+    );
+    createDummy(
+        insert.repositoryHasMember,
+        [
+            function () {
+                return random(count("repository"));
             },
             function () {
                 return random(count("member"));
