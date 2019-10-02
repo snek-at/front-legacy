@@ -114,9 +114,6 @@ export function fill(user) {
                 return randomBtw(1000, 2000);
             },
             function () {
-                return randomBtw(1000, 2000);
-            },
-            function () {
                 return random(count("languagePie"));
             }
         ],

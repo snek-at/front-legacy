@@ -47,11 +47,10 @@ export const repository = `
 INSERT INTO repository(
     avatarUrl,
     name,
-    member_id,
     owner_id,
     languagePie_id
 )
-VALUES (?,?,?,?,?)
+VALUES (?,?,?,?)
 `;
 
 export const languageSlice = `
@@ -59,10 +58,9 @@ INSERT INTO languageSlice(
     name,
     color,
     size,
-    total,
     pie_id
 )
-VALUES (?,?,?,?,?)
+VALUES (?,?,?,?)
 `;
 
 export const busiestDay = `
