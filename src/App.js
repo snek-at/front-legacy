@@ -20,6 +20,7 @@ import Routes from './Routes';
 
 // GitHubUtils 
 import './utilities/GitHubUtils';
+import './utilities/GitHubUtils/connectiontogithub';
 
 class App extends React.Component {
   render() {
