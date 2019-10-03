@@ -1,8 +1,9 @@
-import * as test from "./utilities/GitHubUtils"
+// Import
+import * as gitHub from "./utilities/GitHubUtils"
 
-const fetchDatafromGitHub = async () => {
-    // Get GitHub data
-    let res = await test.get('schettn');
+// Get GitHub data
+const fetchDatafromGitHub = async () => {   
+    let res = await gitHub.get('torvalds');
     if(res){
       console.log(res)
     } else {

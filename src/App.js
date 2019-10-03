@@ -18,9 +18,6 @@ import {
 // Routes
 import Routes from './Routes';
 
-// GitHubUtils 
-import './utilities/GitHubUtils';
-
 // Tests
 import './tests';
 
