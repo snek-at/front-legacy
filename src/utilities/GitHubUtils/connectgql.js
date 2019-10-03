@@ -22,7 +22,7 @@ export function get(username) {
     });
 
 
-    const obj = new Object()
+    const obj = {};
     obj.profile = resProfile.data.user;
     obj.calendar = resCalendar.data.user;
     return obj
