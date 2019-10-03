@@ -4,9 +4,6 @@ import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 
-// GQL
-import * as gqlData from "./GQL"
-
 // Base url
 export const APIHost = 'https://api.github.com';
 
@@ -25,8 +22,7 @@ const APILink = APIHost+"/graphql";
 //const APILink = APIHost;
 
 
-console.log(process.env);
-console.log(process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN);
+// Created HttpLink
 const LINK:HttpLink = new HttpLink({
   uri: APILink,
   headers: {
@@ -41,6 +37,3 @@ export const client = new ApolloClient({
   cache,
   link: LINK,
 });
-
-export const GET_PROFILE = gqlData.GET_PROFILE;
-//export const GET_CALENDAR = gqlData.GET_CALENDAR;
