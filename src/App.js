@@ -18,6 +18,8 @@ import {
 // Routes
 import Routes from './Routes';
 
+// GitHubUtils 
+import './utilities/GitHubUtils';
 
 class App extends React.Component {
   render() {
