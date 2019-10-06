@@ -18,8 +18,9 @@ import {
 // Routes
 import Routes from './Routes';
 
-// Tests
-import './tests';
+//> Test
+// A test with the user "torvalds"
+import "./App.test";
 
 class App extends React.Component {
   render() {

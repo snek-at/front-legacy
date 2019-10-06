@@ -1,6 +1,6 @@
 //> Connect to backend
 
-//Import
+// A tool to save a graphql query into a variable
 import { gql } from "apollo-boost";
 
 // Structure GQL Profile Code
