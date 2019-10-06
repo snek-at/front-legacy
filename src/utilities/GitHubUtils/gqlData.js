@@ -3,62 +3,62 @@
 // A tool to save a graphql query into a variable
 import { gql } from "apollo-boost";
 
-// Structure GQL Profile Code
+// Structure GQL profile code
 export const GET_PROFILE = gql`
-  query getData($username: String!)
-  {
-    user(login: $username) {
-      avatarUrl
-      company
-      createdAt
-      name
-      email
-      websiteUrl
-      hovercard{
-        contexts{
-          message
-          octicon
-        }
-      }
-      isEmployee
-      isHireable
-      location
-      status {
-        emojiHTML
-        expiresAt
+query getData($username: String!)
+{
+  user(login: $username) {
+    avatarUrl
+    company
+    createdAt
+    name
+    email
+    websiteUrl
+    hovercard{
+      contexts{
         message
-        updatedAt
+        octicon
       }
-      organizations(first: 100) {
-        pageInfo {
-            endCursor
-            hasNextPage
-        }
-        edges {
-            node {
-            name
-            url
-            avatarUrl
-            name
-            membersWithRole(first: 100) {
-                totalCount
-                nodes {
-                name
-                login
-                avatarUrl
-                url
-                projectsUrl
-                }
-            }
-            }
-        }
     }
+    isEmployee
+    isHireable
+    location
+    status {
+      emojiHTML
+      expiresAt
+      message
+      updatedAt
+    }
+    organizations(first: 100) {
+      pageInfo {
+          endCursor
+          hasNextPage
+      }
+      edges {
+          node {
+          name
+          url
+          avatarUrl
+          name
+          membersWithRole(first: 100) {
+              totalCount
+              nodes {
+              name
+              login
+              avatarUrl
+              url
+              projectsUrl
+              }
+            }
+          }
+      }
   }
+}
 }
 `;
 
-// Structure GQL Calendar Code
-const GET_CALENDAR_QUERY_PART = (year,c) => {
+// Structure GQL calendar code
+const get_CALENDAR_QUERY_PART = (year,c) => {
   return `
   c${c}: contributionsCollection(to:"${year}"){
      contributionCalendar{
@@ -206,16 +206,16 @@ const GET_CALENDAR_QUERY_PART = (year,c) => {
   `;
 };
 
-// Dynamic generate calenders structure
-const generate_calenders_query = (username, createdAtDate) => {
+// Dynamic generate calendars structure
+const generateCalendarsQuery = (username, createdAtDate) => {
 
   const date = new Date();
-  var query = ``;
+  var query = "";
   var count = 1;
 
   while(date.getFullYear() >= createdAtDate.getFullYear()){
       
-      query += GET_CALENDAR_QUERY_PART(date.toJSON(),count);
+      query += get_CALENDAR_QUERY_PART(date.toJSON(),count);
 
       date.setFullYear(date.getFullYear()-1);
       count++;
@@ -224,15 +224,20 @@ const generate_calenders_query = (username, createdAtDate) => {
 
 };
 
-// Get Calendar skeletal structure
-export const GET_CALENDAR = (username, createdAt) => {
+// Get calendar basic structure
+export const get_CALENDAR = (username, createdAt) => {
   const query = gql`
                   query
                   {
                       user(login: "${username}") {
-                          ${generate_calenders_query(username, createdAt)}
+                          ${generateCalendarsQuery(username, createdAt)}
                       }
                   }
-  `
+  `;
   return query;
 };
+
+/** 
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */

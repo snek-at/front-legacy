@@ -5,7 +5,7 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 
 // Base url
-export const APIHost = 'https://api.github.com';
+export const APIHost = "https://api.github.com";
 
 // Cache setup
 const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -21,7 +21,6 @@ const cache = new InMemoryCache({ fragmentMatcher });
 const APILink = APIHost+"/graphql";
 //const APILink = APIHost;
 
-
 // Created HttpLink
 const LINK:HttpLink = new HttpLink({
   uri: APILink,
@@ -32,8 +31,13 @@ const LINK:HttpLink = new HttpLink({
   },
 });
 
-// Apollo Client setup
+// Apollo client setup
 export const client = new ApolloClient({
   cache,
   link: LINK,
 });
+
+/** 
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
