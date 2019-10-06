@@ -5,8 +5,7 @@ import { gql } from "apollo-boost";
 
 // Structure GQL profile code
 export const GET_PROFILE = gql`
-query getData($username: String!)
-{
+query getData($username: String!) {
   user(login: $username) {
     avatarUrl
     company
@@ -14,8 +13,8 @@ query getData($username: String!)
     name
     email
     websiteUrl
-    hovercard{
-      contexts{
+    hovercard {
+      contexts {
         message
         octicon
       }
@@ -31,34 +30,35 @@ query getData($username: String!)
     }
     organizations(first: 100) {
       pageInfo {
-          endCursor
-          hasNextPage
+        endCursor
+        hasNextPage
       }
       edges {
-          node {
+        node {
           name
           url
           avatarUrl
           name
           membersWithRole(first: 100) {
-              totalCount
-              nodes {
+            totalCount
+            nodes {
               name
               login
               avatarUrl
               url
               projectsUrl
-              }
             }
           }
+        }
       }
+    }
   }
 }
-}
+
 `;
 
 // Structure GQL calendar code
-const get_CALENDAR_QUERY_PART = (year,c) => {
+const getCalendarQueryPart = (year,c) => {
   return `
   c${c}: contributionsCollection(to:"${year}"){
      contributionCalendar{
@@ -215,7 +215,7 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 
   while(date.getFullYear() >= createdAtDate.getFullYear()){
       
-      query += get_CALENDAR_QUERY_PART(date.toJSON(),count);
+      query += getCalendarQueryPart(date.toJSON(),count);
 
       date.setFullYear(date.getFullYear()-1);
       count++;
@@ -225,7 +225,7 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 };
 
 // Get calendar basic structure
-export const get_CALENDAR = (username, createdAt) => {
+export const getCalendar = (username, createdAt) => {
   const query = gql`
                   query
                   {

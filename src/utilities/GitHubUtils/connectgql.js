@@ -18,14 +18,14 @@ export function get(username) {
     const createdAtDate = new Date(data.user.createdAt);
 
     const resCalendar = await apollo.client.query({
-      query: gqlData.get_CALENDAR(username, createdAtDate),
+      query: gqlData.getCalendar(username, createdAtDate),
     });
 
 
-    const obj_user = {};
-    obj_user.profile = resProfile.data.user;
-    obj_user.calendar = resCalendar.data.user;
-    return obj_user;
+    const objUser = {};
+    objUser.profile = resProfile.data.user;
+    objUser.calendar = resCalendar.data.user;
+    return objUser;
   };
 
   return getPlatform(username);
