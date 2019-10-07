@@ -1,4 +1,4 @@
-// A tool to query data from github
+// A tool to query data from GitHub
 import * as gitHub from "./utilities/GitHubUtils";
 
 // Get GitHub data
