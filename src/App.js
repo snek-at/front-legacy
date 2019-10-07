@@ -15,9 +15,13 @@ import {
   Navbar,
 } from './components/molecules';
 */
-// Routes
+
+//> Routes
 import Routes from './Routes';
 
+//> Test
+// A test with the user "torvalds"
+import "./App.test";
 
 class App extends React.Component {
   render() {
