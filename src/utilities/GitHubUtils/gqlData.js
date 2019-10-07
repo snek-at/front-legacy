@@ -1,5 +1,3 @@
-//> Connect to backend
-
 // A tool to save a graphql query into a variable
 import { gql } from "apollo-boost";
 
@@ -206,7 +204,7 @@ const getCalendarQueryPart = (year,c) => {
   `;
 };
 
-// Dynamic generate calendars structure
+// Generates a dynamic query structure
 const generateCalendarsQuery = (username, createdAtDate) => {
 
   const date = new Date();
@@ -232,7 +230,7 @@ export const getCalendar = (username, createdAt) => {
                       user(login: "${username}") {
                           ${generateCalendarsQuery(username, createdAt)}
                       }
-                  }
+                    }
   `;
   return query;
 };

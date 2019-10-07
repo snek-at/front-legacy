@@ -1,4 +1,3 @@
-// Connect to backend
 import * as apollo from "./apolloclient";
 import * as gqlData from "./gqlData";
 

@@ -1,4 +1,3 @@
-//> Connect to backend
 // Apollo
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
@@ -19,7 +18,6 @@ const cache = new InMemoryCache({ fragmentMatcher });
 
 // Create api url from base url
 const APILink = APIHost+"/graphql";
-//const APILink = APIHost;
 
 // Created HttpLink
 const LINK:HttpLink = new HttpLink({

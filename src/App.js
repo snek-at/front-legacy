@@ -15,7 +15,8 @@ import {
   Navbar,
 } from './components/molecules';
 */
-// Routes
+
+//> Routes
 import Routes from './Routes';
 
 //> Test
