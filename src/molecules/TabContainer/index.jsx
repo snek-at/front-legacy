@@ -50,7 +50,7 @@ class TabContainer extends React.Component {
                         <MDBNav pills color="primary" className="flex-column">
                         {this.props.settings.map((setting, key) => {
                             return(
-                                <MDBNavItem>
+                                <MDBNavItem key={key}>
                                     <MDBNavLink 
                                     to="#" 
                                     active={ this.state.activeItemInnerPills === key} 
@@ -68,7 +68,7 @@ class TabContainer extends React.Component {
                         <MDBTabContent activeItem={this.state.activeItemInnerPills}>
                         {this.props.settings.map((setting, key) => {
                             return(
-                                <MDBTabPane tabId={key}>
+                                <MDBTabPane tabId={key} key={key}>
                                     {setting.title}
                                 </MDBTabPane>
                             )
