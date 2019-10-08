@@ -5,12 +5,80 @@ import React from 'react';
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
-    MDBTabPane
+    MDBTabPane,
+    MDBRow,
+    MDBCol,
+    MDBNav,
+    MDBNavItem,
+    MDBNavLink,
+    MDBIcon,
+    MDBTabContent,
+
 } from 'mdbreact';
 
-class Tab extends React.Component {
+//> CSS
+import './tabcontainer.scss';
+
+class TabContainer extends React.Component {
+
+    state = {
+        activeItemOuterTabs: 0,
+        activeItemInnerPills: 0,
+    };
+    
+    toggleOuterTabs = tab => e => {
+        if (this.state.activeItemOuterTabs2 !== tab) {
+        this.setState({
+            activeItemOuterTabs: tab
+        });
+        }
+    };
+    
+    toggleInnerPills = tab => e => {
+        if (this.state.activeItemInnerPills !== tab) {
+        this.setState({
+            activeItemInnerPills: tab
+        });
+        }
+    };
+
     render() {
-        return (
+        if(this.props.vertical){
+            return (
+                <MDBRow id="tabcontainer">
+                    <MDBCol md="3">
+                        <MDBNav pills color="primary" className="flex-column">
+                        {this.props.settings.map((setting, key) => {
+                            return(
+                                <MDBNavItem>
+                                    <MDBNavLink 
+                                    to="#" 
+                                    active={ this.state.activeItemInnerPills === key} 
+                                    onClick={this.toggleInnerPills(key)}
+                                    className="text-left"
+                                    >
+                                    <MDBIcon icon={setting.icon} className="mr-2" /> {setting.title}
+                                    </MDBNavLink>
+                                </MDBNavItem>
+                            )
+                        })}
+                        </MDBNav>
+                    </MDBCol>
+                    <MDBCol md="9">
+                        <MDBTabContent activeItem={this.state.activeItemInnerPills}>
+                        {this.props.settings.map((setting, key) => {
+                            return(
+                                <MDBTabPane tabId={key}>
+                                    {setting.title}
+                                </MDBTabPane>
+                            )
+                        })}
+                        </MDBTabContent>
+                    </MDBCol>
+                </MDBRow>
+            );
+        } else if(this.props.horizontal){
+            return (
             <>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -43,7 +111,16 @@ class Tab extends React.Component {
                 </div>
                 </>
             );
+        } else {
+            return null
+        }
+        
         }
 }
 
-export default Tab;
+export default TabContainer;
+
+/** 
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
