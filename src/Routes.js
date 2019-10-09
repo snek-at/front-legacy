@@ -8,7 +8,7 @@ import { Route, Switch } from 'react-router-dom';
 import { 
   SettingsPage,
   ProfilePage,
-} from './pages';
+} from './components/pages';
 
 class Routes extends React.Component {
   render() {
