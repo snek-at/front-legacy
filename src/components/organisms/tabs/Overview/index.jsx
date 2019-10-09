@@ -27,7 +27,9 @@ class Overview extends React.Component {
           contributions={this.props.contributions}
           />
         }
-        <Calendar3D />
+        <Calendar3D 
+        contributions={this.props.contributions}
+        />
         </>
       }
       </MDBTabPane>
