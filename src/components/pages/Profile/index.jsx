@@ -133,7 +133,7 @@ class Dashboard extends React.Component {
               </MDBCard>
               </MDBCol>
               <MDBCol md="8">
-                <TabContainer items={tabitems}>
+                <TabContainer items={tabitems} horizontal>
                   <OverviewTab
                   id={0}
                   contributions={data.contributions}
@@ -153,7 +153,6 @@ class Dashboard extends React.Component {
             </MDBRow>
           </MDBContainer>
         </div>
-      
       );
     } else {
       return null;
