@@ -5,11 +5,12 @@ import * as gitHub from "./utilities/GitHubUtils";
 /* Util which writes the dummy into local storage.
 /* Get dummy data: JSON.parse(window.localStorage.getItem('DUMMY_DATA'))
 */
-import * as dummy from "./utilities/Dummy";
+import * as dummy from "./utilities/DummyUtils";
 
 // Load dummy file
 dummy
 .load();
+
 // Load local storage
 //JSON.parse(window.localStorage.getItem('DUMMY_DATA'));
 
