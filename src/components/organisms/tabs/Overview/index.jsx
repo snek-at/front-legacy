@@ -13,6 +13,7 @@ import {
 // Molecules
 import {
     Calendar2D,
+    Calendar3D,
 } from '../../../molecules';
 
 class Overview extends React.Component {
@@ -26,6 +27,7 @@ class Overview extends React.Component {
           contributions={this.props.contributions}
           />
         }
+        <Calendar3D />
         </>
       }
       </MDBTabPane>

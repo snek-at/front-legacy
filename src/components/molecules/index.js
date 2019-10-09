@@ -4,10 +4,12 @@ import TabContainer from './TabContainer';
 import Avatar from './Avatar';
 import Socialdata from './Socialdata';
 import Calendar2D from './Calendar2D';
+import Calendar3D from './Calendar3D';
 
 export {
     TabContainer,
     Avatar,
     Socialdata,
     Calendar2D,
+    Calendar3D,
 }
