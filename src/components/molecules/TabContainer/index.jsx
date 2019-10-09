@@ -62,7 +62,7 @@ class TabContainer extends React.Component {
                                 <MDBNavItem key={key}>
                                     <MDBNavLink 
                                     to="#" 
-                                    active={ this.state.activeItemInnerPills === key} 
+                                    active={this.state.activeItemInnerPills === key} 
                                     onClick={this.toggleOuterPills(key)}
                                     className="text-left"
                                     >
