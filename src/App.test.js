@@ -1,9 +1,9 @@
 // A tool to query data from GitHub
 import * as gitHub from "./utilities/GitHubUtils";
 // > Dummy
-/**
-/* Util which writes the dummy into local storage.
-/* Get dummy data: JSON.parse(window.localStorage.getItem('DUMMY_DATA'))
+/*
+* Util which writes the dummy into local storage.
+* Get dummy data: JSON.parse(window.localStorage.getItem('DUMMY_DATA'))
 */
 import * as dummy from "./utilities/DummyUtils";
 
