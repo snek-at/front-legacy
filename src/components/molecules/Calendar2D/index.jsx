@@ -10,7 +10,7 @@ import {
 }  from 'mdbreact';
 
 //> Helpers
-import changeHue from '../helpers/changeHue.js';
+import changeHue from '../../helpers/changeHue.js';
 
 //> CSS
 import './calendar.scss';
