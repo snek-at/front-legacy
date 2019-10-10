@@ -48,12 +48,16 @@ class Calender3D extends React.Component {
   }
 
   renderTopStats() {
+    let data = this.props.contributions.years[0].stats;
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
 
-    countTotal = "1.641";
-    averageCount = "4.47";
+    countTotal = parseInt(data.commits.total) + 
+      parseInt(data.issues.total) + 
+      parseInt(data.codeReviews.total) + 
+      parseInt(data.pullRequests.total);
+    averageCount = data.average;
     datesTotal = "Oct 7, 2018 - Oct 9, 2019";
-    maxCount = "43";
+    maxCount = data.busiestDay;
     dateBest = "Aug 14";
 
     // Dummy data

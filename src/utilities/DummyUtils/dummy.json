@@ -81,7 +81,7 @@
       {
         "stats": {
           "commits": {
-            "total": "5",
+            "total": "1641",
             "reposCount": "5"
           },
           "issues": {
@@ -96,8 +96,8 @@
             "total": "5",
             "reposCount": "5"
           },
-          "busiestDay": "5",
-          "average": "5",
+          "busiestDay": "43",
+          "average": "4.47",
           "streak": {
             "currentStreak": {
               "startDate": "2019-09-06",
@@ -107,7 +107,7 @@
             "longestStreak": {
               "startDate": "2019-09-06",
               "endDate": "2019-09-07",
-              "total": "44"
+              "total": "46"
             },
             "history": [
               {
