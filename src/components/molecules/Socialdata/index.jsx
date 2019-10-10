@@ -9,6 +9,11 @@ import {
   MDBIcon,
 }  from 'mdbreact';
 
+//> Components
+import {
+  LanguageChart,
+} from '../';
+
 //> CSS
 import './socialdata.scss';
 
@@ -67,7 +72,8 @@ class Socialdata extends React.Component {
       >
       <span><MDBIcon icon="link"/>{website}</span>
       </a>
-      }     
+      }
+      <LanguageChart />
     </div>
     </MDBCardBody>
   );

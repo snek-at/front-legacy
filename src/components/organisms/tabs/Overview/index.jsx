@@ -6,14 +6,14 @@ import React from 'react';
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
-    MDBTabPane,
+  MDBTabPane,
 } from 'mdbreact';
 
 //> Components
 // Molecules
 import {
-    Calendar2D,
-    Calendar3D,
+  Calendar2D,
+  Calendar3D,
 } from '../../../molecules';
 
 class Overview extends React.Component {
