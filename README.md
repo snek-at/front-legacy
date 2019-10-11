@@ -35,6 +35,33 @@ The SNEK project is an attempt to create a transparent, open-source non-profit p
 - [Thanks](#thanks)
 - [Copyright and license](#copyright-and-license)
 
+## [](#quick-start)Quick start 
+
+Several quick start options are available:
+
+- Clone the repo: `https://github.com/snek/front.git`
+
+**This project requires the MDB React Pro license and its library.**
+
+You can eigther:
+
+Purchase MDB React Pro
+- Download the zip folder and extract it
+- Move the `mdbreact-X.XX.X.tgz` to the local copy of this repository
+
+or use MDB React Free
+- Update "mdbreact" in `package.json` to the latest version of MDB (such as 4.19.0)
+- After installing, make sure to exclude all elements that require MDB React Pro
+
+How to start this application?
+- Use `npm install` to install all dependencies
+- Start a local copy of the docs site with `npm start`
+- Or build a local copy of the library with `npm run build`
+
+## [](#status)Status
+
+![Website](https://img.shields.io/website/https/snek.at?label=website)
+
 ## [](#bug-and-feature-requests)Bugs and feature requests
 
 Have a bug or a feature request? Please first search for existing and closed issues. If your problem or idea is not
