@@ -21,9 +21,6 @@ The SNEK project is an attempt to create a transparent, open-source non-profit p
   </a>
 </p>
 
-<a href="https://www.buymeacoffee.com/M4SVRWQ" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-
-
 ## Table of contents
 
 - [Table of contents](#table-of-contents)
