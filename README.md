@@ -69,6 +69,8 @@ those rules whenever possible.
 
 ## [](#creators)Creators
 ### [](#frontend)Frontend
+#### Responsible for UX, UI Design, SEO and marketing of the platform.
+
 - **[Aichner Christian](https://github.com/Aichnerc)**
   + Product Owner
   + UX
@@ -81,9 +83,8 @@ those rules whenever possible.
   + Quality assurance
   + THE MANUAL
 
-Responsible for UX, UI Design, SEO and marketing of the platform.
-
 ### [](#ateam)A-Team
+#### Responsible for critical processes, data management, workflows and prototypes.
 - **[Kleber Florian](https://github.com/kleberbaum)**
   + Scrum Master
   + Monitor the sprints
@@ -95,9 +96,9 @@ Responsible for UX, UI Design, SEO and marketing of the platform.
   + Prototyping
   + Front-end data management
 
-Responsible for critical processes, data management, workflows and prototypes.
-
 ### [](#cicada)Cicada
+#### Responsible for securing all workflows and availability.
+
 - **[Leitner Katharina](https://github.com/leitnerkatharina)**
   + Development and Implementation security concepts
 
@@ -105,9 +106,8 @@ Responsible for critical processes, data management, workflows and prototypes.
   + Workflow security
   + Availability
 
-Responsible for securing all workflows and availability.
-
 ### [](#greenteam)Green Team
+#### Responsible for developing and code efficiency.
 - **[Auernig Elias](https://github.com/auernige)**
   + Data processing
   + Implementation
@@ -115,8 +115,6 @@ Responsible for securing all workflows and availability.
 - **[Egger Dominik](https://github.com/eggerd)**
   + Development
   + Implementation
-
-Responsible for developing and code efficiency.
 
 ## [](#thanks)Thanks
 
