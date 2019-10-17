@@ -174,7 +174,7 @@ class Calender2D extends React.Component {
         </svg>
       </div>
     </div>
-  )
+  );
   }
 }
 export default Calender2D;

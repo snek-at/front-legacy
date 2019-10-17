@@ -30,8 +30,6 @@ class Socialdata extends React.Component {
       accounts,
   } = this.props;
 
-  console.log(status);
-
   return (
     <MDBCardBody id="socialdata">
     <h4 className="font-weight-bold mb-4">{name}</h4>

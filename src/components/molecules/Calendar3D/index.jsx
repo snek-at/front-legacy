@@ -26,7 +26,7 @@ class Calender3D extends React.Component {
     this.state = {
       width: 0,
       hue: 0,
-    }
+    };
   }
 
   updateDimensions = () => {
@@ -96,7 +96,7 @@ class Calender3D extends React.Component {
     streakLongest = "46";
     datesLongest = "Jul 30 - Sep 13";
     streakCurrent = "5";
-    datesCurrent = "Oct 5 - Oct 9"
+    datesCurrent = "Oct 5 - Oct 9";
 
     let html;
     html = `<div class="ic-stats-block ic-stats-bottom">\n
@@ -152,7 +152,7 @@ class Calender3D extends React.Component {
       week.contributionDays.map((day, dkey) => {
         // Get max number of contributions
         if(day.contributionCount > maxCount){
-          maxCount = day.contributionCount
+          maxCount = day.contributionCount;
         }
         values[wkey][dkey] = day;
       });
@@ -183,7 +183,7 @@ class Calender3D extends React.Component {
         // Render cube primitive into view
         pixelView.renderObject(cube, p3d);
       })
-    })
+    });
     
   }
 
@@ -199,7 +199,7 @@ class Calender3D extends React.Component {
           </canvas>
         </div>
       </div>
-    )
+    );
   }
 }
 export default Calender3D;

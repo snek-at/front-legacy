@@ -33,7 +33,7 @@ class Overview extends React.Component {
         </>
       }
       </MDBTabPane>
-    )
+    );
   }
 }
 

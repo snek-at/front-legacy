@@ -14,7 +14,7 @@ export {
     Calendar2D,
     Calendar3D,
     LanguageChart,
-}
+};
 
 /** 
  * SPDX-License-Identifier: (EUPL-1.2)

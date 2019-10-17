@@ -2068,6 +2068,6 @@ const contribs = {
       }
     }
   }
-}
+};
 
 export default contribs;

@@ -99,11 +99,14 @@ class Dashboard extends React.Component {
 
   render() {
     const { username } = this.props.match.params;
-    console.log("User via GET param: "+username);
+    
+    // Debugging access point - get username from router
+    //console.log("User via GET param: "+username);
 
     const { data } = this.state;
 
-    console.log(this.state);
+    // Debugging access point - state
+    //console.log(this.state);
 
     if(data){
       return (
