@@ -166,7 +166,7 @@ class Calender2D extends React.Component {
                   </rect>
               );
               }
-              });
+              })
             );
         })}
         </svg>
