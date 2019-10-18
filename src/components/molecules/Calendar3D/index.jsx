@@ -155,7 +155,7 @@ class Calender3D extends React.Component {
         }
         values[wkey][dkey] = day;
       });
-    })
+    });
 
     values.map((week, wi) => {
       week.map((day, di) => {
