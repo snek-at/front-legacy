@@ -182,7 +182,7 @@ class Calender3D extends React.Component {
 
         // Render cube primitive into view
         pixelView.renderObject(cube, p3d);
-      })
+      });
     });
     
   }

@@ -27,7 +27,7 @@ class TabContainer extends React.Component {
         activeHorizontalItem: 0,
     };
     
-    toggleOuterPills = (tab) => e => {
+    toggleOuterPills = (tab) => (e) => {
         if (this.state.activeItemInnerPills !== tab) {
             this.setState({
                 activeItemInnerPills: tab
@@ -35,7 +35,7 @@ class TabContainer extends React.Component {
         }
     };
     
-    toggleSub = (tab) => e => {
+    toggleSub = (tab) => (e) => {
         if (this.state.activeSubItem !== tab) {
             this.setState({
                 activeSubItem: tab
@@ -43,7 +43,7 @@ class TabContainer extends React.Component {
         }
     };
 
-    toggleHorizontal = (tab) => e => {
+    toggleHorizontal = (tab) => (e) => {
         if (this.state.activeHorizontalItem !== tab) {
             this.setState({
                 activeHorizontalItem: tab
@@ -130,7 +130,7 @@ class TabContainer extends React.Component {
                         }
                         </MDBNavLink>
                     </MDBNavItem>
-                    )
+                    );
                 } else {
                     return null;
                 }

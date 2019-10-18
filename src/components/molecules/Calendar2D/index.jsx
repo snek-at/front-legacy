@@ -149,7 +149,7 @@ class Calender2D extends React.Component {
                   >
                   
                   </rect>
-              )
+              );
               } else {
               return(
                   <rect
@@ -164,13 +164,11 @@ class Calender2D extends React.Component {
                   >
                   
                   </rect>
-              )
+              );
               }
-              
-              })
-            )
+              });
+            );
         })}
-        
         </svg>
       </div>
     </div>
