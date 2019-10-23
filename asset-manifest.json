@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.6a5c6357.chunk.css",
-    "main.js": "/static/js/main.69f1d191.chunk.js",
-    "main.js.map": "/static/js/main.69f1d191.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
-    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
-    "static/css/2.31f3bf6c.chunk.css": "/static/css/2.31f3bf6c.chunk.css",
-    "static/js/2.8d39304e.chunk.js": "/static/js/2.8d39304e.chunk.js",
-    "static/js/2.8d39304e.chunk.js.map": "/static/js/2.8d39304e.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.2dcf41da7c7f66024a951e37992ffc04.js": "/precache-manifest.2dcf41da7c7f66024a951e37992ffc04.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.31f3bf6c.chunk.css.map": "/static/css/2.31f3bf6c.chunk.css.map",
-    "static/css/main.6a5c6357.chunk.css.map": "/static/css/main.6a5c6357.chunk.css.map",
-    "static/media/mdb.css": "/static/media/default-skin.b257fa9c.svg",
-    "static/media/all.min.css": "/static/media/fa-solid-900.c2801fb4.svg"
+    "main.css": "./static/css/main.6a5c6357.chunk.css",
+    "main.js": "./static/js/main.98e8c06a.chunk.js",
+    "main.js.map": "./static/js/main.98e8c06a.chunk.js.map",
+    "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
+    "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
+    "static/css/2.161215df.chunk.css": "./static/css/2.161215df.chunk.css",
+    "static/js/2.ddcd37f6.chunk.js": "./static/js/2.ddcd37f6.chunk.js",
+    "static/js/2.ddcd37f6.chunk.js.map": "./static/js/2.ddcd37f6.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.99a3e49ec41010921b4b305671756251.js": "./precache-manifest.99a3e49ec41010921b4b305671756251.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/2.161215df.chunk.css.map": "./static/css/2.161215df.chunk.css.map",
+    "static/css/main.6a5c6357.chunk.css.map": "./static/css/main.6a5c6357.chunk.css.map",
+    "static/media/mdb.css": "./static/media/default-skin.b257fa9c.svg",
+    "static/media/all.min.css": "./static/media/fa-solid-900.c2801fb4.svg"
   }
 }
