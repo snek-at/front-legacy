@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h3 align="center">Official React MDB Template</h3>
+<h3 align="center">SNEKNetwork for Engineers and Knowledged</h3>
 <p align="center">
 The SNEK project is an attempt to create a transparent, open-source non-profit platform that allows engineers to categorize and compare. It should enable engineers from adjacent fields to visualize each other's skills through visualization and project identification. The focus is on absolute transparency. By revealing all source code, front-end and back-end, it should be possible to know exactly what data is stored and how our algorithms work. Unfortunately, there is currently no platform with similar goals. However, there is already an open-source social network called "<a href="https://github.com/Minds">minds.com</a>", <br> which is already very successful with another target group.
   <br>
