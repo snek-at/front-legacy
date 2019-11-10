@@ -4,6 +4,7 @@ const alasql = require("alasql");
 export const fillDB = objUser => {
   fillPlatform(objUser);
   fillOrganization(objUser);
+  fillStats(objUser);
 };
 
 const fillPlatform = objUser => {
@@ -122,6 +123,15 @@ const fillBusiestDay = years => {
     alasql(insert.busiestDay, [busiestDayDate, busiestDayCount]);
     fillStatistic(year, busiestDayDate);
   });
+};
+
+const fillStats = objUser => {
+  let keys = Object.keys(objUser.calendar).filter(str => {
+    return str.match(/c[0-9]+/);
+  });
+  const days = getDaysArray(objUser, keys);
+  const years = getYearsDict(days);
+  fillBusiestDay(years);
 };
 
 //> Helper functions
