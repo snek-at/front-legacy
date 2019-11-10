@@ -112,6 +112,21 @@ const fillStatistic = (year, busiestDayDate) => {
   fillStreak(year);
 };
 
+//> Helper functions
+const getBusiestDay = year => {
+  let busiestDay = null;
+  year.forEach(day => {
+    if (busiestDay == null) {
+      busiestDay = day;
+    } else {
+      if (day.contributionCount > busiestDay.contributionCount) {
+        busiestDay = day;
+      }
+    }
+  });
+  return busiestDay;
+};
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
