@@ -20,9 +20,9 @@ const initTables = `
 `;
 
 export function Database(dbName) {
-    let db = new alasql.Database(dbName);
+  let db = new alasql.Database(dbName);
 
-    db.exec(initTables);
+  db.exec(initTables);
 
-    return db;
+  return db;
 }
