@@ -104,6 +104,14 @@ const fillStreak = year => {
   });
 };
 
+const fillStatistic = (year, busiestDayDate) => {
+  const yearNum = new Date(busiestDayDate).getFullYear();
+  const busiestDayId = alasql("SELECT id FROM busiestDay").pop()["id"];
+  const platformId = alasql("SELECT id FROM platform").pop()["id"];
+  alasql(insert.statistic, [yearNum, busiestDayId, platformId]);
+  fillStreak(year);
+};
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
