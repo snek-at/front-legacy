@@ -134,6 +134,17 @@ const fillStats = objUser => {
   fillBusiestDay(years);
 };
 
+const fillRepository = _repo => {
+  const repoOwnerId = alasql("SELECT id FROM member").pop()["id"];
+  const name = _repo.repository.name;
+  const repoUrl = _repo.repository.url;
+  const pieId = alasql("SELECT id FROM languagePie").pop()["id"];
+  alasql(insert.repository, [repoUrl, name, repoOwnerId, pieId]);
+  const repoId = alasql("SELECT id FROM repository").pop()["id"];
+  const platformId = alasql("SELECT id FROM platform").pop()["id"];
+  alasql(insert.platform_has_repository, [platformId, repoId]);
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
