@@ -287,6 +287,19 @@ const getBusiestDay = year => {
   return busiestDay;
 };
 
+const getDaysArray = (objUser, keys) => {
+  let days = [];
+  keys.forEach(c => {
+    const year = objUser.calendar[c];
+    for (const [w, week] of year.contributionCalendar.weeks.entries()) {
+      for (const [d, day] of week.contributionDays.entries()) {
+        days.push(day);
+      }
+    }
+  });
+  return days;
+};
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
