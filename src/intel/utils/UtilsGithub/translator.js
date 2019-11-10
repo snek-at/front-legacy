@@ -170,6 +170,21 @@ const fillLanguageSlice = _repo => {
   fillRepoOwner(_repo);
 };
 
+const fillPie = reposi => {
+  reposi.forEach(_repo => {
+    if (
+      alasql("SELECT url from repository WHERE url=?", [
+        _repo.repository.url
+      ])[0] == null
+    ) {
+      const languagesCount = _repo.repository.languages.totalCount;
+      const languagesSize = _repo.repository.languages.totalSize;
+      alasql(insert.languagePie, [languagesSize, languagesCount]);
+      fillLanguageSlice(_repo);
+    }
+  });
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
