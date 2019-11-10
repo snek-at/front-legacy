@@ -300,6 +300,18 @@ const getDaysArray = (objUser, keys) => {
   return days;
 };
 
+const getYearsDict = days => {
+  let years = {};
+  days.forEach(day => {
+    const year = new Date(day.date).getFullYear();
+    if (years[year] == undefined) {
+      years[year] = [];
+    }
+    years[year].push(day);
+  });
+  return years;
+};
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
