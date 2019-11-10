@@ -196,6 +196,21 @@ const fillRepos = objUser => {
   });
 };
 
+const fillContribs = (contribs, type, calendarId) => {
+  contribs.forEach(contrib => {
+    alasql(insert.contrib, [
+      contrib.date,
+      contrib.repoNameWithOwner,
+      contrib.repoUrl,
+      contrib.additions,
+      contrib.deletions,
+      contrib.changedFiles,
+      type,
+      calendarId
+    ]);
+  });
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
