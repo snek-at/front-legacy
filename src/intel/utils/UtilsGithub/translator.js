@@ -159,6 +159,17 @@ const fillRepoOwner = _repo => {
   fillRepository(_repo);
 };
 
+const fillLanguageSlice = _repo => {
+  const pieId = alasql("SELECT id FROM languagePie").pop()["id"];
+  _repo.repository.languages.edges.forEach(_edge => {
+    const nodeName = _edge.node.name;
+    const nodeSize = _edge.size;
+    const nodeColor = _edge.node.color;
+    alasql(insert.languageSlice, [nodeName, nodeColor, nodeSize, pieId]);
+  });
+  fillRepoOwner(_repo);
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
