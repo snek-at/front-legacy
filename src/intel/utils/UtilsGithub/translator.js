@@ -211,6 +211,26 @@ const fillContribs = (contribs, type, calendarId) => {
   });
 };
 
+const getContributionsByRepositories = contributionsByRepository => {
+  let contribs = [];
+  contributionsByRepository.forEach(repo => {
+    const repoNameWithOwner = repo.repository.nameWithOwner;
+    const repoUrl = repo.repository.url;
+    repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
+      let contrib = {};
+      const date = edge.node.committedDate.split("T")[0];
+      contrib["date"] = date;
+      contrib["repoNameWithOwner"] = repoNameWithOwner;
+      contrib["repoUrl"] = repoUrl;
+      contrib["additions"] = edge.node.additions;
+      contrib["deletions"] = edge.node.deletions;
+      contrib["changedFiles"] = edge.node.changedFiles;
+      contribs.push(contrib);
+    });
+  });
+  return contribs;
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
