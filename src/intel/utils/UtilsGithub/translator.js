@@ -6,6 +6,7 @@ export const fillDB = objUser => {
   fillOrganization(objUser);
   fillStats(objUser);
   fillRepos(objUser);
+  fillCalendar(objUser);
 };
 
 const fillPlatform = objUser => {
@@ -211,6 +212,48 @@ const fillContribs = (contribs, type, calendarId) => {
   });
 };
 
+const fillCalendar = objUser => {
+  let keys = Object.keys(objUser.calendar).filter(str => {
+    return str.match(/c[0-9]+/);
+  });
+  keys.forEach(c => {
+    const year = objUser.calendar[c];
+    for (const [w, week] of year.contributionCalendar.weeks.entries()) {
+      for (const [d, day] of week.contributionDays.entries()) {
+        const date = day.date;
+        const week = w;
+        const weekday = d;
+        const total = day.contributionCount;
+        const color = day.color;
+        const platformId = alasql("SELECT id FROM platform").pop()["id"];
+        alasql(insert.calendar, [
+          date,
+          week,
+          weekday,
+          total,
+          color,
+          platformId
+        ]);
+        const commits = getContributionsByRepositories(
+          year.commitContributionsByRepository
+        );
+        const issues = getContributionsByRepositories(
+          year.issueContributionsByRepository
+        );
+        const pullRequests = getContributionsByRepositories(
+          year.pullRequestContributionsByRepository
+        );
+        const calendarId = alasql("SELECT id FROM calendar").pop()["id"];
+
+        fillContribs(commits, "commit", calendarId);
+        fillContribs(issues, "issue", calendarId);
+        fillContribs(pullRequests, "pullRequest", calendarId);
+      }
+    }
+  });
+};
+
+//> Helper functions
 const getContributionsByRepositories = contributionsByRepository => {
   let contribs = [];
   contributionsByRepository.forEach(repo => {
@@ -230,8 +273,6 @@ const getContributionsByRepositories = contributionsByRepository => {
   });
   return contribs;
 };
-
-//> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
   year.forEach(day => {
