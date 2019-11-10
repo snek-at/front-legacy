@@ -3,6 +3,7 @@ const alasql = require("alasql");
 
 export const fillDB = objUser => {
   fillPlatform(objUser);
+  fillOrganization(objUser);
 };
 
 const fillPlatform = objUser => {
@@ -55,6 +56,21 @@ const fillOrgMembers = (nodes, orgId) => {
     const member_id = alasql("SELECT id FROM member").pop()["id"];
 
     alasql(insert.organization_has_member, [orgId, member_id]);
+  });
+};
+
+const fillOrganization = objUser => {
+  objUser.profile.organizations.edges.forEach(_org => {
+    const avatarUrl = _org.node.avatarUrl;
+    const name = _org.node.name;
+    const url = _org.node.url;
+    alasql(insert.organization, [avatarUrl, name, url]);
+
+    const organization_id = alasql("SELECT id FROM organization").pop()["id"];
+    const platform_id = alasql("SELECT id FROM platform").pop()["id"];
+
+    alasql(insert.platform_has_organization, [platform_id, organization_id]);
+    fillOrgMembers(_org.node.membersWithRole.nodes, organization_id);
   });
 };
 
