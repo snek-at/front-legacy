@@ -145,6 +145,20 @@ const fillRepository = _repo => {
   alasql(insert.platform_has_repository, [platformId, repoId]);
 };
 
+const fillRepoOwner = _repo => {
+  const repoOwnerUsername = _repo.repository.owner.login;
+  const repoOwnerAvatarUrl = _repo.repository.owner.avatarUrl;
+  const repoOwnerName = _repo.repository.owner.name;
+  const repoOwnerUrl = _repo.repository.owner.url;
+  alasql(insert.member, [
+    repoOwnerAvatarUrl,
+    repoOwnerName,
+    repoOwnerUsername,
+    repoOwnerUrl
+  ]);
+  fillRepository(_repo);
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
