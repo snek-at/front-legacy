@@ -112,6 +112,18 @@ const fillStatistic = (year, busiestDayDate) => {
   fillStreak(year);
 };
 
+const fillBusiestDay = years => {
+  Object.keys(years).forEach(y => {
+    const year = years[y];
+    const busiestDay = getBusiestDay(year);
+    const busiestDayDate = busiestDay.date;
+    const busiestDayCount = busiestDay.contributionCount;
+
+    alasql(insert.busiestDay, [busiestDayDate, busiestDayCount]);
+    fillStatistic(year, busiestDayDate);
+  });
+};
+
 //> Helper functions
 const getBusiestDay = year => {
   let busiestDay = null;
