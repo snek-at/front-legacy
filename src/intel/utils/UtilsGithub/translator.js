@@ -74,6 +74,36 @@ const fillOrganization = objUser => {
   });
 };
 
+const fillStreak = year => {
+  year.forEach(day => {
+    const dayTotal = day.contributionCount;
+    const dayDate = day.date;
+
+    if (dayTotal !== 0) {
+      if (!streak) {
+        streak = true;
+        streakStart = dayDate;
+        streakTotal = dayTotal;
+      } else {
+        streakTotal += dayTotal;
+      }
+    } else if (streakTotal != 0) {
+      const statisticId = alasql("SELECT id FROM statistic").pop()["id"];
+      alasql(insert.streak, [
+        streakStart,
+        new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000)
+          .toISOString()
+          .substr(0, 10),
+        streakTotal,
+        statisticId
+      ]);
+      streak = false;
+      streakStart = "";
+      streakTotal = 0;
+    }
+  });
+};
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
