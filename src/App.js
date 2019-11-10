@@ -21,6 +21,7 @@ import {
 */
 // Routes
 import Routes from "./Routes";
+
 class App extends React.Component {
   render() {
     return (

@@ -22,7 +22,8 @@ const createDummy = (table, entries, c) => {
       if (
         e.message ===
           "Cannot insert record, because it already exists in primary key index" ||
-        "Cannot insert record, because it already exists in unique index"
+        e.message ===
+          "Cannot insert record, because it already exists in unique index"
       ) {
         //console.warn(e.message);
       } else {
