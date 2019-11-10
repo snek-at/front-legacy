@@ -5,6 +5,7 @@ export const fillDB = objUser => {
   fillPlatform(objUser);
   fillOrganization(objUser);
   fillStats(objUser);
+  fillRepos(objUser);
 };
 
 const fillPlatform = objUser => {
@@ -182,6 +183,16 @@ const fillPie = reposi => {
       alasql(insert.languagePie, [languagesSize, languagesCount]);
       fillLanguageSlice(_repo);
     }
+  });
+};
+
+const fillRepos = objUser => {
+  let keys = Object.keys(objUser.calendar).filter(str => {
+    return str.match(/c[0-9]+/);
+  });
+  keys.forEach(c => {
+    const reposi = objUser.calendar[c].commitContributionsByRepository;
+    fillPie(reposi);
   });
 };
 
