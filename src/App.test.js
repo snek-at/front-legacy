@@ -1,4 +1,4 @@
 import * as intel from "./intel";
 
-intel.fill("pinterid");
+intel.fill({ username: "pinterid" });
 //console.log(intel.templateGetPlatform());

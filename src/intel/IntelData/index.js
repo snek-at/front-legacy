@@ -10,5 +10,5 @@ export const exec = value => {
 
 export function fill(user) {
   //gitlab.fill(db, user);
-  //github.fill(db, user);
+  github.fill(db, user);
 }
