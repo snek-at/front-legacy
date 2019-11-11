@@ -1,7 +1,11 @@
 import * as insert from "../../Database/Statements/Insert";
-const alasql = require("alasql");
+let db;
+let streak = false;
+let streakStart = "";
+let streakTotal = 0;
 
-export const fillDB = objUser => {
+export const fillDB = (_db, objUser) => {
+  db = _db;
   fillPlatform(objUser);
   fillOrganization(objUser);
   fillStats(objUser);
@@ -29,7 +33,7 @@ const fillPlatform = objUser => {
   const createdAt = objUser.profile.createdAt;
   const location = objUser.profile.location;
 
-  alasql(insert.platform, [
+  db.exec(insert.platform, [
     "GitHub",
     "https://github.com",
     avatarUrl,
@@ -50,15 +54,15 @@ const fillOrgMembers = (nodes, orgId) => {
     const memberName = _member.name;
     const memberWebUrl = _member.url;
     const memberUsername = _member.login;
-    alasql(insert.member, [
+    db.exec(insert.member, [
       memberAvatarUrl,
       memberName,
       memberUsername,
       memberWebUrl
     ]);
-    const member_id = alasql("SELECT id FROM member").pop()["id"];
+    const member_id = db.exec("SELECT id FROM member").pop()["id"];
 
-    alasql(insert.organization_has_member, [orgId, member_id]);
+    db.exec(insert.organizationHasMember, [orgId, member_id]);
   });
 };
 
@@ -67,12 +71,12 @@ const fillOrganization = objUser => {
     const avatarUrl = _org.node.avatarUrl;
     const name = _org.node.name;
     const url = _org.node.url;
-    alasql(insert.organization, [avatarUrl, name, url]);
+    db.exec(insert.organization, [avatarUrl, name, url]);
 
-    const organization_id = alasql("SELECT id FROM organization").pop()["id"];
-    const platform_id = alasql("SELECT id FROM platform").pop()["id"];
+    const organization_id = db.exec("SELECT id FROM organization").pop()["id"];
+    const platform_id = db.exec("SELECT id FROM platform").pop()["id"];
 
-    alasql(insert.platform_has_organization, [platform_id, organization_id]);
+    db.exec(insert.platformHasOrganization, [platform_id, organization_id]);
     fillOrgMembers(_org.node.membersWithRole.nodes, organization_id);
   });
 };
@@ -82,7 +86,7 @@ const fillStreak = year => {
     const dayTotal = day.contributionCount;
     const dayDate = day.date;
 
-    if (dayTotal !== 0) {
+    if (dayTotal != 0) {
       if (!streak) {
         streak = true;
         streakStart = dayDate;
@@ -91,8 +95,8 @@ const fillStreak = year => {
         streakTotal += dayTotal;
       }
     } else if (streakTotal != 0) {
-      const statisticId = alasql("SELECT id FROM statistic").pop()["id"];
-      alasql(insert.streak, [
+      const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
+      db.exec(insert.streak, [
         streakStart,
         new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000)
           .toISOString()
@@ -109,9 +113,9 @@ const fillStreak = year => {
 
 const fillStatistic = (year, busiestDayDate) => {
   const yearNum = new Date(busiestDayDate).getFullYear();
-  const busiestDayId = alasql("SELECT id FROM busiestDay").pop()["id"];
-  const platformId = alasql("SELECT id FROM platform").pop()["id"];
-  alasql(insert.statistic, [yearNum, busiestDayId, platformId]);
+  const busiestDayId = db.exec("SELECT id FROM busiestDay").pop()["id"];
+  const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+  db.exec(insert.statistic, [yearNum, busiestDayId, platformId]);
   fillStreak(year);
 };
 
@@ -122,7 +126,7 @@ const fillBusiestDay = years => {
     const busiestDayDate = busiestDay.date;
     const busiestDayCount = busiestDay.contributionCount;
 
-    alasql(insert.busiestDay, [busiestDayDate, busiestDayCount]);
+    db.exec(insert.busiestDay, [busiestDayDate, busiestDayCount]);
     fillStatistic(year, busiestDayDate);
   });
 };
@@ -137,14 +141,14 @@ const fillStats = objUser => {
 };
 
 const fillRepository = _repo => {
-  const repoOwnerId = alasql("SELECT id FROM member").pop()["id"];
+  const repoOwnerId = db.exec("SELECT id FROM member").pop()["id"];
   const name = _repo.repository.name;
   const repoUrl = _repo.repository.url;
-  const pieId = alasql("SELECT id FROM languagePie").pop()["id"];
-  alasql(insert.repository, [repoUrl, name, repoOwnerId, pieId]);
-  const repoId = alasql("SELECT id FROM repository").pop()["id"];
-  const platformId = alasql("SELECT id FROM platform").pop()["id"];
-  alasql(insert.platform_has_repository, [platformId, repoId]);
+  const pieId = db.exec("SELECT id FROM languagePie").pop()["id"];
+  db.exec(insert.repository, [repoUrl, name, repoOwnerId, pieId]);
+  const repoId = db.exec("SELECT id FROM repository").pop()["id"];
+  const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+  db.exec(insert.platformHasRepository, [platformId, repoId]);
 };
 
 const fillRepoOwner = _repo => {
@@ -152,7 +156,7 @@ const fillRepoOwner = _repo => {
   const repoOwnerAvatarUrl = _repo.repository.owner.avatarUrl;
   const repoOwnerName = _repo.repository.owner.name;
   const repoOwnerUrl = _repo.repository.owner.url;
-  alasql(insert.member, [
+  db.exec(insert.member, [
     repoOwnerAvatarUrl,
     repoOwnerName,
     repoOwnerUsername,
@@ -162,12 +166,12 @@ const fillRepoOwner = _repo => {
 };
 
 const fillLanguageSlice = _repo => {
-  const pieId = alasql("SELECT id FROM languagePie").pop()["id"];
+  const pieId = db.exec("SELECT id FROM languagePie").pop()["id"];
   _repo.repository.languages.edges.forEach(_edge => {
     const nodeName = _edge.node.name;
     const nodeSize = _edge.size;
     const nodeColor = _edge.node.color;
-    alasql(insert.languageSlice, [nodeName, nodeColor, nodeSize, pieId]);
+    db.exec(insert.languageSlice, [nodeName, nodeColor, nodeSize, pieId]);
   });
   fillRepoOwner(_repo);
 };
@@ -175,13 +179,13 @@ const fillLanguageSlice = _repo => {
 const fillPie = reposi => {
   reposi.forEach(_repo => {
     if (
-      alasql("SELECT url from repository WHERE url=?", [
-        _repo.repository.url
+      db.exec("SELECT name from repository WHERE name=?", [
+        _repo.repository.name
       ])[0] == null
     ) {
       const languagesCount = _repo.repository.languages.totalCount;
       const languagesSize = _repo.repository.languages.totalSize;
-      alasql(insert.languagePie, [languagesSize, languagesCount]);
+      db.exec(insert.languagePie, [languagesSize, languagesCount]);
       fillLanguageSlice(_repo);
     }
   });
@@ -199,7 +203,7 @@ const fillRepos = objUser => {
 
 const fillContribs = (contribs, type, calendarId) => {
   contribs.forEach(contrib => {
-    alasql(insert.contrib, [
+    db.exec(insert.contrib, [
       contrib.date,
       contrib.repoNameWithOwner,
       contrib.repoUrl,
@@ -225,8 +229,8 @@ const fillCalendar = objUser => {
         const weekday = d;
         const total = day.contributionCount;
         const color = day.color;
-        const platformId = alasql("SELECT id FROM platform").pop()["id"];
-        alasql(insert.calendar, [
+        const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+        db.exec(insert.calendar, [
           date,
           week,
           weekday,
@@ -243,7 +247,7 @@ const fillCalendar = objUser => {
         const pullRequests = getContributionsByRepositories(
           year.pullRequestContributionsByRepository
         );
-        const calendarId = alasql("SELECT id FROM calendar").pop()["id"];
+        const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
 
         fillContribs(commits, "commit", calendarId);
         fillContribs(issues, "issue", calendarId);

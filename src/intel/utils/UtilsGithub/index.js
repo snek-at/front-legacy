@@ -3,8 +3,8 @@ import * as gqlData from "./gqlData";
 import * as translator from "./translator";
 
 // Get profile and calendar
-export async function fill(user) {
-  const getPlatform = async username => {
+export async function fill(db, user) {
+  const getPlatform = async (db, username) => {
     const resProfile = await apollo.client.query({
       query: gqlData.GET_PROFILE,
       variables: {
@@ -22,10 +22,10 @@ export async function fill(user) {
     const objUser = {};
     objUser.profile = resProfile.data.user;
     objUser.calendar = resCalendar.data.user;
-    translator.fillDB(objUser);
+    translator.fillDB(db, objUser);
   };
-
-  await getPlatform(user["username"]);
+  //console.log(user["username"]);
+  await getPlatform(db, user["username"]);
 }
 
 /**
