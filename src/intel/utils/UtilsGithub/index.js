@@ -1,11 +1,14 @@
-import * as apollo from "./apolloclient";
+import * as apollo from "./../UtilsApollo";
 import * as gqlData from "./gqlData";
 import * as translator from "./translator";
 
 // Get profile and calendar
 export async function fill(db, user) {
   const getPlatform = async (db, username) => {
-    const resProfile = await apollo.client.query({
+    const apiLink = "https://api.github.com/graphql";
+    const authorization = `Bearer ${process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN}`;
+    const client = apollo.init(apiLink, authorization);
+    const resProfile = await client.query({
       query: gqlData.GET_PROFILE,
       variables: {
         username
@@ -15,7 +18,7 @@ export async function fill(db, user) {
     const { data } = resProfile;
     const createdAtDate = new Date(data.user.createdAt);
 
-    const resCalendar = await apollo.client.query({
+    const resCalendar = await client.query({
       query: gqlData.getCalendar(username, createdAtDate)
     });
 
@@ -24,7 +27,7 @@ export async function fill(db, user) {
     objUser.calendar = resCalendar.data.user;
     translator.fillDB(db, objUser);
   };
-  //console.log(user["username"]);
+  console.log(user["username"]);
   await getPlatform(db, user["username"]);
 }
 
