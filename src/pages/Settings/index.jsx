@@ -42,29 +42,7 @@ class Settings extends React.Component {
   render() {
     return (
       <MDBContainer>
-        <h2 className="mt-5">Pills within the tabs</h2>
-        <MDBNav tabs className="nav-justified" color="primary">
-          <MDBNavItem>
-            <MDBNavLink
-              to="#"
-              active={this.state.activeItemOuterTabs === "1"}
-              onClick={this.toggleOuterTabs("1")}
-              role="tab"
-            >
-              <MDBIcon icon="user" /> Profile
-            </MDBNavLink>
-          </MDBNavItem>
-          <MDBNavItem>
-            <MDBNavLink
-              to="#"
-              active={this.state.activeItemOuterTabs === "2"}
-              onClick={this.toggleOuterTabs("2")}
-              role="tab"
-            >
-              <MDBIcon icon="heart" /> Follow
-            </MDBNavLink>
-          </MDBNavItem>
-        </MDBNav>
+        <h2 className="mt-5">Settings</h2>
         <MDBTabContent
           className="card mb-5"
           activeItem={this.state.activeItemOuterTabs}
@@ -102,18 +80,61 @@ class Settings extends React.Component {
                       <MDBIcon icon="address-card" className="ml-2" />
                     </MDBNavLink>
                   </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      to="#"
+                      active={this.state.activeItemInnerPills === "4"}
+                      onClick={this.toggleInnerPills("4")}
+                    >
+                      Downloads <MDBIcon icon="download" className="ml-2" />
+                    </MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      to="#"
+                      active={this.state.activeItemInnerPills === "5"}
+                      onClick={this.toggleInnerPills("5")}
+                    >
+                      Downloads <MDBIcon icon="download" className="ml-2" />
+                    </MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      to="#"
+                      active={this.state.activeItemInnerPills === "5"}
+                      onClick={this.toggleInnerPills("5")}
+                    >
+                      Downloads <MDBIcon icon="download" className="ml-2" />
+                    </MDBNavLink>
+                  </MDBNavItem>
+                  <MDBNavItem>
+                    <MDBNavLink
+                      to="#"
+                      active={this.state.activeItemInnerPills === "6"}
+                      onClick={this.toggleInnerPills("6")}
+                    >
+                      Downloads <MDBIcon icon="download" className="ml-2" />
+                    </MDBNavLink>
+                  </MDBNavItem>
                 </MDBNav>
               </MDBCol>
               <MDBCol md="9">
                 <MDBTabContent activeItem={this.state.activeItemInnerPills}>
-                  <MDBTabPane tabId="1">
-                    <h5>Panel 1</h5>
-                  </MDBTabPane>
+                  <MDBTabPane tabId="1"></MDBTabPane>
                   <MDBTabPane tabId="2">
                     <h5>Panel 2</h5>
                   </MDBTabPane>
                   <MDBTabPane tabId="3">
                     <h5>Panel 3</h5>
+                  </MDBTabPane>
+                  <MDBTabPane tabId="4">
+                    <h5>Panel 4</h5>
+                  </MDBTabPane>
+                  <MDBTabPane tabId="5">
+                    <h5>Panel 5</h5>
+                  </MDBTabPane>
+                  <MDBTabPane tabId="6">
+                    <h5>Panel 6</h5>
                   </MDBTabPane>
                 </MDBTabContent>
               </MDBCol>
