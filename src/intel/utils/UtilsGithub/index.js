@@ -1,6 +1,6 @@
 import * as apollo from "./../UtilsApollo";
-import * as gqlData from "./gqlData";
-import * as translator from "./translator";
+import * as gqlData from "./GqlData";
+import * as translator from "./Translator";
 
 // Get profile and calendar
 export async function fill(db, user) {

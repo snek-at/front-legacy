@@ -1,10 +1,10 @@
-import * as insert from "../../Database/Statements/Insert";
+import * as insert from "../../../Database/Statements/Insert";
 let db;
 let streak = false;
 let streakStart = "";
 let streakTotal = 0;
 
-// Fill the database from objUser
+// Fill the Database from User Object
 export const fillDB = (_db, objUser) => {
   db = _db;
   fillPlatform(objUser);
@@ -14,7 +14,7 @@ export const fillDB = (_db, objUser) => {
   fillCalendar(objUser);
 };
 
-// Fill the platform table
+// Fill the platform Table
 const fillPlatform = objUser => {
   let statusMessage;
   let statusEmojiHTML;
@@ -50,7 +50,7 @@ const fillPlatform = objUser => {
   ]);
 };
 
-// Fill the member table with organization members
+// Fill the member Table with Organization Members
 const fillOrgMembers = (nodes, orgId) => {
   nodes.forEach(_member => {
     const memberAvatarUrl = _member.avatarUrl;
@@ -69,7 +69,7 @@ const fillOrgMembers = (nodes, orgId) => {
   });
 };
 
-// Fill organization table
+// Fill organization Table
 const fillOrganization = objUser => {
   objUser.profile.organizations.edges.forEach(_org => {
     const avatarUrl = _org.node.avatarUrl;
@@ -85,7 +85,7 @@ const fillOrganization = objUser => {
   });
 };
 
-// Fill streak table
+// Fill streak Table
 const fillStreak = year => {
   year.forEach(day => {
     const dayTotal = day.contributionCount;
@@ -116,7 +116,7 @@ const fillStreak = year => {
   });
 };
 
-// Fill statistic table
+// Fill statistic Table
 const fillStatistic = (year, busiestDayDate) => {
   const yearNum = new Date(busiestDayDate).getFullYear();
   const busiestDayId = db.exec("SELECT id FROM busiestDay").pop()["id"];
@@ -125,7 +125,7 @@ const fillStatistic = (year, busiestDayDate) => {
   fillStreak(year);
 };
 
-// Fill busiestDay table
+// Fill busiestDay Table
 const fillBusiestDay = years => {
   Object.keys(years).forEach(y => {
     const year = years[y];
@@ -138,7 +138,7 @@ const fillBusiestDay = years => {
   });
 };
 
-// Prepare data to call functions related to stats
+// Prepare data to call functions related to Stats
 const fillStats = objUser => {
   let keys = Object.keys(objUser.calendar).filter(str => {
     return str.match(/c[0-9]+/);
@@ -148,7 +148,7 @@ const fillStats = objUser => {
   fillBusiestDay(years);
 };
 
-// Fill repository table
+// Fill repository Table
 const fillRepository = _repo => {
   const repoOwnerId = db.exec("SELECT id FROM member").pop()["id"];
   const name = _repo.repository.name;
@@ -160,7 +160,7 @@ const fillRepository = _repo => {
   db.exec(insert.platformHasRepository, [platformId, repoId]);
 };
 
-// Fill member table with repository owner
+// Fill member Table with Repository Owner
 const fillRepoOwner = _repo => {
   const repoOwnerUsername = _repo.repository.owner.login;
   const repoOwnerAvatarUrl = _repo.repository.owner.avatarUrl;
@@ -175,7 +175,7 @@ const fillRepoOwner = _repo => {
   fillRepository(_repo);
 };
 
-// Fill languageSlice table
+// Fill languageSlice Table
 const fillLanguageSlice = _repo => {
   const pieId = db.exec("SELECT id FROM languagePie").pop()["id"];
   _repo.repository.languages.edges.forEach(_edge => {
@@ -187,7 +187,7 @@ const fillLanguageSlice = _repo => {
   fillRepoOwner(_repo);
 };
 
-// Fill languagePie table
+// Fill languagePie Table
 const fillPie = reposi => {
   reposi.forEach(_repo => {
     if (
@@ -203,7 +203,7 @@ const fillPie = reposi => {
   });
 };
 
-// Prepare data to call tables related to repositories
+// Prepare data to call Tables related to Repositories
 const fillRepos = objUser => {
   let keys = Object.keys(objUser.calendar).filter(str => {
     return str.match(/c[0-9]+/);
@@ -214,7 +214,7 @@ const fillRepos = objUser => {
   });
 };
 
-// Fill contribs table
+// Fill contribs Table
 const fillContribs = (contribs, type, calendarId) => {
   contribs.forEach(contrib => {
     db.exec(insert.contrib, [
@@ -230,7 +230,7 @@ const fillContribs = (contribs, type, calendarId) => {
   });
 };
 
-// fill calendar table
+// fill calendar Table
 const fillCalendar = objUser => {
   let keys = Object.keys(objUser.calendar).filter(str => {
     return str.match(/c[0-9]+/);
@@ -273,7 +273,7 @@ const fillCalendar = objUser => {
 };
 
 //> Helper functions
-// Get an array with contributions from contributionsByRepository object
+// Get an Array with Contributions from contributionsByRepository Object
 const getContributionsByRepositories = contributionsByRepository => {
   let contribs = [];
   contributionsByRepository.forEach(repo => {
@@ -294,7 +294,7 @@ const getContributionsByRepositories = contributionsByRepository => {
   return contribs;
 };
 
-// Get the busiest day from year object
+// Get the busiest Day from year Object
 const getBusiestDay = year => {
   let busiestDay = null;
   year.forEach(day => {
@@ -309,7 +309,7 @@ const getBusiestDay = year => {
   return busiestDay;
 };
 
-// Get an array of days from user object
+// Get an Array of Days from User Object
 const getDaysArray = (objUser, keys) => {
   let days = [];
   keys.forEach(c => {
@@ -323,8 +323,8 @@ const getDaysArray = (objUser, keys) => {
   return days;
 };
 
-// Get an dictionary of years from days array
-// key: year, value: array of days
+// Get an Dictionary of Years from Days Array
+// Key: year, Value: Array of Days
 const getYearsDict = days => {
   let years = {};
   days.forEach(day => {
