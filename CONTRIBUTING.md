@@ -13,8 +13,8 @@
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
-- [[](#commits)Commits](#commitscommits)
-- [[](#pull-requests)Pull Requests](#pull-requestspull-requests)
+- [Commits](#commits)
+- [Pull Requests](#pull-requests)
 
 
 ## [](#commits)Commits
