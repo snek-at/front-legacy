@@ -9,6 +9,6 @@ export const exec = value => {
 };
 
 export async function fill(user) {
-  //gitlab.fill(db, user);
+  await gitlab.fill(db, user);
   //github.fill(db, user);
 }
