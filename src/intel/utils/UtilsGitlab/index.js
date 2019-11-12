@@ -95,6 +95,19 @@ const fillOrganizations = async (user) => {
     ]);
 
   }
+const fillDummy = () => {
+  db.exec(insert.member, [
+    "https://snek.at/users/trash/avatar",
+    "Trash The User",
+    "trash",
+    "https://snek.at/users/trash"
+  ])
+  db.exec(insert.languagePie, [
+    -1,
+    -1
+  ])
+}
+
 const fillRepositories = (user, nameWithOwner) => {
   let repository = {};
   repository.repoUrl = `https://${user.server}/${nameWithOwner}`;
@@ -163,7 +176,7 @@ const fillContribution = (user, item) => {
 
 export const fill = (_db, user) => {
   db = _db;
-  return fillPlatform(user).then(async()=>
+  fillDummy();
     await fillOrganizations(user)
   );
 };
