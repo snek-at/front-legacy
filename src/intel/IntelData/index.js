@@ -8,7 +8,7 @@ export const exec = value => {
   return db.exec(value);
 };
 
-export function fill(user) {
+export async function fill(user) {
   //gitlab.fill(db, user);
   //github.fill(db, user);
 }
