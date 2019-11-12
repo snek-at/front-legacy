@@ -2,6 +2,8 @@
   "editor.fontFamily": "Fira Code, Consolas, 'Courier New', monospace",
   "editor.fontLigatures": true,
   "editor.snippetSuggestions": "top",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
   "terminal.integrated.fontFamily": "Consolas",
   "workbench.colorTheme": "Dracula Soft",
   "cSpell.ignoreWords": [
@@ -41,6 +43,7 @@
     "homescreen",
     "precached",
     "renamer",
-    "webfonts"
+    "webfonts",
+    "webscrap"
   ]
 }
