@@ -3,7 +3,7 @@
 const proxy = "https://c-hive-proxy.herokuapp.com/";
 
 // Fetch JSON from url
-const fetchJson = (urlIn) => {
+export const fetchJson = (urlIn) => {
     const url = `${proxy}${urlIn}`;
     return fetch(url, {
         headers: {
@@ -18,7 +18,7 @@ const fetchJson = (urlIn) => {
 };
 
 // Fetch HTML from url
-const fetchHtml = (urlIn) => {
+export const fetchHtml = (urlIn) => {
     const url = `${proxy}${urlIn}`;
     return fetch(url, {
         headers: {
@@ -33,7 +33,7 @@ const fetchHtml = (urlIn) => {
 
 //> Parser functions
 // Parse Json to DOM Object
-const parseJsonToDOM = (json) => {
+export const parseJsonToDOM = (json) => {
     const parser = new DOMParser();
     const html = json.then((res) => {
         return parser.parseFromString(res.html, "text/html");
@@ -42,7 +42,7 @@ const parseJsonToDOM = (json) => {
 };
 
 //Parse plain text to DOM Object
-const parseTextToDOM = (json) => {
+export const parseTextToDOM = (json) => {
     const parser = new DOMParser();
     const html = json.then((res) => {
         return parser.parseFromString(res, "text/html");
