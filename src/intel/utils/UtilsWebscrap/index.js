@@ -30,3 +30,22 @@ const fetchHtml = (urlIn) => {
             return res;
         });
 };
+
+//> Parser functions
+// Parse Json to DOM Object
+const parseJsonToDOM = (json) => {
+    const parser = new DOMParser();
+    const html = json.then((res) => {
+        return parser.parseFromString(res.html, "text/html");
+    });
+    return html;
+};
+
+//Parse plain text to DOM Object
+const parseTextToDOM = (json) => {
+    const parser = new DOMParser();
+    const html = json.then((res) => {
+        return parser.parseFromString(res, "text/html");
+    });
+    return html;
+};
