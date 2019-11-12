@@ -95,6 +95,34 @@ const fillOrganizations = async (user) => {
     ]);
 
   }
+const fillRepositories = (user, nameWithOwner) => {
+  let repository = {};
+  repository.repoUrl = `https://${user.server}/${nameWithOwner}`;
+  repository.avatarUrl = `https://${user.server}/${nameWithOwner}/-/avatar`;
+  repository.name = nameWithOwner;
+  repository.ownerId = db.exec("SELECT id FROM member").pop()["id"];
+  repository.languagePieId = db.exec("SELECT id FROM languagePie").pop()["id"];
+
+  const repoExists = db.exec(`SELECT id FROM repository WHERE name="${repository.name}"`);
+  if(repoExists === undefined || repoExists.length == 0){
+    console.log(repository)
+    db.exec(insert.repository, [
+      repository.avatarUrl,
+      repository.name,
+      repository.ownerId,
+      repository.languagePieId
+    ]);
+
+    const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+    const repositoryId = db.exec("SELECT id FROM repository").pop()["id"];
+
+    db.exec(insert.platformHasRepository, [
+      platformId,
+      repositoryId
+    ])
+  }
+  return repository;
+};
 };
 
 //> Export functions
