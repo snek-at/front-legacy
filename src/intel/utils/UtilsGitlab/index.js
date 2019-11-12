@@ -1,10 +1,23 @@
 import * as insert from "../../Database/Statements/Insert";
+import * as update from "../../Database/Statements/Update";
 import * as webscrap from "../UtilsWebscrap";
 let db;
 
+//> Helper functions
+// Get calendar week from date
+Date.prototype.getWeekNumber = function() {
+  var d = new Date(
+    Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())
+  );
+  var dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d - yearStart) / 864e5 + 1) / 7);
+};
+
 //> Fill functions
 // Fill the platform table with data
-const fillPlatform = async user => {
+const fillPlatform = async (user) => {
   const url = `https://${user.server}/${user.username}`;
   const html = await webscrap.parseTextToDOM(
     webscrap.fetchHtml(url).then(html => {
@@ -171,12 +184,67 @@ const fillContribution = (user, item) => {
   ])
 };
 
+const fillCalendar = async (user) => {
+  const limit = "2147483647";
+  const url = `https://${user.server}/${user.username}?limit=${limit}`;
+
+  const html = await webscrap.parseJsonToDOM(
+    webscrap.fetchJson(url).then(html => {
+      return html;
+    })
+  );
+
+  const activities = html.getElementsByClassName("event-item");
+  for (const item of Array.from(activities)) {
+    if (item.innerHTML.includes("pushed to branch")
+      || item.innerHTML.includes("opened")
+      || item.innerHTML.includes("Merge branch")) {
+
+      let datetime = item
+        .getElementsByTagName("time")[0]
+        .getAttribute("datetime");
+      datetime = new Date(datetime);
+      let date = `${datetime.getFullYear()}-${datetime.getMonth()}-${datetime.getDate()}`;
+      let week = datetime.getWeekNumber().toString();
+      let weekday = datetime.getDay().toString();
+
+      const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+      let res = db.exec(`SELECT total FROM calendar WHERE date="${date}"`).pop();
+      //console.log(total)
+      if(res === undefined || res.length == 0){
+        db.exec(insert.calendar, [
+          date,
+          week,
+          weekday,
+          1,
+          null,
+          platformId
+        ]);
+      }else{
+        let total = res.total;
+        total++;
+        db.exec(update.calendarTotal, [
+          total,
+          date,
+          platformId
+        ])
+      }
+
+      fillContribution(user, item)
+
+    }
+  }
+};
+
 //> Export functions
 // Fill the Database from user object
 
 export const fill = (_db, user) => {
   db = _db;
   fillDummy();
-    await fillOrganizations(user)
+  return fillPlatform(user).then(async () =>
+    await fillOrganizations(user).then(
+      await fillCalendar(user)
+    )
   );
 };
