@@ -123,6 +123,39 @@ const fillRepositories = (user, nameWithOwner) => {
   }
   return repository;
 };
+const fillContribution = (user, item) => {
+  let type;
+  if(item.innerHTML.includes("pushed to branch")){
+    type = "commit";
+  } else if(item.innerHTML.includes("opened")){
+    type = "issue"
+  } else if(item.innerHTML.includes("Merge branch")){
+    type = "pullRequest"
+  }
+
+  let datetime = item
+        .getElementsByTagName("time")[0]
+        .getAttribute("datetime");
+  datetime = new Date(datetime);
+
+  let nameWithOwner = item
+        .getElementsByClassName("event-scope")[0]
+        .getElementsByTagName("a")[0]
+        .getAttribute("href");
+  nameWithOwner = nameWithOwner.substring(1);
+
+  const repository = fillRepositories(user, nameWithOwner);
+  const calendarId = db.exec("SELECT id FROM calendar").pop()['id'];
+  db.exec(insert.contrib, [
+    datetime,
+    nameWithOwner,
+    repository.repoUrl,
+    null,
+    null,
+    null,
+    type,
+    calendarId
+  ])
 };
 
 //> Export functions
