@@ -17,7 +17,7 @@ const fillPlatform = async user => {
     .getElementsByTagName("span");
 
   const coverTitle = html.getElementsByClassName("cover-title")[0];
-  const avatarUrl = html
+  let avatarUrl = html
     .getElementsByClassName("avatar-holder")[0]
     .getElementsByTagName("a")[0]
     .getAttribute("href");
@@ -27,28 +27,31 @@ const fillPlatform = async user => {
   const fullName = coverDesc[0].innerHTML.trim().substring(1);
   const date = coverDesc[1].innerHTML;
 
-  var dbAvatarURL = null;
-  if (avatarUrl.includes("https://") || avatarUrl.includes("http://")) {
-    dbAvatarURL = avatarUrl;
-  } else {
-    dbAvatarURL = `https://${user.server}/${avatarUrl.substring(1)}`;
+  if (avatarUrl) {
+    if (!avatarUrl.includes("https://") || !avatarUrl.includes("http://")) {
+      avatarUrl = `https://${user.server}/${avatarUrl.substring(
+        1
+      )}`;
+    }
+  }
 
-    const createdAt = new Date(date);
+  const createdAt = new Date(date);
 
-    db.exec(insert.platform, [
-      user.platformName,
-      url,
-      dbAvatarURL,
-      null,
-      null,
-      null,
-      user.username,
-      fullName,
-      createdAt,
-      null,
-      message,
-      emojiHTML
-    ]);
+  db.exec(insert.platform, [
+    user.platformName,
+    url,
+    avatarUrl,
+    null,
+    null,
+    null,
+    user.username,
+    fullName,
+    createdAt,
+    null,
+    message,
+    emojiHTML
+  ]);
+};
   }
 };
 
