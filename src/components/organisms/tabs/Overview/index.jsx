@@ -19,7 +19,7 @@ class Overview extends React.Component {
             {this.props.contributions.weeks && (
               <Calendar2D contributions={this.props.contributions} />
             )}
-            <Calendar3D />
+            <Calendar3D contributions={this.props.contributions} />
           </>
         )}
       </MDBTabPane>
