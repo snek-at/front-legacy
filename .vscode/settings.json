@@ -36,11 +36,11 @@
   "cSpell.showStatus": true,
   "cSpell.ignorePaths": ["node_modules"],
   "cSpell.words": [
-    "VARCHAR",
     "browserslist",
     "homescreen",
     "precached",
     "renamer",
     "webfonts"
-  ]
+  ],
+  "editor.tabSize": 2
 }
