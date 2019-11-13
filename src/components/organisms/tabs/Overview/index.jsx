@@ -8,7 +8,7 @@ import { MDBTabPane } from "mdbreact";
 
 //> Components
 // Molecules
-import { Calendar2D } from "../../../molecules";
+import { Calendar2D, Calendar3D } from "../../../molecules";
 
 class Overview extends React.Component {
   render() {
@@ -19,6 +19,7 @@ class Overview extends React.Component {
             {this.props.contributions.weeks && (
               <Calendar2D contributions={this.props.contributions} />
             )}
+            <Calendar3D />
           </>
         )}
       </MDBTabPane>
