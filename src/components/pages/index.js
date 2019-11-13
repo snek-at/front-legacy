@@ -2,8 +2,13 @@
 // Import all components to export them for easy access from parent components
 import SettingsPage from "./Settings";
 import ProfilePage from "./Profile";
+import RegisterPage from "./Register";
 
-export { SettingsPage, ProfilePage };
+export { 
+  SettingsPage,
+  ProfilePage,
+  RegisterPage,
+};
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
