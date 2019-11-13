@@ -19,11 +19,23 @@ import {
 //> Routes
 import Routes from "./Routes";
 
+//> Dummy data
+import data from "./tempDummy.json";
+
 //> Test
 // A test with the user "torvalds"
 import "./App.test";
 
 class App extends React.Component {
+
+  state = {};
+
+  componentDidMount = () => {
+    this.setState({
+      data: data
+    });
+  }
+
   render() {
     return (
       <Router>
@@ -32,7 +44,7 @@ class App extends React.Component {
           <Navbar />
           */}
           <main>
-            <Routes />
+            <Routes data={this.state.data}/>
           </main>
           {/*
           <Footer />
