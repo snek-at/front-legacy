@@ -57,8 +57,8 @@ export const GET_PROFILE = gql`
 // Structure GQL calendar code
 const getCalendarQueryPart = (year, c) => {
   return `
-  c${c}: contributionsCollection(to:"${year}"){
-     contributionCalendar{
+    c${c}: contributionsCollection(to:"${year}"){
+      contributionCalendar{
         totalContributions
         weeks{
           contributionDays{
@@ -71,7 +71,6 @@ const getCalendarQueryPart = (year, c) => {
       commitContributionsByRepository {
         contributions{
           totalCount
-          
         }
         url
         repository {
@@ -221,12 +220,12 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 // Get calendar basic structure
 export const getCalendar = (username, createdAt) => {
   const query = gql`
-                  query
-                  {
-                      user(login: "${username}") {
-                          ${generateCalendarsQuery(username, createdAt)}
-                      }
-                    }
+    query
+    {
+      user(login: "${username}") {
+        ${generateCalendarsQuery(username, createdAt)}
+      }
+    }
   `;
   return query;
 };
