@@ -27,7 +27,6 @@ export async function fill(db, user) {
     objUser.calendar = resCalendar.data.user;
     translator.fillDB(db, objUser);
   };
-  console.log(user["username"]);
   await getPlatform(db, user["username"]);
 }
 

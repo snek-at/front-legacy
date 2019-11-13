@@ -24,7 +24,7 @@ export const init = (apiLink, authorization) => {
   LINK = new HttpLink({
     uri: apiLink,
     headers: {
-      authorization: authorization
+      authorization
     }
   });
   // Apollo client setup

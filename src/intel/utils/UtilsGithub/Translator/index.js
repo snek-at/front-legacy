@@ -4,16 +4,72 @@ let streak = false;
 let streakStart = "";
 let streakTotal = 0;
 
-// Fill the Database from User Object
-export const fillDB = (_db, objUser) => {
-  db = _db;
-  fillPlatform(objUser);
-  fillOrganization(objUser);
-  fillStats(objUser);
-  fillRepos(objUser);
-  fillCalendar(objUser);
+//> Helper functions
+// Get an Array with Contributions from contributionsByRepository Object
+const getContributionsByRepositories = contributionsByRepository => {
+  let contribs = [];
+  contributionsByRepository.forEach(repo => {
+    const repoNameWithOwner = repo.repository.nameWithOwner;
+    const repoUrl = repo.repository.url;
+    repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
+      let contrib = {};
+      const date = edge.node.committedDate.split("T")[0];
+      contrib["date"] = date;
+      contrib["repoNameWithOwner"] = repoNameWithOwner;
+      contrib["repoUrl"] = repoUrl;
+      contrib["additions"] = edge.node.additions;
+      contrib["deletions"] = edge.node.deletions;
+      contrib["changedFiles"] = edge.node.changedFiles;
+      contribs.push(contrib);
+    });
+  });
+  return contribs;
 };
 
+// Get the busiest Day from year Object
+const getBusiestDay = year => {
+  let busiestDay = null;
+  year.forEach(day => {
+    if (busiestDay == null) {
+      busiestDay = day;
+    } else {
+      if (day.contributionCount > busiestDay.contributionCount) {
+        busiestDay = day;
+      }
+    }
+  });
+  return busiestDay;
+};
+
+// Get an Array of Days from User Object
+const getDaysArray = (objUser, keys) => {
+  let days = [];
+  keys.forEach(c => {
+    const year = objUser.calendar[parseInt(c)];
+    for (const [w, week] of year.contributionCalendar.weeks.entries()) {
+      for (const [d, day] of week.contributionDays.entries()) {
+        days.push(day);
+      }
+    }
+  });
+  return days;
+};
+
+// Get an Dictionary of Years from Days Array
+// Key: year, Value: Array of Days
+const getYearsDict = days => {
+  let years = {};
+  days.forEach(day => {
+    const year = new Date(day.date).getFullYear();
+    if (years[parseInt(year)] === null) {
+      years[parseInt(year)] = [];
+    }
+    years[parseInt(year)].push(day);
+  });
+  return years;
+};
+
+//> Fill functions
 // Fill the platform Table
 const fillPlatform = objUser => {
   let statusMessage;
@@ -63,9 +119,9 @@ const fillOrgMembers = (nodes, orgId) => {
       memberUsername,
       memberWebUrl
     ]);
-    const member_id = db.exec("SELECT id FROM member").pop()["id"];
+    const memberId = db.exec("SELECT id FROM member").pop()["id"];
 
-    db.exec(insert.organizationHasMember, [orgId, member_id]);
+    db.exec(insert.organizationHasMember, [orgId, memberId]);
   });
 };
 
@@ -77,11 +133,11 @@ const fillOrganization = objUser => {
     const url = _org.node.url;
     db.exec(insert.organization, [avatarUrl, name, url]);
 
-    const organization_id = db.exec("SELECT id FROM organization").pop()["id"];
-    const platform_id = db.exec("SELECT id FROM platform").pop()["id"];
+    const organizationId = db.exec("SELECT id FROM organization").pop()["id"];
+    const platformId = db.exec("SELECT id FROM platform").pop()["id"];
 
-    db.exec(insert.platformHasOrganization, [platform_id, organization_id]);
-    fillOrgMembers(_org.node.membersWithRole.nodes, organization_id);
+    db.exec(insert.platformHasOrganization, [platformId, organizationId]);
+    fillOrgMembers(_org.node.membersWithRole.nodes, organizationId);
   });
 };
 
@@ -91,7 +147,7 @@ const fillStreak = year => {
     const dayTotal = day.contributionCount;
     const dayDate = day.date;
 
-    if (dayTotal != 0) {
+    if (dayTotal !== 0) {
       if (!streak) {
         streak = true;
         streakStart = dayDate;
@@ -99,7 +155,7 @@ const fillStreak = year => {
       } else {
         streakTotal += dayTotal;
       }
-    } else if (streakTotal != 0) {
+    } else if (streakTotal !== 0) {
       const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
       db.exec(insert.streak, [
         streakStart,
@@ -128,7 +184,7 @@ const fillStatistic = (year, busiestDayDate) => {
 // Fill busiestDay Table
 const fillBusiestDay = years => {
   Object.keys(years).forEach(y => {
-    const year = years[y];
+    const year = years[parseInt(y)];
     const busiestDay = getBusiestDay(year);
     const busiestDayDate = busiestDay.date;
     const busiestDayCount = busiestDay.contributionCount;
@@ -209,7 +265,8 @@ const fillRepos = objUser => {
     return str.match(/c[0-9]+/);
   });
   keys.forEach(c => {
-    const reposi = objUser.calendar[c].commitContributionsByRepository;
+    const reposi =
+      objUser.calendar[parseInt(c)].commitContributionsByRepository;
     fillPie(reposi);
   });
 };
@@ -236,7 +293,7 @@ const fillCalendar = objUser => {
     return str.match(/c[0-9]+/);
   });
   keys.forEach(c => {
-    const year = objUser.calendar[c];
+    const year = objUser.calendar[parseInt(c)];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
         const date = day.date;
@@ -272,69 +329,14 @@ const fillCalendar = objUser => {
   });
 };
 
-//> Helper functions
-// Get an Array with Contributions from contributionsByRepository Object
-const getContributionsByRepositories = contributionsByRepository => {
-  let contribs = [];
-  contributionsByRepository.forEach(repo => {
-    const repoNameWithOwner = repo.repository.nameWithOwner;
-    const repoUrl = repo.repository.url;
-    repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
-      let contrib = {};
-      const date = edge.node.committedDate.split("T")[0];
-      contrib["date"] = date;
-      contrib["repoNameWithOwner"] = repoNameWithOwner;
-      contrib["repoUrl"] = repoUrl;
-      contrib["additions"] = edge.node.additions;
-      contrib["deletions"] = edge.node.deletions;
-      contrib["changedFiles"] = edge.node.changedFiles;
-      contribs.push(contrib);
-    });
-  });
-  return contribs;
-};
-
-// Get the busiest Day from year Object
-const getBusiestDay = year => {
-  let busiestDay = null;
-  year.forEach(day => {
-    if (busiestDay == null) {
-      busiestDay = day;
-    } else {
-      if (day.contributionCount > busiestDay.contributionCount) {
-        busiestDay = day;
-      }
-    }
-  });
-  return busiestDay;
-};
-
-// Get an Array of Days from User Object
-const getDaysArray = (objUser, keys) => {
-  let days = [];
-  keys.forEach(c => {
-    const year = objUser.calendar[c];
-    for (const [w, week] of year.contributionCalendar.weeks.entries()) {
-      for (const [d, day] of week.contributionDays.entries()) {
-        days.push(day);
-      }
-    }
-  });
-  return days;
-};
-
-// Get an Dictionary of Years from Days Array
-// Key: year, Value: Array of Days
-const getYearsDict = days => {
-  let years = {};
-  days.forEach(day => {
-    const year = new Date(day.date).getFullYear();
-    if (years[year] == undefined) {
-      years[year] = [];
-    }
-    years[year].push(day);
-  });
-  return years;
+// Fill the Database from User Object
+export const fillDB = (_db, objUser) => {
+  db = _db;
+  fillPlatform(objUser);
+  fillOrganization(objUser);
+  fillStats(objUser);
+  fillRepos(objUser);
+  fillCalendar(objUser);
 };
 
 /**
