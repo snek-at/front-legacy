@@ -16,12 +16,16 @@ class Routes extends React.Component {
     return (
       <Switch>
         <Route exact path="/settings" component={SettingsPage} />
-        <Route 
+        <Route
         exact
         path="/u/:username"
-        component={(props) => <ProfilePage globalStore={this.props} {...props} />}
+        component={(props) => (
+          <ProfilePage 
+          globalStore={this.props} {...props}
+          />
+        )}
         />
-        <Route 
+        <Route
         exact
         path="/join"
         component={(props) => <RegisterPage globalStore={this.props} {...props} />}
