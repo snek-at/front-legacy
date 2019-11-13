@@ -23,7 +23,7 @@ class Routes extends React.Component {
         />
         <Route 
         exact
-        path="/signup"
+        path="/join"
         component={(props) => <RegisterPage globalStore={this.props} {...props} />}
         />
         <Route
