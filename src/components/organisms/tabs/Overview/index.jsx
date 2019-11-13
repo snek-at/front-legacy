@@ -14,7 +14,13 @@ class Overview extends React.Component {
   render() {
     return (
       <MDBTabPane tabId={this.props.id} role="tabpanel">
-        <Calendar2D contributions={this.props.contributions} />
+        {this.props.contributions && (
+          <>
+            {this.props.contributions.weeks && (
+              <Calendar2D contributions={this.props.contributions} />
+            )}
+          </>
+        )}
       </MDBTabPane>
     );
   }
