@@ -25,9 +25,18 @@ import "./App.test";
 
 class App extends React.Component {
 
-  state = {};
+  // Init state
+  state = {
+    contrib: null,
+    contribCalendar: null,
+    contribTypes: null,
+    user: null,
+    languages: null,
+    repos: null
+  };
 
   componentDidMount = () => {
+    // Fill with data
     this.setState({
       contrib: null,
       contribCalendar: null,
@@ -39,7 +48,10 @@ class App extends React.Component {
   }
 
   render() {
+    // Debugging
     console.log(this.state);
+    
+    // Check if every state is set
     if(
       this.state.contrib && 
       this.state.contribCalendar &&
