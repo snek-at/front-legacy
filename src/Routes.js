@@ -8,13 +8,18 @@ import { Route, Switch } from "react-router-dom";
 import { 
   SettingsPage,
   ProfilePage,
-  RegisterPage,
+  LandingPage,
 } from "./components/pages";
 
 class Routes extends React.Component {
   render() {
     return (
       <Switch>
+        <Route
+        exact
+        path="/"
+        component={(props) => <LandingPage globalStore={this.props} {...props} />}
+        />
         <Route exact path="/settings" component={SettingsPage} />
         <Route
         exact
@@ -24,11 +29,6 @@ class Routes extends React.Component {
           globalStore={this.props} {...props}
           />
         )}
-        />
-        <Route
-        exact
-        path="/join"
-        component={(props) => <RegisterPage globalStore={this.props} {...props} />}
         />
         <Route
           render={function() {
