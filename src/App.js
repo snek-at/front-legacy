@@ -9,12 +9,9 @@ import { BrowserRouter as Router } from "react-router-dom";
  * Footer: Global Footer
  * Navbar: Global navigation bar
  */
-/*
 import {
-  Footer,
   Navbar,
 } from './components/molecules';
-*/
 
 //> Routes
 import Routes from "./Routes";
@@ -53,21 +50,19 @@ class App extends React.Component {
     
     // Check if every state is set
     if(
-      this.state.contrib && 
-      this.state.contribCalendar &&
-      this.state.contribTypes &&
-      this.state.user &&
-      this.state.languages &&
-      this.state.repos
+      !this.state.contrib && 
+      !this.state.contribCalendar &&
+      !this.state.contribTypes &&
+      !this.state.user &&
+      !this.state.languages &&
+      !this.state.repos
     ){
       return (
         <Router>
           <div className="flyout">
-            {/*
             <Navbar />
-            */}
             <main>
-              <Routes 
+              <Routes
               data={this.state}
               />
             </main>
