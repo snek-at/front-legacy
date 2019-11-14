@@ -2,12 +2,12 @@
 // Import all components to export them for easy access from parent components
 import SettingsPage from "./Settings";
 import ProfilePage from "./Profile";
-import RegisterPage from "./Register";
+import LandingPage from "./Landing";
 
 export { 
   SettingsPage,
   ProfilePage,
-  RegisterPage,
+  LandingPage,
 };
 
 /**
