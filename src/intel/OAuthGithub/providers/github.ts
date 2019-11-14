@@ -63,8 +63,13 @@ export const githubProvider: IProvider<boolean> = {
     })
       .then(async res => await res.json())
       .then(res => {
-        window.localStorage.setItem("access_token", res.access_token);
-        window.localStorage.setItem("token_type", res.token_type);
+        const access_token = res.access_token
+            fetch(`https://api.github.com/user?access_token=${access_token}`)
+            .then(async res => await res.json())
+            .then(res => {
+                window.localStorage.setItem('access_token',access_token);
+                window.localStorage.setItem('user', res.login);
+            });
       });
     return true;
   }
