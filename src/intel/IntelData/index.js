@@ -9,6 +9,11 @@ export const exec = value => {
 };
 
 export async function fill(user) {
-  //gitlab.fill(db, user);
-  await github.fill(db, user);
+  await gitlab.fill(db, user);
+  //github.fill(db, user);
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
