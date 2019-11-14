@@ -6,3 +6,8 @@ export function guid() {
       return (c === "x" ? r : (r & 0x3 | 0x8)).toString(16);
   });
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
