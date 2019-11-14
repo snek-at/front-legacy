@@ -7,7 +7,7 @@
 <h3 align="center">Official contributing guidelines</h3>
 
 <p align="center">
-  A code of conduct is a set of rules outlining the norms, rules, and responsibilities of, 
+  A code of conduct is a set of rules outlining the norms, rules, and responsibilities of,
   and or proper practices for, an individual.
 </p>
 
