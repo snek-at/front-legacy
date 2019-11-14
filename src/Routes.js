@@ -5,7 +5,11 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { SettingsPage, ProfilePage } from "./components/pages";
+import { 
+  SettingsPage,
+  ProfilePage, 
+  RedirectPage
+} from "./components/pages";
 
 class Routes extends React.Component {
   render() {
@@ -13,6 +17,7 @@ class Routes extends React.Component {
       <Switch>
         <Route exact path="/settings" component={SettingsPage} />
         <Route exact path="/u/:username" component={ProfilePage} />
+        <Route exact path="/oauth" component={RedirectPage} />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
