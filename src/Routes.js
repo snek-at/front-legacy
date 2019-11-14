@@ -5,11 +5,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { 
-  SettingsPage,
-  ProfilePage, 
-  RedirectPage
-} from "./components/pages";
+import { SettingsPage, ProfilePage, RedirectPage } from "./components/pages";
 
 class Routes extends React.Component {
   render() {
