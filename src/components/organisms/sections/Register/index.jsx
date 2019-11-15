@@ -56,9 +56,9 @@ const CREATE_USER_MUTATION = gql`
 const data = {
   sources: [
     {
-      id: (Math.random() * "Aichnerc".length + "gitlab".length),
+      id: (Math.random() * "Aichnercc".length + "gitlab".length),
       source: "gitlab",
-      username: "Aichnerc"
+      username: "Aichnercc"
     },
     {
       id: (Math.random() * "Kleberwald".length + "github".length),
@@ -338,7 +338,7 @@ class Register extends React.Component{
           />
           <MDBBtn
           color="success"
-          className="w-100 py-3 font-weight-bold"
+          className="w-100 py-3 font-weight-bold mx-0"
           onClick={this.handleSubmit}
           >
           Sign up for SNEK

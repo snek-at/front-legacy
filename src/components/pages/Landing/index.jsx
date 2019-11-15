@@ -8,17 +8,23 @@ import {
   MDBContainer,
   MDBRow,
   MDBCol,
+  MDBBtn,
 } from "mdbreact";
 
 //> Components
 import {
   Register,
+  Login,
 } from "../../organisms/sections";
 
 //> CSS
 import "./landing.scss";
 
 class Landing extends React.Component {
+
+  state = {
+    login: false,
+  }
 
   render() {
     
@@ -31,11 +37,23 @@ class Landing extends React.Component {
             <MDBRow className="flex-center">
               <MDBCol md="6">
                 <h1>Built for engineers</h1>
+                <MDBBtn
+                color="white"
+                onClick={() => this.setState({login: !this.state.login})}
+                >
+                {this.state.login ? "Join us now" : "Sign in"}
+                </MDBBtn>
               </MDBCol>
               <MDBCol md="6">
+              {this.state.login ? (
+                <Login 
+                token={globalStore.data.token}
+                />
+              ) : (
                 <Register 
                 token={globalStore.data.token}
                 />
+              )}
               </MDBCol>
             </MDBRow>
           </MDBContainer>
