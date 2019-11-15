@@ -84,7 +84,7 @@ export const calendar = `
 SELECT
   calendar.id as cId,
   calendar.date as cDate,
-  YEAR(calendar.date) as cYear,
+  YEAR(contrib.datetime) as cYear,
   calendar.week as cWeek,
   calendar.weekday as cWeekday,
   calendar.color as cColor,
