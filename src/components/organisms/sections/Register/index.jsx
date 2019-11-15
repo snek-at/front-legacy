@@ -73,29 +73,29 @@ class Register extends React.Component{
   connectGitHub = async () => {
     // Debugging
     //console.log("GitHub oAuth function called.");
-    await RSA.acquireTokenAsync(githubProvider)
-    .then(
-      this.setState({
-        oAuthGitHubButton: true
-      })
-    );
     
     // Disable button while oAuth in progress
     this.setState({
       oAuthGitHubButton: false
     });
 
-    // Do oAuth magic, then enable GitHub button button again
-  
-    //> In the .then() function
-    // Replace with the data you get from oAuth
-    let data = {
-      username: window.localStorage.getItem('user')
-    };
-    // Set the data and after the state is set, push it to the list to display
-    this.setState({
-      oAuthGitHubData: data
-    }, () => this.pushToSourceList("github", data.username));
+    await RSA.acquireTokenAsync(githubProvider)
+    .then((data) => {
+      console.log(data);
+      if(data){
+        if(data.username){
+          console.log(data);
+          // Set the data and after the state is set, push it to the list to display
+          this.setState({
+            oAuthGitHubData: data,
+            oAuthGitHubButton: true
+          }, () => this.pushToSourceList("github", data.username));
+        }
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   pushToSourceList = (source, username) => {
@@ -123,6 +123,7 @@ class Register extends React.Component{
   }
 
   render(){
+    console.log(this.state);
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
