@@ -21,21 +21,30 @@ import "./landing.scss";
 class Landing extends React.Component {
 
   render() {
-    return (
-      <div id="landing" className="py-5">
-        <MDBContainer>
-          <MDBRow className="flex-center">
-            <MDBCol md="6">
-              <h1>Built for engineers</h1>
-            </MDBCol>
-            <MDBCol md="6">
-              <Register />
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-          
-      </div>
-    );
+    
+    const { globalStore } = this.props;
+
+    if(globalStore.data.loaded){
+      return (
+        <div id="landing" className="py-5">
+          <MDBContainer>
+            <MDBRow className="flex-center">
+              <MDBCol md="6">
+                <h1>Built for engineers</h1>
+              </MDBCol>
+              <MDBCol md="6">
+                <Register 
+                token={globalStore.data.token}
+                />
+              </MDBCol>
+            </MDBRow>
+          </MDBContainer>
+        </div>
+      );
+    } else {
+      return <p>Loading...</p>;
+    }
+    
   }
 }
 
