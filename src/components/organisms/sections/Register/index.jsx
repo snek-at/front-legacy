@@ -41,6 +41,7 @@ class Register extends React.Component{
   }
 
   componentDidMount = () => {
+    // Preset some connected accounts for testing purposes
     this.setState({
       sourceList: data.sources
     });
