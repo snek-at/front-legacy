@@ -4,11 +4,16 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import { MDBTabPane } from "mdbreact";
+import { 
+  MDBTabPane
+} from "mdbreact";
 
 //> Components
 // Molecules
-import { Calendar2D, Calendar3D } from "../../../molecules";
+import { 
+  Calendar2D,
+  Calendar3D
+} from "../../../molecules";
 
 class Overview extends React.Component {
   render() {

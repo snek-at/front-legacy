@@ -5,14 +5,32 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { SettingsPage, ProfilePage, RedirectPage } from "./components/pages";
+import {
+  SettingsPage,
+  ProfilePage,
+  RedirectPage,
+  LandingPage
+} from "./components/pages";
 
 class Routes extends React.Component {
   render() {
     return (
       <Switch>
+        <Route
+          exact
+          path="/"
+          component={props => (
+            <LandingPage globalStore={this.props} {...props} />
+          )}
+        />
         <Route exact path="/settings" component={SettingsPage} />
-        <Route exact path="/u/:username" component={ProfilePage} />
+        <Route
+          exact
+          path="/u/:username"
+          component={props => (
+            <ProfilePage globalStore={this.props} {...props} />
+          )}
+        />
         <Route exact path="/oauth" component={RedirectPage} />
         <Route
           render={function() {
