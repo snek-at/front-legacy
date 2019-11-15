@@ -45,7 +45,7 @@ const getBusiestDay = year => {
 const getDaysArray = (objUser, keys) => {
   let days = [];
   keys.forEach(c => {
-    const year = objUser.calendar[parseInt(c)];
+    const year = objUser.calendar[c.toString()];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
         days.push(day);
@@ -61,7 +61,7 @@ const getYearsDict = days => {
   let years = {};
   days.forEach(day => {
     const year = new Date(day.date).getFullYear();
-    if (years[parseInt(year)] === null) {
+    if (years[parseInt(year)] === undefined) {
       years[parseInt(year)] = [];
     }
     years[parseInt(year)].push(day);
@@ -266,7 +266,7 @@ const fillRepos = objUser => {
   });
   keys.forEach(c => {
     const reposi =
-      objUser.calendar[parseInt(c)].commitContributionsByRepository;
+      objUser.calendar[c.toString()].commitContributionsByRepository;
     fillPie(reposi);
   });
 };
@@ -293,7 +293,7 @@ const fillCalendar = objUser => {
     return str.match(/c[0-9]+/);
   });
   keys.forEach(c => {
-    const year = objUser.calendar[parseInt(c)];
+    const year = objUser.calendar[c.toString()];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
         const date = day.date;

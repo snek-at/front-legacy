@@ -5,10 +5,11 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { 
+import {
   SettingsPage,
   ProfilePage,
-  LandingPage,
+  RedirectPage,
+  LandingPage
 } from "./components/pages";
 
 class Routes extends React.Component {
@@ -16,20 +17,21 @@ class Routes extends React.Component {
     return (
       <Switch>
         <Route
-        exact
-        path="/"
-        component={(props) => <LandingPage globalStore={this.props} {...props} />}
+          exact
+          path="/"
+          component={props => (
+            <LandingPage globalStore={this.props} {...props} />
+          )}
         />
         <Route exact path="/settings" component={SettingsPage} />
         <Route
-        exact
-        path="/u/:username"
-        component={(props) => (
-          <ProfilePage 
-          globalStore={this.props} {...props}
-          />
-        )}
+          exact
+          path="/u/:username"
+          component={props => (
+            <ProfilePage globalStore={this.props} {...props} />
+          )}
         />
+        <Route exact path="/oauth" component={RedirectPage} />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
