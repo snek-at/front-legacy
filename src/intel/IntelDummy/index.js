@@ -33,8 +33,8 @@ const createDummy = (table, entries, c) => {
   }
 };
 
-export const exec = value => {
-  return db.exec(value);
+export const exec = (statement, values) => {
+  return db.exec(statement, values);
 };
 
 export function fill(user) {

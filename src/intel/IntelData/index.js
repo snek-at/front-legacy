@@ -4,13 +4,19 @@ import * as github from "../utils/UtilsGithub";
 
 let db = new Database("data");
 
-export const exec = value => {
-  return db.exec(value);
+export const exec = (statement, values) => {
+  return db.exec(statement, values);
 };
 
 export async function fill(user) {
-  await gitlab.fill(db, user);
-  //github.fill(db, user);
+
+  if(user.platformName === "github"){
+    await github.fill(db, user);
+  }
+  else if (user.platformName === "gitlab"){
+    console.log("LAB")
+    await gitlab.fill(db, user);
+  }
 }
 
 /**
