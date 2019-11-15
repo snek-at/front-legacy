@@ -11,7 +11,7 @@ import { BrowserRouter as Router } from "react-router-dom";
  */
 import {
   Navbar,
-} from './components/molecules';
+} from "./components/molecules";
 
 //> Routes
 import Routes from "./Routes";
