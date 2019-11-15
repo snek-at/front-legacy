@@ -22,6 +22,10 @@ import {
 //> CSS
 import "./register.scss";
 
+// OAuth
+import { githubProvider } from '../../../../intel/OAuthGithub/providers/github'
+import RSA from 'react-very-simple-oauth'
+
 //> Dummy data
 const data = {
   sources: [
@@ -66,21 +70,27 @@ class Register extends React.Component{
     });
   }
 
-  connectGitHub = () => {
+  connectGitHub = async () => {
     // Debugging
     //console.log("GitHub oAuth function called.");
-
+    await RSA.acquireTokenAsync(githubProvider)
+    .then(
+      this.setState({
+        oAuthGitHubButton: true
+      })
+    );
+    
     // Disable button while oAuth in progress
     this.setState({
       oAuthGitHubButton: false
     });
 
     // Do oAuth magic, then enable GitHub button button again
-
+  
     //> In the .then() function
     // Replace with the data you get from oAuth
     let data = {
-      username: "Aichnerc"
+      username: window.localStorage.getItem('user')
     };
     // Set the data and after the state is set, push it to the list to display
     this.setState({
