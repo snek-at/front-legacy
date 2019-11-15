@@ -67,8 +67,8 @@ export const githubProvider: IProvider<boolean> = {
       fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
       .then(res => {
-        window.localStorage.setItem('access_token',access_token)
-        window.localStorage.setItem('user', res.login)
+        window.localStorage.setItem('access_token',access_token);
+        window.localStorage.setItem('user', res.login);
       });
     });
     return true;
