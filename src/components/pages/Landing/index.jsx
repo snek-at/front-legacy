@@ -26,6 +26,10 @@ class Landing extends React.Component {
     login: false,
   }
 
+  logMeIn = (token) => {
+    localStorage.setItem('fprint', token);
+  }
+
   render() {
     
     const { globalStore } = this.props;
@@ -48,6 +52,7 @@ class Landing extends React.Component {
               {this.state.login ? (
                 <Login 
                 token={globalStore.data.token}
+                loginHandler={this.logMeIn}
                 />
               ) : (
                 <Register 

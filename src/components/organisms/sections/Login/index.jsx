@@ -59,6 +59,11 @@ class Login extends React.Component{
     })
     .then(({data}) => {
         console.log(data);
+        if(data.tokenAuth){
+          if(data.tokenAuth.token){
+            this.props.loginHandler(data.tokenAuth.token);
+          }
+        }
     })
     .catch(error => {
         console.warn("Mutation error:",error.message);
