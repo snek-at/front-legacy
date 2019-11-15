@@ -1,4 +1,5 @@
 import * as select from "../Statements/Select"
+import { objectTypeSpreadProperty } from "@babel/types";
 
 // Formats a date to YYYY-MM-DD format
 const formatDate = (date) => {return date.toISOString().split('T')[0] };
@@ -137,7 +138,7 @@ export function getCalendar(data) {
     emptyContributionYear.weeks = {}
     emptyContributionYear.total = 0
     date = new Date(indexY, 0, 1);
-    for (let indexW = 0; indexW < 54; indexW++) {
+    for (let indexW = 0; indexW < 53; indexW++) {
       let week = {}
       week.contributionDays = {}
 
@@ -156,9 +157,11 @@ export function getCalendar(data) {
   }
 
   calendar.forEach(day => {
-    calendarGrid[day.cYear].total++;
-    calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].total++;
-    calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].color = day.cColor;
+    if(day.cYear){
+      calendarGrid[day.cYear].total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].color = day.cColor;
+    }
   })
   
   return calculateColorsForCalendarDay(calendarGrid)
