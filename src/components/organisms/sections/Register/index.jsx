@@ -125,23 +125,12 @@ class Register extends React.Component{
       oAuthGitHubButton: false
     });
 
-    await RSA.acquireTokenAsync(githubProvider)
-    .then((data) => {
-      console.log(data);
-      if(data){
-        if(data.username){
-          console.log(data);
-          // Set the data and after the state is set, push it to the list to display
-          this.setState({
-            oAuthGitHubData: data,
-            oAuthGitHubButton: true
-          }, () => this.pushToSourceList("github", data.username));
-        }
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    const data = await RSA.acquireTokenAsync(githubProvider);
+    console.log(data);
+    this.setState({
+      oAuthGitHubData: data,
+      oAuthGitHubButton: true
+    }, () => this.pushToSourceList("github", data.username));
   }
 
   pushToSourceList = (source, username) => {

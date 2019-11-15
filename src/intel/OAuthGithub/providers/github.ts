@@ -4,8 +4,7 @@ import { IProvider } from "react-very-simple-oauth";
 const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
 const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 const state = guid();
-const redirect_uri = encodeURIComponent(`http://localhost:3000/oauth`);
-//const redirect_uri = encodeURIComponent(`https://snek.at/oauth`);
+const redirect_uri = encodeURIComponent(`https://snek.at/oauth`);
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const githubProvider: IProvider<boolean> = {
@@ -64,16 +63,18 @@ export const githubProvider: IProvider<boolean> = {
       method: "POST"
     })
     .then(async res => await res.json())
-    .then(res => {
+    .then(async res => {
       const access_token = res.access_token
-      fetch(`https://api.github.com/user?access_token=${access_token}`)
+      await fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
       .then(res => {
         window.localStorage.setItem('access_token',access_token);
         window.localStorage.setItem('user', res.login);
-        data = res.login
+        data = {'username':res.login, 'access_token': access_token};
+        return data;
       });
     });
+    return data;
   }
 };
 
