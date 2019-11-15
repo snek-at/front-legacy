@@ -117,21 +117,9 @@ const getCalendarQueryPart = (year, c) => {
           totalCount
         }
         repository {
-          defaultBranchRef{
-            target{
-              ... on Commit {
-                history {
-                  edges {
-                    node {
-                      changedFiles
-                      additions
-                      deletions
-                      committedDate
-                      commitUrl
-                    }
-                  }
-                }
-              }
+          issues(first:100) {
+            nodes{
+              createdAt
             }
           }
           name
@@ -160,21 +148,9 @@ const getCalendarQueryPart = (year, c) => {
           totalCount
         }
         repository {
-          defaultBranchRef{
-            target{
-              ... on Commit {
-                history {
-                  edges {
-                    node {
-                      changedFiles
-                      additions
-                      deletions
-                      committedDate
-                      commitUrl
-                    }
-                  }
-                }
-              }
+          pullRequests(first:100) {
+            nodes{
+              createdAt
             }
           }
           name
