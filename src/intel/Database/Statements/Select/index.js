@@ -15,10 +15,10 @@ SELECT
   organization.url as oUrl
 FROM
   organization
-JOIN
+LEFT OUTER JOIN
   organization_has_member
     ON organization.id = organization_has_member.organization_id
-JOIN
+LEFT OUTER JOIN
   member
     ON member.id = organization_has_member.member_id
 `
