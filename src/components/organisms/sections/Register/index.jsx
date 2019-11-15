@@ -36,12 +36,23 @@ class Register extends React.Component{
   state = {
     email: "",
     password: "",
+    password1: "",
+    oAuthGitHubButton: true
   }
 
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
+  }
+
+  connectGitHub = () => {
+    // Disable button while oAuth in progress
+    this.setState({
+      oAuthGitHubButton: false
+    });
+
+    // Do oAuth magic, then enable GitHub button button again
   }
 
   render(){
@@ -59,17 +70,25 @@ class Register extends React.Component{
           size="lg"
           />
           <div>
+            <div>
             <p className="lead">Connect your work</p>
-            <MDBBtn floating color="black" className="mr-3">
-              <MDBIcon icon="plus" />
-            </MDBBtn>
-            <MDBBtn floating color="orange" className="mx-1">
+              <small>
+              You can connect multiple accounts - even from the same platform.
+              </small>
+            </div>
+            <MDBBtn floating color="orange" className="mx-1" disabled>
               <MDBIcon fab icon="gitlab" />
             </MDBBtn>
-            <MDBBtn floating social="git" className="mx-1">
+            <MDBBtn 
+            floating
+            social="git"
+            className="mx-1"
+            onClick={this.connectGitHub}
+            disabled={!this.state.oAuthGitHubButton}
+            >
               <MDBIcon fab icon="github" />
             </MDBBtn>
-            <MDBBtn floating social="blue" className="mx-1">
+            <MDBBtn floating social="blue" className="mx-1" disabled>
               <MDBIcon fab icon="bitbucket" />
             </MDBBtn>
           </div>
