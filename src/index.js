@@ -19,14 +19,37 @@ import "mdbreact/dist/css/mdb.css";
 // Root SCSS file
 import "./index.scss";
 
+//> Apollo
+import { ApolloClient } from "apollo-client";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloProvider } from "react-apollo";
+
 //> Components
 // Root component
 import App from "./App";
 
 import registerServiceWorker from "./registerServiceWorker";
 
+// API Link
+const httpLink = createHttpLink({
+  uri: "https://api.snek.at"
+});
+
+// Apollo Client
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache()
+});
+
 // Render the root component to <div id="root"></div>
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById("root")
+);
 
 registerServiceWorker();
 
