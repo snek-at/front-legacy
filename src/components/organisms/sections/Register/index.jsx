@@ -16,6 +16,10 @@ import {
   MDBInput,
   MDBBtn,
   MDBBadge,
+  MDBTooltip,
+  MDBPopover,
+  MDBPopoverHeader,
+  MDBPopoverBody,
   MDBIcon,
 } from "mdbreact";
 
@@ -52,16 +56,36 @@ class Register extends React.Component{
     email: "",
     password: "",
     password1: "",
+    username: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
     sourceList: [],
+    customUsername: false,
+    usernames: [],
   }
 
   componentDidMount = () => {
     // Preset some connected accounts for testing purposes
-    this.setState({
-      sourceList: data.sources
+    let usernames = this.state.usernames;
+    let sourceList = this.state.sourceList;
+
+    data.sources.map((source, i) => {
+      sourceList.push(source);
+
+      this.setState({
+        sourceList,
+      }, () => this.addToUsernames(source.username));
     });
+  }
+
+  addToUsernames = (username) => {
+    let usernames = this.state.usernames;
+    if(!usernames.includes(username)){
+      usernames.push(username);
+      this.setState({
+        usernames
+      });
+    }
   }
 
   changeHandler = (e) => {
@@ -100,7 +124,9 @@ class Register extends React.Component{
 
   pushToSourceList = (source, username) => {
     //console.log(source,username);
-    let sourceList = this.state.sourceList; 
+    let sourceList = this.state.sourceList;
+
+    this.addToUsernames(username);
 
     sourceList.push({
       id: Math.random() * username.length + source.length,
@@ -109,7 +135,8 @@ class Register extends React.Component{
     });
     // Set the new list
     this.setState({
-      sourceList
+      sourceList,
+      username: this.state.username ? this.state.username : sourceList[0].username
     });
   }
 
@@ -119,6 +146,12 @@ class Register extends React.Component{
     });
     this.setState({
       sourceList
+    });
+  }
+
+  handleUserNamePick = (username) => {
+    this.setState({
+      username
     });
   }
 
@@ -133,7 +166,7 @@ class Register extends React.Component{
           type="email"
           name="email"
           outline
-          value={this.state.username}
+          value={this.state.email}
           onChange={this.changeHandler}
           size="lg"
           />
@@ -144,21 +177,42 @@ class Register extends React.Component{
               You can connect multiple accounts - even from the same platform.
               </small>
             </div>
-            <MDBBtn floating color="orange" className="mx-1" disabled>
-              <MDBIcon fab icon="gitlab" />
-            </MDBBtn>
-            <MDBBtn 
-            floating
-            social="git"
-            className="mx-1"
-            onClick={this.connectGitHub}
-            disabled={!this.state.oAuthGitHubButton}
+            <MDBTooltip
+              placement="bottom"
             >
-              <MDBIcon fab icon="github" />
-            </MDBBtn>
-            <MDBBtn floating social="blue" className="mx-1" disabled>
-              <MDBIcon fab icon="bitbucket" />
-            </MDBBtn>
+              <MDBBtn floating color="orange" className="mx-1" disabled>
+                <MDBIcon fab icon="gitlab" />
+              </MDBBtn>
+              <div>
+                  Link GitLab account
+              </div>
+            </MDBTooltip>
+            <MDBTooltip
+              placement="bottom"
+            >
+              <MDBBtn 
+              floating
+              social="git"
+              className="mx-1"
+              onClick={this.connectGitHub}
+              disabled={!this.state.oAuthGitHubButton}
+              >
+                <MDBIcon fab icon="github" />
+              </MDBBtn>
+                <div>
+                  Link GitHub account
+              </div>
+            </MDBTooltip>
+            <MDBTooltip
+              placement="bottom"
+            >
+              <MDBBtn floating social="blue" className="mx-1" disabled>
+                <MDBIcon fab icon="bitbucket" />
+              </MDBBtn>
+              <div>
+                Link Bitbucket account
+              </div>
+            </MDBTooltip>
           </div>
           <div>
             <MDBListGroup>
@@ -175,6 +229,34 @@ class Register extends React.Component{
                   className="company-icon"
                   />
                   {source.username}
+                  <MDBPopover
+                    placement="right"
+                    domElement
+                    clickable
+                    popover
+                    tag="span"
+                    id="popper1"
+                  >
+                    <span>
+                    <MDBIcon
+                    icon="check"
+                    className="text-success ml-2 cursor-pointer"
+                    />
+                    </span>
+                    <div>
+                      <MDBPopoverHeader>Verified</MDBPopoverHeader>
+                      <MDBPopoverBody>
+                        <MDBRow className="justify-content-center align-items-center m-0">
+                          <MDBCol size="auto" className="p-0 text-success">
+                            <MDBIcon icon="award" size="3x" />
+                          </MDBCol>
+                          <MDBCol className="p-0 pl-3">
+                            This source has been <strong className="text-success">verified</strong> by logging into it.
+                          </MDBCol>
+                        </MDBRow>
+                      </MDBPopoverBody>
+                    </div>
+                  </MDBPopover>
                   </div>
                   <MDBIcon 
                   icon="times"
@@ -186,6 +268,23 @@ class Register extends React.Component{
             })}
             </MDBListGroup>
           </div>
+          {this.state.sourceList.length > 0 &&
+          <div className="pt-4">
+            <p className="lead">Choose your username</p>
+            {this.state.usernames.map((username, i) => {
+              return(
+                <MDBInput 
+                key={i}
+                onClick={(e) => this.handleUserNamePick(username)}
+                checked={this.state.username === username ? true : false}
+                label={username}
+                type="radio"
+                id={"radio"+i}
+                />
+              );
+            })}
+          </div>
+          }
           <MDBInput 
           label="Password"
           type="password"

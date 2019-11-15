@@ -9,6 +9,14 @@
   box-shadow: none;
 }
 
+// Custom mouse
+.cursor-pointer{
+  cursor: pointer;
+}
+.cursor-help{
+  cursor: help;
+}
+
 // Custom colors
 .snek-dark {
   background-color: $snekDark !important;
