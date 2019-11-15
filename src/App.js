@@ -13,6 +13,8 @@ import {
   Navbar,
 } from "./components/molecules";
 
+import * as intel from "./intel";
+
 //> Routes
 import Routes from "./Routes";
 
@@ -67,6 +69,19 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
+    /*intel.fill({
+      username: "pinterid",
+      server: "gitlab.htl-villach.at",
+      platformName: "GitLab"
+    })
+    .then(() => {
+      console.log(intel.templateGetPlatform());
+      console.log(intel.user());
+      console.log(intel.repos());
+      console.log(intel.orgs());
+      console.log(intel.languages());
+      console.log(intel.calendar());
+    });*/
     // Fill with data
     this.setState({
       contrib: null,

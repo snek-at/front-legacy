@@ -184,8 +184,7 @@ class Register extends React.Component{
       sources: JSON.stringify(this.state.sourceList),
       username: this.state.username,
       email: this.state.email,
-      password: sha256(this.state.password),
-      platform_data: "Test"
+      password: sha256(this.state.password)
     };
     console.log(values);
     this.props.register({
