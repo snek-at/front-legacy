@@ -80,6 +80,16 @@ export function getRepositories(data) {
 
     }
 
+      let member = {};
+      member.oid = repoWithExtras.oId;
+      member.name = repoWithExtras.mName
+      member.login = repoWithExtras.mUsername
+      member.avatarUrl = repoWithExtras.mAvatarUrl
+      member.url = repoWithExtras.mUrl
+      member.projectsUrl = null;
+
+      repos[repoWithExtras.rId].memberCount++;
+      repos[repoWithExtras.rId].membersWithRole.push(member)
     let slice = {};
     slice.name = repoWithExtras.sName;
     slice.color = repoWithExtras.sColor;

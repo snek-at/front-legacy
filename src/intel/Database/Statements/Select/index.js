@@ -33,7 +33,11 @@ SELECT
   owner.name as oName,
   owner.username as oUsername,
   owner.url as oUrl,
-
+  member.id as mId,
+  member.avatarUrl as mAvatarUrl,
+  member.name as mName,
+  member.username as mUsername,
+  member.url as mUrl,
   languagePie.id as lId,
   languagePie.size as lSize,
   languagePie.total as lTotal,
