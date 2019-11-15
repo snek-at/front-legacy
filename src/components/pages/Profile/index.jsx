@@ -84,7 +84,7 @@ class Dashboard extends React.Component {
     const { globalStore } = this.props;
 
     // Debugging access point - state
-    console.log(globalStore);
+    //console.log(globalStore);
 
     let data = globalStore.data;
 

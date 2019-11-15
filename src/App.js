@@ -46,7 +46,7 @@ class App extends React.Component {
 
   render() {
     // Debugging
-    console.log(this.state);
+    //console.log(this.state);
     
     // Check if every state is set
     if(

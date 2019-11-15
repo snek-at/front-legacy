@@ -41,7 +41,7 @@ const data = {
       username: "aichnerchristian"
     }
   ]
-}
+};
 
 class Register extends React.Component{
   state = {
@@ -68,7 +68,7 @@ class Register extends React.Component{
 
   connectGitHub = () => {
     // Debugging
-    console.log("GitHub oAuth function called.");
+    //console.log("GitHub oAuth function called.");
 
     // Disable button while oAuth in progress
     this.setState({
@@ -89,7 +89,7 @@ class Register extends React.Component{
   }
 
   pushToSourceList = (source, username) => {
-    console.log(source,username);
+    //console.log(source,username);
     let sourceList = this.state.sourceList; 
 
     sourceList.push({
