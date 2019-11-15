@@ -35,7 +35,8 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
-  extractSession(redirectUrl: string): boolean {
+  async extractSession(redirectUrl: string) {
+    let data = null;
     let code = null;
     const codeMatch = redirectUrl.match(/code=([^&]+)/);
     if (codeMatch) {
@@ -51,7 +52,7 @@ export const githubProvider: IProvider<boolean> = {
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
         &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
-    fetch(AuthorizeUrl, {
+    await fetch(AuthorizeUrl, {
       headers: {
         Accept: "application/json",
         "Access-Allow-Credentials": "True",
@@ -70,9 +71,9 @@ export const githubProvider: IProvider<boolean> = {
       .then(res => {
         window.localStorage.setItem('access_token',access_token);
         window.localStorage.setItem('user', res.login);
+        data = res.login
       });
     });
-    return true;
   }
 };
 
