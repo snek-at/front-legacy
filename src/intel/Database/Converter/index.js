@@ -42,16 +42,18 @@ export function getOrganizations(data) {
       orgs[orgWithMember.oId] = org;
     }
 
-    let member = {};
-    member.oid = orgWithMember.oId;
-    member.name = orgWithMember.mName
-    member.login = orgWithMember.mUsername
-    member.avatarUrl = orgWithMember.mAvatarUrl
-    member.url = orgWithMember.mUrl
-    member.projectsUrl = null;
+    if(orgWithMember.mId !== undefined){
+      let member = {};
+      member.oid = orgWithMember.oId;
+      member.name = orgWithMember.mName
+      member.login = orgWithMember.mUsername
+      member.avatarUrl = orgWithMember.mAvatarUrl
+      member.url = orgWithMember.mUrl
+      member.projectsUrl = null;
 
-    orgs[orgWithMember.oId].membersWithRole.push(member)
-
+      orgs[orgWithMember.oId].memberCount++;
+      orgs[orgWithMember.oId].membersWithRole.push(member)
+    }
   })
   return orgs
 }
@@ -80,6 +82,7 @@ export function getRepositories(data) {
 
     }
 
+    if(repoWithExtras.mId !== undefined){
       let member = {};
       member.oid = repoWithExtras.oId;
       member.name = repoWithExtras.mName
@@ -90,12 +93,17 @@ export function getRepositories(data) {
 
       repos[repoWithExtras.rId].memberCount++;
       repos[repoWithExtras.rId].membersWithRole.push(member)
-    let slice = {};
-    slice.name = repoWithExtras.sName;
-    slice.color = repoWithExtras.sColor;
-    slice.size = repoWithExtras.sSize;
+    }
 
-    repos[repoWithExtras.rId].languagePie.slices.push(slice)
+    if(repoWithExtras.sId !== undefined){
+      let slice = {};
+      slice.name = repoWithExtras.sName;
+      slice.color = repoWithExtras.sColor;
+      slice.size = repoWithExtras.sSize;
+
+      repos[repoWithExtras.rId].languagePie.slices.push(slice)
+    }
+    
   });
 
 
