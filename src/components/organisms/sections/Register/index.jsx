@@ -2,6 +2,10 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 
+//> Additional modules
+// Password hashing
+import { sha256 } from 'js-sha256';
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -27,8 +31,26 @@ import {
 import "./register.scss";
 
 // OAuth
-import { githubProvider } from '../../../../intel/OAuthGithub/providers/github'
-import RSA from 'react-very-simple-oauth'
+import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
+import RSA from "react-very-simple-oauth";
+
+// Apollo
+import { graphql } from "react-apollo";
+import * as compose from "lodash.flowright";
+import { gql } from "apollo-boost";
+
+// Register mutation
+const CREATE_USER_MUTATION = gql`
+    mutation register($token: String!, $values: GenericScalar!) {
+        registrationFormPage(token: $token, url: "/registration", values: $values) {
+            result
+            errors {
+            name
+            errors
+            }
+        }
+    }
+`;
 
 //> Dummy data
 const data = {
@@ -155,8 +177,31 @@ class Register extends React.Component{
     });
   }
 
+  handleSubmit = () => {
+    let token = this.props.token;
+    
+    let values = {
+      sources: JSON.stringify(this.state.sourceList),
+      username: this.state.username,
+      email: this.state.email,
+      password: sha256(this.state.password),
+      platform_data: "Test"
+    };
+    console.log(values);
+    this.props.register({
+      variables: { "token": token, "values": values }
+    })
+    .then(({data}) => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.warn("Mutation error:",error.message);
+    })
+  }
+
   render(){
     console.log(this.state);
+    console.log(this.props);
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
@@ -297,7 +342,7 @@ class Register extends React.Component{
           <MDBInput 
           label="Repeat password"
           type="password"
-          name="username2"
+          name="password2"
           outline
           value={this.state.password2}
           onChange={this.changeHandler}
@@ -306,6 +351,7 @@ class Register extends React.Component{
           <MDBBtn
           color="success"
           className="w-100 py-3 font-weight-bold"
+          onClick={this.handleSubmit}
           >
           Sign up for SNEK
           </MDBBtn>
@@ -318,7 +364,11 @@ class Register extends React.Component{
   }
 }
 
-export default Register;
+export default compose(
+  graphql(CREATE_USER_MUTATION, {
+      name: 'register'
+  })
+)(Register);
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
