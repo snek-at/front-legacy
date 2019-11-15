@@ -1,0 +1,67 @@
+#register{
+  .btn{
+    text-transform: initial;
+    font-size: 1.2rem;
+  }
+  input{
+    padding-top: .8rem;
+    padding-bottom: .8rem;
+    font-size: 1rem;
+  }
+  ul li{
+    margin-bottom: 0 !important;
+  }
+  .list-group-item{
+    $borderRadius: 6px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all .2s ease;
+    &.list-item-github{
+      border-left: 5px #333 solid;
+    }
+    &.list-item-gitlab{
+      border-left: 5px #f57c00 solid;
+    }
+    &.list-item-bitbucket{
+      border-left: 5px #1976d2 solid;
+    }
+    /*&:hover{
+      border-left-width: 10px;
+    }*/
+    .company-icon{
+      margin-right: .4rem;
+      &.fa-github{
+        color: #333;
+      }
+      &.fa-gitlab{
+        color: #f57c00;
+      }
+      &.fa-bitbucket{
+        color: #1976d2;
+      }
+    }
+    .close-icon{
+      color: lightgray;
+      cursor: pointer;
+      transition: color .25s ease;
+      &:hover{
+        color: lightcoral;
+      }
+    }
+    &:first-of-type{
+      border-top-left-radius: $borderRadius;
+      border-top-right-radius: $borderRadius;
+    }
+    &:last-of-type{
+      border-bottom-left-radius: $borderRadius;
+      border-bottom-right-radius: $borderRadius;
+    }
+  }
+}
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
