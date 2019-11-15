@@ -1,7 +1,7 @@
 import * as select from "../Statements/Select"
 
 // Formats a date to YYYY-MM-DD format
-const formatDate = (date) => { console.log(date); return date.toISOString().split('T')[0] };
+const formatDate = (date) => {return date.toISOString().split('T')[0] };
 
 
 export function getUser(data) {
@@ -114,4 +114,88 @@ export function getLanguages(data) {
 
   })
   return slices
+}
+
+export function getCalendar(data) {
+  let calendar = data.exec(select.calendar)
+  let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
+
+  //let totalContribs = data.exec(select.totalContributions, [])[0].num;
+
+
+
+  // Empty calendar
+
+
+  let calendarGrid = {}
+
+
+
+
+  //console.log(baseYear)
+  let date = null;
+  for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
+    let emptyContributionYear = {}
+    emptyContributionYear.weeks = {}
+    emptyContributionYear.total = 0
+    date = new Date(indexY, 0, 1);
+    for (let indexW = 0; indexW < 54; indexW++) {
+      let week = {}
+      week.contributionDays = {}
+
+      for (let indexD = 0; indexD <= 6; indexD++) {
+        let day = {}
+        date.setDate(date.getDate() + 1);
+        day.total = 0
+        day.date = formatDate(new Date(date));
+        day.color = "#ffffff"
+        week.contributionDays[indexD] = day
+      }
+
+      emptyContributionYear.weeks[indexW] = week
+    }
+    calendarGrid[indexY] = emptyContributionYear
+  }
+
+  calendar.forEach(day => {
+    calendarGrid[day.cYear].total++;
+    calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].total++;
+    calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].color = day.cColor;
+  })
+  
+  return calculateColorsForCalendarDay(calendarGrid)
+}
+
+// Fill the raw calendar structure with the correct colors
+const calculateColorsForCalendarDay = (rawCalendar) => {
+  Object.values(rawCalendar).forEach(_year => {
+      let busiestDay = 0;
+      console.log("YEAR", _year)
+      // Calculate busiest day of the year
+      Object.values(_year.weeks).forEach(_week => {
+        Object.values(_week.contributionDays).forEach(_day => {
+          if (_day.total > busiestDay) {
+            busiestDay = _day.total;
+        }
+        })
+      })
+
+      Object.values(_year.weeks).forEach(_week => {
+        Object.values(_week.contributionDays).forEach(_day => {
+          let precision = _day.total / busiestDay;
+          if (precision > 0.8 && precision <= 1) {
+              _day.color = "#196127";
+          } else if (precision > 0.6 && precision <= 0.8) {
+              _day.color = "#239a3b";
+          } else if (precision > 0.4 && precision <= 0.6) {
+              _day.color = "#7bc96f";
+          } else if (precision > 0.0 && precision <= 0.4) {
+              _day.color = "#c6e48b";
+          } else if (precision === 0) {
+              _day.color = "#ebedf0";
+          }
+        })
+      })
+  });
+  return rawCalendar;
 }

@@ -79,6 +79,31 @@ FROM
   languageSlice
 `;
 
+
+export const calendar = `
+SELECT
+  calendar.id as cId,
+  calendar.date as cDate,
+  YEAR(calendar.date) as cYear,
+  calendar.week as cWeek,
+  calendar.weekday as cWeekday,
+  calendar.color as cColor,
+  contrib.id as ctId,
+  contrib.datetime as ctDatetime,
+  contrib.nameWithOwner as ctNameWithOwner,
+  contrib.repoUrl as ctRepoUrl,
+  contrib.additions as ctAdditions,
+  contrib.deletions as ctDeletions,
+  contrib.changedFiles as ctChangedFiles,
+  contrib.type as ctType
+FROM
+  calendar
+JOIN
+  contrib
+    ON calendar.id = contrib.calendar_id
+
+`;
+
 export const totalContributions = `
 SELECT
   count(contrib.id) as num
@@ -86,4 +111,11 @@ FROM
   contrib
 WHERE
   YEAR(contrib.datetime) = ?
+`;
+
+export const baseYearOfPlatforms = `
+SELECT 
+  MIN(YEAR(createdAt)) as baseYear
+FROM
+  platform
 `;
