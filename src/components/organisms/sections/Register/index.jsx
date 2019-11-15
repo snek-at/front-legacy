@@ -26,9 +26,9 @@ import "./register.scss";
 const data = {
   sources: [
     {
-      id: (Math.random() * "Aichnerc".length + "gitlab".length),
+      id: (Math.random() * "Aichnerccc".length + "gitlab".length),
       source: "gitlab",
-      username: "Aichnerc"
+      username: "Aichnerccc"
     },
     {
       id: (Math.random() * "Kleberwald".length + "github".length),
@@ -51,6 +51,7 @@ class Register extends React.Component{
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
     sourceList: [],
+    customUsername: false,
   }
 
   componentDidMount = () => {
@@ -99,7 +100,8 @@ class Register extends React.Component{
     });
     // Set the new list
     this.setState({
-      sourceList
+      sourceList,
+      username: sourceList[0].username
     });
   }
 
@@ -109,6 +111,12 @@ class Register extends React.Component{
     });
     this.setState({
       sourceList
+    });
+  }
+
+  handleUserNamePick = (source) => {
+    this.setState({
+      username: source.username
     });
   }
 
@@ -164,6 +172,10 @@ class Register extends React.Component{
                   className="company-icon"
                   />
                   {source.username}
+                  <MDBIcon
+                  icon="check"
+                  className="text-success ml-2"
+                  />
                   </div>
                   <MDBIcon 
                   icon="times"
@@ -175,6 +187,23 @@ class Register extends React.Component{
             })}
             </MDBListGroup>
           </div>
+          {this.state.sourceList.length > 0 &&
+          <div className="pt-4">
+            <p className="lead">Choose your username</p>
+            {this.state.sourceList.map((source, i) => {
+              return(
+                <MDBInput 
+                key={i}
+                onClick={(e) => this.handleUserNamePick(source)}
+                checked={this.state.username === source.username ? true : false}
+                label={source.username}
+                type="radio"
+                id={"radio"+i}
+                />
+              );
+            })}
+          </div>
+          }
           <MDBInput 
           label="Password"
           type="password"
