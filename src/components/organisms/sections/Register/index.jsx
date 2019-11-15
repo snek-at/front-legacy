@@ -25,9 +25,21 @@ import "./register.scss";
 //> Dummy data
 const data = {
   sources: [
-    {source: "gitlab", username: "Aichnerc"},
-    {source: "github", username: "Kleberwald"},
-    {source: "bitbucket", username: "aichnerchristian"}
+    {
+      id: (Math.random() * "Aichnerc".length + "gitlab".length),
+      source: "gitlab",
+      username: "Aichnerc"
+    },
+    {
+      id: (Math.random() * "Kleberwald".length + "github".length),
+      source: "github",
+      username: "Kleberwald"
+    },
+    {
+      id: (Math.random() * "aichnerchristian".length + "bitbucket".length),
+      source: "bitbucket",
+      username: "aichnerchristian"
+    }
   ]
 }
 
@@ -37,6 +49,7 @@ class Register extends React.Component{
     password: "",
     password1: "",
     oAuthGitHubButton: true,
+    oAuthGitHubData: null,
     sourceList: [],
   }
 
@@ -64,20 +77,39 @@ class Register extends React.Component{
 
     // Do oAuth magic, then enable GitHub button button again
 
-    // Example on how to push an item to the sources list
-    this.pushToSourceList("github","Aichnerc");
+    //> In the .then() function
+    // Replace with the data you get from oAuth
+    let data = {
+      username: "Aichnerc"
+    }
+    // Set the data and after the state is set, push it to the list to display
+    this.setState({
+      oAuthGitHubData: data
+    }, () => this.pushToSourceList("github", data.username))
   }
 
   pushToSourceList = (source, username) => {
+    console.log(source,username);
     let sourceList = this.state.sourceList; 
 
     sourceList.push({
-      id: source.charAt(Math.floor(Math.random() * source.length)),
+      id: Math.random() * username.length + source.length,
       source: source,
       username: username,
     });
+    // Set the new list
+    this.setState({
+      sourceList: sourceList
+    });
+  }
 
-    console.log(sourceList);
+  removeSource = (id) => {
+    let sourceList = this.state.sourceList.filter(function( obj ) {
+        return obj.id !== id;
+    });
+    this.setState({
+      sourceList: sourceList
+    });
   }
 
   render(){
@@ -133,7 +165,11 @@ class Register extends React.Component{
                   />
                   {source.username}
                   </div>
-                  <MDBIcon icon="times" className="close-icon" />
+                  <MDBIcon 
+                  icon="times"
+                  className="close-icon"
+                  onClick={() => this.removeSource(source.id)}
+                  />
                 </MDBListGroupItem>
               );
             })}
