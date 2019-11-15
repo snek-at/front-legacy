@@ -30,7 +30,6 @@ export function getOrganizations(data) {
   let organizations = data.exec(select.organization)
 
   let orgs = {}
-  console.log(organizations)
   organizations.forEach(orgWithMember => {
     if (!orgs[orgWithMember.oId]) {
       let org = {}
@@ -95,7 +94,6 @@ export function getRepositories(data) {
 export function getLanguages(data) {
   let languages = data.exec(select.language)
   let totalSize = data.exec(select.totalLanguageSize)[0].num;
-  console.log(totalSize)
   let slices = {}
 
   languages.forEach(languageSlice => {
@@ -170,7 +168,6 @@ export function getCalendar(data) {
 const calculateColorsForCalendarDay = (rawCalendar) => {
   Object.values(rawCalendar).forEach(_year => {
       let busiestDay = 0;
-      console.log("YEAR", _year)
       // Calculate busiest day of the year
       Object.values(_year.weeks).forEach(_week => {
         Object.values(_week.contributionDays).forEach(_day => {
