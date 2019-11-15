@@ -44,13 +44,13 @@ SELECT
   languageSlice.pie_id as sPieId
 FROM
   repository
-JOIN 
+LEFT OUTER JOIN 
   member as owner
     ON owner.id = repository.owner_id
-JOIN 
+LEFT OUTER JOIN
     languagePie
       ON languagePie.id = repository.languagePie_id
-JOIN 
+LEFT OUTER JOIN 
   languageSlice
       ON languageSlice.pie_id = languagePie.id
 LEFT OUTER JOIN
