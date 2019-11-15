@@ -6,22 +6,50 @@ let streakTotal = 0;
 
 //> Helper functions
 // Get an Array with Contributions from contributionsByRepository Object
-const getContributionsByRepositories = contributionsByRepository => {
+const getContributionsByRepositories = (contributionsByRepository, type) => {
   let contribs = [];
   contributionsByRepository.forEach(repo => {
     const repoNameWithOwner = repo.repository.nameWithOwner;
     const repoUrl = repo.repository.url;
-    repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
-      let contrib = {};
-      const date = edge.node.committedDate.split("T")[0];
-      contrib["date"] = date;
-      contrib["repoNameWithOwner"] = repoNameWithOwner;
-      contrib["repoUrl"] = repoUrl;
-      contrib["additions"] = edge.node.additions;
-      contrib["deletions"] = edge.node.deletions;
-      contrib["changedFiles"] = edge.node.changedFiles;
-      contribs.push(contrib);
-    });
+    if(type === "commit"){
+      repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
+        let contrib = {};
+        const date = edge.node.committedDate.split("T")[0];
+        contrib["date"] = date;
+        contrib["repoNameWithOwner"] = repoNameWithOwner;
+        contrib["repoUrl"] = repoUrl;
+        contrib["additions"] = edge.node.additions;
+        contrib["deletions"] = edge.node.deletions;
+        contrib["changedFiles"] = edge.node.changedFiles;
+        contribs.push(contrib);
+      });
+    }
+    else if(type === "issue"){
+      repo.repository.issues.nodes.forEach((node) => {
+        let contrib = {};
+        const date = node.createdAt.split("T")[0];
+        contrib["date"] = date;
+        contrib["repoNameWithOwner"] = repoNameWithOwner;
+        contrib["repoUrl"] = repoUrl;
+        contrib["additions"] = null;
+        contrib["deletions"] = null;
+        contrib["changedFiles"] = null;
+        contribs.push(contrib);
+      });
+    }
+    else if(type === "pullRequest"){
+      repo.repository.pullRequests.nodes.forEach((node) => {
+        let contrib = {};
+        const date = node.createdAt.split("T")[0];
+        contrib["date"] = date;
+        contrib["repoNameWithOwner"] = repoNameWithOwner;
+        contrib["repoUrl"] = repoUrl;
+        contrib["additions"] = null;
+        contrib["deletions"] = null;
+        contrib["changedFiles"] = null;
+        contribs.push(contrib);
+      });
+    }
   });
   return contribs;
 };
@@ -310,22 +338,27 @@ const fillCalendar = objUser => {
           color,
           platformId
         ]);
-        const commits = getContributionsByRepositories(
-          year.commitContributionsByRepository
-        );
-        const issues = getContributionsByRepositories(
-          year.issueContributionsByRepository
-        );
-        const pullRequests = getContributionsByRepositories(
-          year.pullRequestContributionsByRepository
-        );
-        const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
-
-        fillContribs(commits, "commit", calendarId);
-        fillContribs(issues, "issue", calendarId);
-        fillContribs(pullRequests, "pullRequest", calendarId);
       }
     }
+    console.log(year.commitContributionsByRepository)
+    const commits = getContributionsByRepositories(
+      year.commitContributionsByRepository,
+      "commit"
+    );
+    const issues = getContributionsByRepositories(
+      year.issueContributionsByRepository,
+      "issue"
+    );
+    const pullRequests = getContributionsByRepositories(
+      year.pullRequestContributionsByRepository,
+      "pullRequest"
+    );
+    console.log(commits)
+    const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
+
+    fillContribs(commits, "commit", calendarId);
+    fillContribs(issues, "issue", calendarId);
+    fillContribs(pullRequests, "pullRequest", calendarId);
   });
 };
 
