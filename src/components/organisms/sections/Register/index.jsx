@@ -25,10 +25,9 @@ import "./register.scss";
 //> Dummy data
 const data = {
   sources: [
-    {name: "github", user: "Aichnerc"},
-    {name: "gitlab", user: "Aichnerc"},
-    {name: "github", user: "Kleberwald"},
-    {name: "bitbucket", user: "aichnerchristian"}
+    {source: "gitlab", username: "Aichnerc"},
+    {source: "github", username: "Kleberwald"},
+    {source: "bitbucket", username: "aichnerchristian"}
   ]
 }
 
@@ -37,7 +36,14 @@ class Register extends React.Component{
     email: "",
     password: "",
     password1: "",
-    oAuthGitHubButton: true
+    oAuthGitHubButton: true,
+    sourceList: [],
+  }
+
+  componentDidMount = () => {
+    this.setState({
+      sourceList: data.sources
+    });
   }
 
   changeHandler = (e) => {
@@ -56,6 +62,21 @@ class Register extends React.Component{
     });
 
     // Do oAuth magic, then enable GitHub button button again
+
+    // Example on how to push an item to the sources list
+    this.pushToSourceList("github","Aichnerc");
+  }
+
+  pushToSourceList = (source, username) => {
+    let sourceList = this.state.sourceList; 
+
+    sourceList.push({
+      id: source.charAt(Math.floor(Math.random() * source.length)),
+      source: source,
+      username: username,
+    });
+
+    console.log(sourceList);
   }
 
   render(){
@@ -97,19 +118,19 @@ class Register extends React.Component{
           </div>
           <div>
             <MDBListGroup>
-            {data.sources.map((source, i) => {
+            {this.state.sourceList.map((source, i) => {
               return(
                 <MDBListGroupItem 
-                className={"list-item-"+source.name}
+                className={"list-item-"+source.source}
                 key={i}
                 >
                   <div>
                   <MDBIcon 
                   fab
-                  icon={source.name}
+                  icon={source.source}
                   className="company-icon"
                   />
-                  {source.user}
+                  {source.username}
                   </div>
                   <MDBIcon icon="times" className="close-icon" />
                 </MDBListGroupItem>
