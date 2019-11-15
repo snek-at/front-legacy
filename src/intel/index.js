@@ -8,11 +8,11 @@ export async function fill(user) {
 }
 
 export function templateGetPlatform() {
-  return data.exec("SELECT * FROM platform");
+  return data.exec("SELECT * FROM calendar");
 }
 
 export function user() {
-  return converter.getCalendar(data)
+  return converter.getUser(data)
 }
 
 export function repos() {
@@ -25,6 +25,10 @@ export function orgs() {
 
 export function languages() {
   return converter.getLanguages(data)
+}
+
+export function calendar() {
+  return converter.getCalendar(data)
 }
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
