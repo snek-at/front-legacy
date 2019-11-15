@@ -47,6 +47,9 @@ class Register extends React.Component{
   }
 
   connectGitHub = () => {
+    // Debugging
+    console.log("GitHub oAuth function called.");
+
     // Disable button while oAuth in progress
     this.setState({
       oAuthGitHubButton: false
@@ -60,7 +63,7 @@ class Register extends React.Component{
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
           <h2>Join us</h2>
-          <MDBInput 
+          <MDBInput
           label="Email"
           type="email"
           name="email"
@@ -98,6 +101,7 @@ class Register extends React.Component{
               return(
                 <MDBListGroupItem 
                 className={"list-item-"+source.name}
+                key={i}
                 >
                   <div>
                   <MDBIcon 
