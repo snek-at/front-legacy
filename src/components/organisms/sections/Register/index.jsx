@@ -81,11 +81,11 @@ class Register extends React.Component{
     // Replace with the data you get from oAuth
     let data = {
       username: "Aichnerc"
-    }
+    };
     // Set the data and after the state is set, push it to the list to display
     this.setState({
       oAuthGitHubData: data
-    }, () => this.pushToSourceList("github", data.username))
+    }, () => this.pushToSourceList("github", data.username));
   }
 
   pushToSourceList = (source, username) => {
@@ -94,12 +94,12 @@ class Register extends React.Component{
 
     sourceList.push({
       id: Math.random() * username.length + source.length,
-      source: source,
-      username: username,
+      source,
+      username,
     });
     // Set the new list
     this.setState({
-      sourceList: sourceList
+      sourceList
     });
   }
 
@@ -108,7 +108,7 @@ class Register extends React.Component{
         return obj.id !== id;
     });
     this.setState({
-      sourceList: sourceList
+      sourceList
     });
   }
 
