@@ -9,6 +9,7 @@ export const GET_PROFILE = gql`
       company
       createdAt
       name
+      login
       email
       websiteUrl
       hovercard {
