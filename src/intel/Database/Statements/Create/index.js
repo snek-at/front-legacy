@@ -56,9 +56,10 @@ DROP TABLE IF EXISTS repository;
 CREATE TABLE IF NOT EXISTS repository (
     id INT NOT NULL AUTO_INCREMENT,
     avatarUrl VARCHAR(2048) NOT NULL,
+    url VARCHAR(2048) NOT NULL,
     name VARCHAR(80) NOT NULL,
     owner_id INT NULL,
-    languagePie_id INT NOT NULL,
+    languagePie_id INT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_repository_owner1
         FOREIGN KEY (owner_id)

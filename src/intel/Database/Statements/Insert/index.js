@@ -46,11 +46,12 @@ VALUES (?,?);
 export const repository = `
 INSERT INTO repository(
     avatarUrl,
+    url,
     name,
     owner_id,
     languagePie_id
 )
-VALUES (?,?,?,?);
+VALUES (?,?,?,?,?);
 `;
 
 export const languageSlice = `
