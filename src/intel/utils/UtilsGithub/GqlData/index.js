@@ -86,8 +86,8 @@ const getCalendarQueryPart = (year, c) => {
                       deletions
                       committedDate
                       commitUrl
-                      committer{
-                        user{
+                      author {
+                        user {
                           login
                         }
                       }
