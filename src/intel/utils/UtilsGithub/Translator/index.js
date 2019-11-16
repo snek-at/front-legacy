@@ -6,48 +6,56 @@ let streakTotal = 0;
 
 //> Helper functions
 // Get an Array with Contributions from contributionsByRepository Object
-const getContributionsByRepositories = (contributionsByRepository, type) => {
+const getContributionsByRepositories = (contributionsByRepository, type, user) => {
   let contribs = [];
   contributionsByRepository.forEach(repo => {
     const repoNameWithOwner = repo.repository.nameWithOwner;
     const repoUrl = repo.repository.url;
     if(type === "commit"){
       repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
-        let contrib = {};
-        const date = edge.node.committedDate.split("T")[0];
-        contrib["date"] = date;
-        contrib["repoNameWithOwner"] = repoNameWithOwner;
-        contrib["repoUrl"] = repoUrl;
-        contrib["additions"] = edge.node.additions;
-        contrib["deletions"] = edge.node.deletions;
-        contrib["changedFiles"] = edge.node.changedFiles;
-        contribs.push(contrib);
+        if(edge.node.author.user !== null) {
+          if(edge.node.author.user.login === user) {
+            let contrib = {};
+            const date = edge.node.committedDate.split("T")[0];
+            contrib["date"] = date;
+            contrib["repoNameWithOwner"] = repoNameWithOwner;
+            contrib["repoUrl"] = repoUrl;
+            contrib["additions"] = edge.node.additions;
+            contrib["deletions"] = edge.node.deletions;
+            contrib["changedFiles"] = edge.node.changedFiles;
+            contribs.push(contrib);
+          }
+        }
       });
     }
     else if(type === "issue"){
       repo.repository.issues.nodes.forEach((node) => {
-        let contrib = {};
-        const date = node.createdAt.split("T")[0];
-        contrib["date"] = date;
-        contrib["repoNameWithOwner"] = repoNameWithOwner;
-        contrib["repoUrl"] = repoUrl;
-        contrib["additions"] = null;
-        contrib["deletions"] = null;
-        contrib["changedFiles"] = null;
-        contribs.push(contrib);
+        if(node.author.login === user) {
+          let contrib = {};
+          const date = node.createdAt.split("T")[0];
+          contrib["date"] = date;
+          contrib["repoNameWithOwner"] = repoNameWithOwner;
+          contrib["repoUrl"] = repoUrl;
+          contrib["additions"] = null;
+          contrib["deletions"] = null;
+          contrib["changedFiles"] = null;
+          contribs.push(contrib);
+        }
       });
     }
     else if(type === "pullRequest"){
       repo.repository.pullRequests.nodes.forEach((node) => {
-        let contrib = {};
-        const date = node.createdAt.split("T")[0];
-        contrib["date"] = date;
-        contrib["repoNameWithOwner"] = repoNameWithOwner;
-        contrib["repoUrl"] = repoUrl;
-        contrib["additions"] = null;
-        contrib["deletions"] = null;
-        contrib["changedFiles"] = null;
-        contribs.push(contrib);
+        if(node.author.login === user) {
+          let contrib = {};
+          const date = node.createdAt.split("T")[0];
+          contrib["date"] = date;
+          contrib["repoNameWithOwner"] = repoNameWithOwner;
+          contrib["repoUrl"] = repoUrl;
+          contrib["additions"] = node.additions;
+          contrib["deletions"] = node.deletions;
+          contrib["changedFiles"] = node.changedFiles;
+          contribs.push(contrib);
+        }
       });
     }
   });
@@ -118,6 +126,7 @@ const fillPlatform = objUser => {
   const fullName = objUser.profile.name;
   const createdAt = objUser.profile.createdAt;
   const location = objUser.profile.location;
+  const username = objUser.profile.login;
 
   db.exec(insert.platform, [
     "GitHub",
@@ -126,6 +135,7 @@ const fillPlatform = objUser => {
     websiteUrl,
     company,
     email,
+    username,
     fullName,
     createdAt,
     location,
@@ -340,20 +350,23 @@ const fillCalendar = objUser => {
         ]);
       }
     }
-    console.log(year.commitContributionsByRepository)
+    const user = db.exec("SELECT username FROM platform").pop()["username"];
     const commits = getContributionsByRepositories(
       year.commitContributionsByRepository,
-      "commit"
+      "commit",
+      user
     );
+    console.log(commits)
     const issues = getContributionsByRepositories(
       year.issueContributionsByRepository,
-      "issue"
+      "issue",
+      user
     );
     const pullRequests = getContributionsByRepositories(
       year.pullRequestContributionsByRepository,
-      "pullRequest"
+      "pullRequest",
+      user
     );
-    console.log(commits)
     const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
 
     fillContribs(commits, "commit", calendarId);
