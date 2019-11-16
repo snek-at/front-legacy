@@ -6,6 +6,9 @@ import React from "react";
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBCardBody, MDBIcon } from "mdbreact";
 
+//> Components
+import { LanguageChart } from "../";
+
 //> CSS
 import "./socialdata.scss";
 
@@ -24,11 +27,15 @@ class Socialdata extends React.Component {
     return (
       <MDBCardBody id="socialdata">
         <h4 className="font-weight-bold mb-4">{name}</h4>
-        {status && (
+        {(status.message || status.emojiHTML) && (
           <>
             <hr />
-            <div dangerouslySetInnerHTML={{ __html: status.emojiHTML }}></div>
-            <p className="dark-grey-text">{status.message}</p>
+            {status.emojiHTML && (
+              <div dangerouslySetInnerHTML={{ __html: status.emojiHTML }}></div>
+            )}
+            {status.message && (
+              <p className="dark-grey-text">{status.message}</p>
+            )}
           </>
         )}
         {(company || location || email || website) && <hr />}
@@ -65,20 +72,7 @@ class Socialdata extends React.Component {
               </span>
             </a>
           )}
-          {(accounts.github || accounts.gitlab) && (
-            <div className="text-center">
-              <hr />
-              <p className="mb-2">Connected accounts</p>
-              <div className="connected">
-                {accounts.github && (
-                  <MDBIcon fab icon="github" size="2x" className="ml-2 mr-2" />
-                )}
-                {accounts.gitlab && (
-                  <MDBIcon fab icon="gitlab" size="2x" className="ml-2 mr-2" />
-                )}
-              </div>
-            </div>
-          )}
+          <LanguageChart />
         </div>
       </MDBCardBody>
     );

@@ -4,10 +4,6 @@ import React from "react";
 // DOM bindings for React Router
 import { BrowserRouter as Router } from "react-router-dom";
 
-//> Tests
-// Includes files in order to test their functionality
-import "./App.test";
-
 //> Components
 /**
  * Footer: Global Footer
@@ -19,8 +15,13 @@ import {
   Navbar,
 } from './components/molecules';
 */
-// Routes
+
+//> Routes
 import Routes from "./Routes";
+
+//> Test
+// A test with the user "torvalds"
+import "./App.test";
 
 class App extends React.Component {
   render() {
