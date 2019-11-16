@@ -1,5 +1,6 @@
 import * as intel from "./intel";
 
+/*
 intel
   .fill({
     username: "pinterid",
@@ -9,6 +10,7 @@ intel
   .then(() => {
     console.log(intel.templateGetPlatform());
   });
+*/
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
