@@ -28,13 +28,13 @@ const createDummy = (table, entries, c) => {
         //console.warn(e.message);
       } else {
         throw e;
-      }
-    }
-  }
+      };
+    };
+  };
 };
 
-export const exec = value => {
-  return db.exec(value);
+export const exec = (statement, values) => {
+  return db.exec(statement, values);
 };
 
 export function fill(user) {
@@ -69,7 +69,7 @@ export function fill(user) {
       faker.internet.userName,
       faker.internet.url
     ],
-    20
+    50
   );
   createDummy(
     insert.languagePie,
@@ -95,7 +95,7 @@ export function fill(user) {
         return random(count("languagePie"));
       }
     ],
-    20
+    30
   );
   createDummy(
     insert.languageSlice,
@@ -112,7 +112,7 @@ export function fill(user) {
         return random(count("languagePie"));
       }
     ],
-    20
+    200
   );
   createDummy(
     insert.busiestDay,
@@ -157,7 +157,7 @@ export function fill(user) {
         return random(count("platform"));
       }
     ],
-    300
+    500
   );
   createDummy(
     insert.contrib,
@@ -182,7 +182,7 @@ export function fill(user) {
         return random(count("calendar"));
       }
     ],
-    22
+    5000
   );
   createDummy(
     insert.streak,
@@ -249,3 +249,8 @@ export function fill(user) {
     20
   );
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
