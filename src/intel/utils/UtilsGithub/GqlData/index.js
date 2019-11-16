@@ -85,6 +85,11 @@ const getCalendarQueryPart = (year, c) => {
                       deletions
                       committedDate
                       commitUrl
+                      committer{
+                        user{
+                          login
+                        }
+                      }
                     }
                   }
                 }
@@ -120,6 +125,9 @@ const getCalendarQueryPart = (year, c) => {
           issues(first:100) {
             nodes{
               createdAt
+              author{
+                login
+              }
             }
           }
           name
@@ -150,7 +158,13 @@ const getCalendarQueryPart = (year, c) => {
         repository {
           pullRequests(first:100) {
             nodes{
+              changedFiles
+              additions
+              deletions
               createdAt
+              author{
+                login
+              }
             }
           }
           name
