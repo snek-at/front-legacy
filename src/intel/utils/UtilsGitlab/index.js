@@ -75,7 +75,7 @@ const fillOrganizations = async user => {
   const rows = html.getElementsByClassName("group-row");
 
   for (const _org of Array.from(rows)) {
-    const avatarUrl = _org
+    let avatarUrl = _org
       .getElementsByClassName("avatar")[0]
       .getAttribute("data-src");
     const name = _org
@@ -92,10 +92,10 @@ const fillOrganizations = async user => {
 
     db.exec(insert.organization, [avatarUrl, name, orgUrl]);
 
-    var id_platform = db.exec("SELECT id FROM platform").pop()["id"];
-    var id_organization = db.exec("SELECT id FROM organization").pop()["id"];
+    var idPlatform = db.exec("SELECT id FROM platform").pop()["id"];
+    var idOrganization = db.exec("SELECT id FROM organization").pop()["id"];
 
-    db.exec(insert.platformHasOrganization, [id_platform, id_organization]);
+    db.exec(insert.platformHasOrganization, [idPlatform, idOrganization]);
   }
 };
 
@@ -120,8 +120,7 @@ const fillRepositories = (user, nameWithOwner) => {
   const repoExists = db.exec(
     `SELECT id FROM repository WHERE name="${repository.name}"`
   );
-  if (repoExists === undefined || repoExists.length == 0) {
-    console.log(repository);
+  if (repoExists === undefined || repoExists.length === 0) {
     db.exec(insert.repository, [
       repository.avatarUrl,
       repository.name,
@@ -200,7 +199,7 @@ const fillCalendar = async user => {
         .exec(`SELECT total FROM calendar WHERE date="${date}"`)
         .pop();
       //console.log(total)
-      if (res === undefined || res.length == 0) {
+      if (res === undefined || res.length === 0) {
         db.exec(insert.calendar, [date, week, weekday, 1, null, platformId]);
       } else {
         let total = res.total;
