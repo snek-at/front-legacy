@@ -24,13 +24,13 @@ export const githubProvider: IProvider<boolean> = {
 
     const errorReason = errorMatch[1];
     const errorDescriptionMatch = redirectUrl.match(
-      /error_description=([^&]+)/
+      /error_description=([^&]+)/,
     );
     const errorDescription = errorDescriptionMatch
       ? errorDescriptionMatch[1]
       : "";
     return new Error(
-      `Error during login. Reason: ${errorReason} Description: ${errorDescription}`
+      `Error during login. Reason: ${errorReason} Description: ${errorDescription}`,
     );
   },
 
@@ -57,17 +57,22 @@ export const githubProvider: IProvider<boolean> = {
         "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
-        Vary: "Origin"
+        Vary: "Origin",
       },
-      method: "POST"
+      method: "POST",
     })
       .then(async res => await res.json())
       .then(res => {
-        window.localStorage.setItem("access_token", res.access_token);
-        window.localStorage.setItem("token_type", res.token_type);
+        const access_token = res.access_token
+        fetch(`https://api.github.com/user?access_token=${access_token}`)
+          .then(async res => await res.json())
+          .then(res => {
+            window.localStorage.setItem("access_token", access_token);
+            window.localStorage.setItem("user", res.login);
+          });
       });
     return true;
-  }
+  },
 };
 
 /**
