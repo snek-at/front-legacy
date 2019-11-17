@@ -144,3 +144,26 @@ JOIN
 JOIN
   busiestDay
     ON statistic.busiestDay_id = busiestDay.id
+`;
+
+export const contribPerPlatform = `
+SELECT
+contrib.id as cId,
+contrib.datetime as cDatetime,
+contrib.nameWithOwner as cNameWithOwner,
+contrib.repoUrl as ctRepoUrl,
+contrib.additions as cAdditions,
+contrib.deletions as cDeletions,
+contrib.changedFiles as cChangedFiles,
+contrib.type as cType,
+platform.id as pId,
+platform.platformName as pName
+FROM
+  contrib
+JOIN
+  calendar
+    ON contrib.calendar_id = calendar.id
+JOIN
+  platform
+    ON calendar.platform_id = platform.id
+`;

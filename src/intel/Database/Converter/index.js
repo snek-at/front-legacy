@@ -272,7 +272,84 @@ export function getStats(data) {
 
   return statistics;
 };
+
+export function getContribTypes(data) {
+  let contribPerPlatforms = data.exec(select.contribPerPlatform);
+
+  let contribTypes = {};
+  contribTypes.platform = {};
+  contribTypes.user = {};
+  contribTypes.contribs = {};
+
+  contribPerPlatforms.forEach(contribPerPlatform => {
+    if(!contribTypes.platform[contribPerPlatform.pName]){
+      let platform = {};
+      platform.share = 0;
+      platform.count = 0;
+
+      contribTypes.platform[contribPerPlatform.pName] = platform;
+    }
+
+    contribTypes.platform[contribPerPlatform.pName].count++;
+    contribTypes.platform[contribPerPlatform.pName].share = Math.round(contribTypes.platform[contribPerPlatform.pName].count / contribPerPlatforms.length * 100 * 100) / 100;
+
+    if(!contribTypes.user[contribPerPlatform.pId]){
+      let platform = {};
+      platform.share = 0;
+      platform.count = 0;
+      platform.name = contribPerPlatform.pName;
+
+      contribTypes.user[contribPerPlatform.pId] = platform;
+    }
+
+    contribTypes.user[contribPerPlatform.pId].count++;
+    contribTypes.user[contribPerPlatform.pId].share = Math.round(contribTypes.user[contribPerPlatform.pId].count / contribPerPlatforms.length * 100 * 100) / 100;
+
+    if(!contribTypes.contribs[contribPerPlatform.cType]){
+      let type = {};
+      type.share = 0;
+      type.count = 0;
+      type.platform = {};
+      type.user = {};
+
+      contribTypes.contribs[contribPerPlatform.cType] = type;
+    }
+    
+    contribTypes.contribs[contribPerPlatform.cType].count++;
+    contribTypes.contribs[contribPerPlatform.cType].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].count / contribPerPlatforms.length * 100 * 100) / 100;
+
+    if(!contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName]){
+      let platform = {};
+      platform.share = 0;
+      platform.count = 0;
+
+      contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName] = platform;
+    }
+
+    contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].count++;
+    contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].count / contribPerPlatforms.filter(elem => {
+      return elem.cType === contribPerPlatform.cType;
+    }).length * 100 * 100) / 100 ;
+    
+    if(!contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId]){
+      let platform = {};
+      platform.share = 0;
+      platform.count = 0;
+      platform.name = contribPerPlatform.pName;
+
+      contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId] = platform;
+    }
+    
+    contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].count++;
+    contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].count / contribPerPlatforms.filter(elem => {
+      return elem.cType === contribPerPlatform.cType;
+    }).length * 100 * 100) / 100 ;
+
+      //contribTypes.platform[contribPerPlatform.pName] = platform
+  });
+  return contribTypes
 };
+
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
