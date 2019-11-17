@@ -4,49 +4,27 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import {
-  MDBContainer,
-} from "mdbreact";
+import { MDBContainer, MDBRow, MDBCol } from "mdbreact";
+
+//> Components
+import { Register } from "../../organisms/sections";
 
 //> CSS
-import "./register.scss";
+import "./landing.scss";
 
 class Landing extends React.Component {
-
-  state = {
-    username: "",
-    email: "",
-    password: "",
-  }
-
-  changeHandler = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  }
-
   render() {
     return (
-      <div id="honme">
-        <MDBContainer className="pt-5">
-          <input
-          type="text"
-          name="username"
-          value={this.state.username}
-          onChange={this.changeHandler}
-          />
-          <input
-          type="email"
-          name="email"
-          value={this.state.email}
-          onChange={this.changeHandler}
-          />
-          <input
-          type="password"
-          name="password"
-          value={this.state.password}
-          onChange={this.changeHandler}
-          />
+      <div id="landing" className="py-5">
+        <MDBContainer>
+          <MDBRow className="flex-center">
+            <MDBCol md="6">
+              <h1>Built for engineers</h1>
+            </MDBCol>
+            <MDBCol md="6">
+              <Register />
+            </MDBCol>
+          </MDBRow>
         </MDBContainer>
       </div>
     );
