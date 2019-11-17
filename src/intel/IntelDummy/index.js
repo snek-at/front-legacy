@@ -119,34 +119,24 @@ export function fill(user) {
     200
   );
   createDummy(
-    insert.busiestDay,
-    [
-      faker.date.recent,
-      function() {
-        return randomBtw(1000, 2000);
-      }
-    ],
-    20
-  );
-  createDummy(
     insert.statistic,
     [
       function() {
-        return randomBtw(2019, 2019);
-      },
-      function() {
-        return random(count("busiestDay"));
+        return randomBtw(2016, 2019);
       },
       function() {
         return random(count("platform"));
       }
     ],
-    2
+    5
   );
   createDummy(
     insert.calendar,
     [
-      faker.date.recent,
+      function() {
+        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       function() {
         return randomBtw(0, 53);
       },
@@ -166,7 +156,10 @@ export function fill(user) {
   createDummy(
     insert.contrib,
     [
-      faker.date.recent,
+      function() {
+        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       faker.internet.userName,
       faker.internet.url,
       function() {
@@ -191,8 +184,14 @@ export function fill(user) {
   createDummy(
     insert.streak,
     [
-      faker.date.recent,
-      faker.date.recent,
+      function() {
+        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        return types[Math.floor(Math.random() * types.length)];
+      },
+      function() {
+        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       function() {
         return randomBtw(213, 500);
       },
