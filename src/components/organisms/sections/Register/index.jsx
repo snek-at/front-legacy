@@ -26,9 +26,9 @@ import "./register.scss";
 const data = {
   sources: [
     {
-      id: Math.random() * "Aichnercc".length + "gitlab".length,
+      id: Math.random() * "Aichnerc".length + "gitlab".length,
       source: "gitlab",
-      username: "Aichnercc"
+      username: "Aichnerc"
     },
     {
       id: Math.random() * "Kleberwald".length + "github".length,
@@ -149,21 +149,8 @@ class Register extends React.Component {
     });
   };
 
-  checkDuplicate = username => {
-    let usernames = this.state.usernames;
-
-    if (usernames.length > 0) {
-      if (usernames.includes(username)) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  };
-
   render() {
+    console.log(this.state);
     return (
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
@@ -203,31 +190,27 @@ class Register extends React.Component {
           <div>
             <MDBListGroup>
               {this.state.sourceList.map((source, i) => {
-                if (this.checkDuplicate(source.username)) {
-                  return (
-                    <MDBListGroupItem
-                      className={"list-item-" + source.source}
-                      key={i}
-                    >
-                      <div>
-                        <MDBIcon
-                          fab
-                          icon={source.source}
-                          className="company-icon"
-                        />
-                        {source.username}
-                        <MDBIcon icon="check" className="text-success ml-2" />
-                      </div>
+                return (
+                  <MDBListGroupItem
+                    className={"list-item-" + source.source}
+                    key={i}
+                  >
+                    <div>
                       <MDBIcon
-                        icon="times"
-                        className="close-icon"
-                        onClick={() => this.removeSource(source.id)}
+                        fab
+                        icon={source.source}
+                        className="company-icon"
                       />
-                    </MDBListGroupItem>
-                  );
-                } else {
-                  return undefined;
-                }
+                      {source.username}
+                      <MDBIcon icon="check" className="text-success ml-2" />
+                    </div>
+                    <MDBIcon
+                      icon="times"
+                      className="close-icon"
+                      onClick={() => this.removeSource(source.id)}
+                    />
+                  </MDBListGroupItem>
+                );
               })}
             </MDBListGroup>
           </div>
