@@ -119,9 +119,9 @@ GROUP BY
 
 export const baseYearOfPlatforms = `
 SELECT 
-  MIN(YEAR(createdAt)) as baseYear
+  MIN(YEAR(date)) as baseYear
 FROM
-  platform
+  calendar
 `;
 
 export const statistic = `
