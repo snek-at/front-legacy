@@ -26,9 +26,9 @@ import "./register.scss";
 const data = {
   sources: [
     {
-      id: Math.random() * "Aichnerccc".length + "gitlab".length,
+      id: Math.random() * "Aichnercc".length + "gitlab".length,
       source: "gitlab",
-      username: "Aichnerccc"
+      username: "Aichnercc"
     },
     {
       id: Math.random() * "Kleberwald".length + "github".length,
@@ -48,18 +48,39 @@ class Register extends React.Component {
     email: "",
     password: "",
     password1: "",
-    username: null,
+    username: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
     sourceList: [],
-    customUsername: false
+    customUsername: false,
+    usernames: []
   };
 
   componentDidMount = () => {
     // Preset some connected accounts for testing purposes
-    this.setState({
-      sourceList: data.sources
+    let usernames = this.state.usernames;
+    let sourceList = this.state.sourceList;
+
+    data.sources.map((source, i) => {
+      sourceList.push(source);
+
+      this.setState(
+        {
+          sourceList
+        },
+        () => this.addToUsernames(source.username)
+      );
     });
+  };
+
+  addToUsernames = username => {
+    let usernames = this.state.usernames;
+    if (!usernames.includes(username)) {
+      usernames.push(username);
+      this.setState({
+        usernames
+      });
+    }
   };
 
   changeHandler = e => {
@@ -97,6 +118,8 @@ class Register extends React.Component {
     //console.log(source,username);
     let sourceList = this.state.sourceList;
 
+    this.addToUsernames(username);
+
     sourceList.push({
       id: Math.random() * username.length + source.length,
       source,
@@ -120,10 +143,24 @@ class Register extends React.Component {
     });
   };
 
-  handleUserNamePick = source => {
+  handleUserNamePick = username => {
     this.setState({
-      username: source.username
+      username
     });
+  };
+
+  checkDuplicate = username => {
+    let usernames = this.state.usernames;
+
+    if (usernames.length > 0) {
+      if (usernames.includes(username)) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
   };
 
   render() {
@@ -136,7 +173,7 @@ class Register extends React.Component {
             type="email"
             name="email"
             outline
-            value={this.state.username}
+            value={this.state.email}
             onChange={this.changeHandler}
             size="lg"
           />
@@ -166,42 +203,44 @@ class Register extends React.Component {
           <div>
             <MDBListGroup>
               {this.state.sourceList.map((source, i) => {
-                return (
-                  <MDBListGroupItem
-                    className={"list-item-" + source.source}
-                    key={i}
-                  >
-                    <div>
+                if (this.checkDuplicate(source.username)) {
+                  return (
+                    <MDBListGroupItem
+                      className={"list-item-" + source.source}
+                      key={i}
+                    >
+                      <div>
+                        <MDBIcon
+                          fab
+                          icon={source.source}
+                          className="company-icon"
+                        />
+                        {source.username}
+                        <MDBIcon icon="check" className="text-success ml-2" />
+                      </div>
                       <MDBIcon
-                        fab
-                        icon={source.source}
-                        className="company-icon"
+                        icon="times"
+                        className="close-icon"
+                        onClick={() => this.removeSource(source.id)}
                       />
-                      {source.username}
-                      <MDBIcon icon="check" className="text-success ml-2" />
-                    </div>
-                    <MDBIcon
-                      icon="times"
-                      className="close-icon"
-                      onClick={() => this.removeSource(source.id)}
-                    />
-                  </MDBListGroupItem>
-                );
+                    </MDBListGroupItem>
+                  );
+                } else {
+                  return undefined;
+                }
               })}
             </MDBListGroup>
           </div>
           {this.state.sourceList.length > 0 && (
             <div className="pt-4">
               <p className="lead">Choose your username</p>
-              {this.state.sourceList.map((source, i) => {
+              {this.state.usernames.map((username, i) => {
                 return (
                   <MDBInput
                     key={i}
-                    onClick={e => this.handleUserNamePick(source)}
-                    checked={
-                      this.state.username === source.username ? true : false
-                    }
-                    label={source.username}
+                    onClick={e => this.handleUserNamePick(username)}
+                    checked={this.state.username === username ? true : false}
+                    label={username}
                     type="radio"
                     id={"radio" + i}
                   />
