@@ -112,24 +112,26 @@ export function getRepositories(data) {
 export function getLanguages(data) {
   let languages = data.exec(select.language);
   let totalSize = data.exec(select.totalLanguageSize)[0].num;
-  let slices = {};
+  let pie = {};
+  pie.slices = {};
+  pie.total = totalSize;
 
   languages.forEach(languageSlice => {
-    if (!slices[languageSlice.sName]) {
+    if (!pie.slices[languageSlice.sName]) {
       let slice = {};
       slice.name = languageSlice.sName;
       slice.color = languageSlice.sColor;
       slice.size = languageSlice.sSize;
       slice.share = Math.round(slice.size / totalSize * 100 * 100) / 100;
 
-      slices[languageSlice.sName] = slice;
+      pie.slices[languageSlice.sName] = slice;
     } else {
-      slices[languageSlice.sName].size += languageSlice.sSize;
-      slices[languageSlice.sName].share = Math.round(slices[languageSlice.sName].size / totalSize * 100 * 100) / 100;
+      pie.slices[languageSlice.sName].size += languageSlice.sSize;
+      pie.slices[languageSlice.sName].share = Math.round(pie.slices[languageSlice.sName].size / totalSize * 100 * 100) / 100;
     };
 
   });
-  return Object.values(slices);
+  return pie;
 };
 
 export function getCalendar(data) {
