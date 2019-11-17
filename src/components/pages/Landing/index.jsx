@@ -11,7 +11,7 @@ import {
 //> CSS
 import "./register.scss";
 
-class Register extends React.Component {
+class Landing extends React.Component {
 
   state = {
     username: "",
@@ -27,7 +27,7 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div id="register">
+      <div id="honme">
         <MDBContainer className="pt-5">
           <input
           type="text"
@@ -53,7 +53,7 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default Landing;
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
