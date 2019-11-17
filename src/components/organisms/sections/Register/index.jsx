@@ -48,6 +48,7 @@ class Register extends React.Component {
     email: "",
     password: "",
     password1: "",
+    username: null,
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
     sourceList: [],
@@ -104,7 +105,9 @@ class Register extends React.Component {
     // Set the new list
     this.setState({
       sourceList,
-      username: sourceList[0].username
+      username: this.state.username
+        ? this.state.username
+        : sourceList[0].username
     });
   };
 
