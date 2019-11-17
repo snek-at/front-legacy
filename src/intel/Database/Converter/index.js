@@ -36,7 +36,7 @@ export function getOrganizations(data) {
       org.url = orgWithMember.oUrl;
       org.avatarUrl = orgWithMember.oAvatarUrl;
       org.memberCount = 0;
-      org.membersWithRole = [];
+      org.members = [];
       orgs[orgWithMember.oId] = org;
     };
 
@@ -50,7 +50,7 @@ export function getOrganizations(data) {
       member.projectsUrl = null;
 
       orgs[orgWithMember.oId].memberCount++;
-      orgs[orgWithMember.oId].membersWithRole.push(member);
+      orgs[orgWithMember.oId].members.push(member);
     };
   });
   return Object.values(orgs);
@@ -76,7 +76,8 @@ export function getRepositories(data) {
       repo.languagePie.total = repoWithExtras.lTotal;
       repo.languagePie.slices = [];
 
-      repo.membersWithRole = [];
+      repo.members = [];
+      repo.memberCount = 0
 
       repos[repoWithExtras.rId] = repo;
     };
@@ -91,7 +92,7 @@ export function getRepositories(data) {
       member.projectsUrl = null;
 
       repos[repoWithExtras.rId].memberCount++;
-      repos[repoWithExtras.rId].membersWithRole.push(member);
+      repos[repoWithExtras.rId].members.push(member);
     };
 
     if(repoWithExtras.sId !== undefined){
