@@ -24,7 +24,14 @@ import Routes from "./Routes";
 import "./App.test";
 
 class App extends React.Component {
-  state = {};
+  state = {
+    contrib: null,
+    contribCalendar: null,
+    contribTypes: null,
+    user: null,
+    languages: null,
+    repos: null
+  };
 
   componentDidMount = () => {
     this.setState({
