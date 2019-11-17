@@ -17,6 +17,9 @@ import {
   MDBBtn,
   MDBBadge,
   MDBTooltip,
+  MDBPopover,
+  MDBPopoverHeader,
+  MDBPopoverBody,
   MDBIcon
 } from "mdbreact";
 
@@ -211,12 +214,38 @@ class Register extends React.Component {
                         className="company-icon"
                       />
                       {source.username}
-                      <MDBTooltip placement="bottom" domElement tag="span">
+                      <MDBPopover
+                        placement="right"
+                        domElement
+                        clickable
+                        popover
+                        tag="span"
+                        id="popper1"
+                      >
                         <span>
-                          <MDBIcon icon="check" className="text-success ml-2" />
+                          <MDBIcon
+                            icon="check"
+                            className="text-success ml-2 cursor-pointer"
+                          />
                         </span>
-                        <span>Verifiziert</span>
-                      </MDBTooltip>
+                        <div>
+                          <MDBPopoverHeader>Verified</MDBPopoverHeader>
+                          <MDBPopoverBody>
+                            <MDBRow className="justify-content-center align-items-center m-0">
+                              <MDBCol size="auto" className="p-0 text-success">
+                                <MDBIcon icon="award" size="3x" />
+                              </MDBCol>
+                              <MDBCol className="p-0 pl-3">
+                                This source has been{" "}
+                                <strong className="text-success">
+                                  verified
+                                </strong>{" "}
+                                by logging into it.
+                              </MDBCol>
+                            </MDBRow>
+                          </MDBPopoverBody>
+                        </div>
+                      </MDBPopover>
                     </div>
                     <MDBIcon
                       icon="times"
