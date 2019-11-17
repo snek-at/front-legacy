@@ -16,6 +16,7 @@ import {
   MDBInput,
   MDBBtn,
   MDBBadge,
+  MDBTooltip,
   MDBIcon
 } from "mdbreact";
 
@@ -150,7 +151,6 @@ class Register extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
@@ -171,21 +171,30 @@ class Register extends React.Component {
                 You can connect multiple accounts - even from the same platform.
               </small>
             </div>
-            <MDBBtn floating color="orange" className="mx-1" disabled>
-              <MDBIcon fab icon="gitlab" />
-            </MDBBtn>
-            <MDBBtn
-              floating
-              social="git"
-              className="mx-1"
-              onClick={this.connectGitHub}
-              disabled={!this.state.oAuthGitHubButton}
-            >
-              <MDBIcon fab icon="github" />
-            </MDBBtn>
-            <MDBBtn floating social="blue" className="mx-1" disabled>
-              <MDBIcon fab icon="bitbucket" />
-            </MDBBtn>
+            <MDBTooltip placement="bottom">
+              <MDBBtn floating color="orange" className="mx-1" disabled>
+                <MDBIcon fab icon="gitlab" />
+              </MDBBtn>
+              <div>Link GitLab account</div>
+            </MDBTooltip>
+            <MDBTooltip placement="bottom">
+              <MDBBtn
+                floating
+                social="git"
+                className="mx-1"
+                onClick={this.connectGitHub}
+                disabled={!this.state.oAuthGitHubButton}
+              >
+                <MDBIcon fab icon="github" />
+              </MDBBtn>
+              <div>Link GitHub account</div>
+            </MDBTooltip>
+            <MDBTooltip placement="bottom">
+              <MDBBtn floating social="blue" className="mx-1" disabled>
+                <MDBIcon fab icon="bitbucket" />
+              </MDBBtn>
+              <div>Link Bitbucket account</div>
+            </MDBTooltip>
           </div>
           <div>
             <MDBListGroup>
@@ -202,7 +211,12 @@ class Register extends React.Component {
                         className="company-icon"
                       />
                       {source.username}
-                      <MDBIcon icon="check" className="text-success ml-2" />
+                      <MDBTooltip placement="bottom" domElement tag="span">
+                        <span>
+                          <MDBIcon icon="check" className="text-success ml-2" />
+                        </span>
+                        <span>Verifiziert</span>
+                      </MDBTooltip>
                     </div>
                     <MDBIcon
                       icon="times"
