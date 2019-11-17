@@ -19,39 +19,52 @@ import {
 //> Routes
 import Routes from "./Routes";
 
-//> Dummy data
-import data from "./tempDummy.json";
-
 //> Test
 // A test with the user "torvalds"
 import "./App.test";
 
 class App extends React.Component {
-
   state = {};
 
   componentDidMount = () => {
     this.setState({
-      data: data
+      contrib: null,
+      contribCalendar: null,
+      contribTypes: null,
+      user: null,
+      languages: null,
+      repos: null
     });
-  }
+  };
 
   render() {
-    return (
-      <Router>
-        <div className="flyout">
-          {/*
-          <Navbar />
-          */}
-          <main>
-            <Routes data={this.state.data}/>
-          </main>
-          {/*
-          <Footer />
-          */}
-        </div>
-      </Router>
-    );
+    console.log(this.state);
+    if (
+      this.state.contrib &&
+      this.state.contribCalendar &&
+      this.state.contribTypes &&
+      this.state.user &&
+      this.state.languages &&
+      this.state.repos
+    ) {
+      return (
+        <Router>
+          <div className="flyout">
+            {/*
+            <Navbar />
+            */}
+            <main>
+              <Routes data={this.state} />
+            </main>
+            {/*
+            <Footer />
+            */}
+          </div>
+        </Router>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
