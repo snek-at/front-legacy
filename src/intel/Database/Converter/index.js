@@ -84,7 +84,6 @@ export function getRepositories(data) {
 
     if(repoWithExtras.mId !== undefined){
       let member = {};
-      member.oid = repoWithExtras.oId;
       member.name = repoWithExtras.mName;
       member.login = repoWithExtras.mUsername;
       member.avatarUrl = repoWithExtras.mAvatarUrl;
@@ -129,7 +128,6 @@ export function getLanguages(data) {
       pie.slices[languageSlice.sName].size += languageSlice.sSize;
       pie.slices[languageSlice.sName].share = Math.round(pie.slices[languageSlice.sName].size / totalSize * 100 * 100) / 100;
     };
-
   });
   return pie;
 };
@@ -140,39 +138,50 @@ export function getCalendar(data) {
 
   let calendarGrid = {};
 
-  let date = null;
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    let emptyContributionYear = {};
-    emptyContributionYear.weeks = {};
-    emptyContributionYear.total = 0;
-    date = new Date(indexY, 0, 1);
-    for (let indexW = 0; indexW < 53; indexW++) {
-      let week = {};
-      week.contributionDays = {};
+    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1))
+  };
 
-      for (let indexD = 0; indexD <= 6; indexD++) {
-        let day = {}
-        date.setDate(date.getDate() + 1);
-        day.total = 0
-        day.date = formatDate(new Date(date));
-        day.color = "#ffffff"
-        week.contributionDays[indexD] = day
-      }
-
-      emptyContributionYear.weeks[indexW] = week
-    }
-    calendarGrid[indexY] = emptyContributionYear
-  }
+  let today = new Date();
+  today.setDate(today.getDate() + 1);
 
   calendar.forEach(day => {
     if(day.cYear){
       calendarGrid[day.cYear].total++;
       calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].total++;
       calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].color = day.cColor;
-    }
-  })
+    };
+  });
+
   
-  return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid))
+  return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid));
+};
+
+const generateCalendarGrid = (date, flag) => {
+    let emptyContributionYear = {};
+    emptyContributionYear.weeks = {};
+    emptyContributionYear.total = 0;
+
+    for (let indexW = 0; indexW < 53; indexW++) {
+      let week = {};
+      week.contributionDays = {};
+
+      for (let indexD = 0; indexD <= 6; indexD++) {
+        let day = {};
+        if(flag){
+          date.setDate(date.getDate() + 1);
+        }else{
+          date.setDate(date.getDate() - 1);
+        };
+        day.total = 0;
+        day.date = formatDate(new Date(date));
+        day.color = "#ffffff";
+        week.contributionDays[indexD] = day;
+      };
+
+      emptyContributionYear.weeks[indexW] = week;
+    };
+    return emptyContributionYear;
 };
 
 // Fill the raw calendar structure with the correct colors
