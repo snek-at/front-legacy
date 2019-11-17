@@ -132,18 +132,12 @@ SELECT
   streak.startDate as stsDate,
   streak.endDate as steDate,
   streak.total as stTotal,
-  streak.statistic_id as stsId,
-  busiestDay.id as bId,
-  busiestDay.date as bDate,
-  busiestDay.total as bTotal
+  streak.statistic_id as stsId
 FROM
   statistic
 JOIN
   streak
     ON statistic.id = streak.statistic_id
-JOIN
-  busiestDay
-    ON statistic.busiestDay_id = busiestDay.id
 `;
 
 export const contribPerPlatform = `
@@ -166,4 +160,19 @@ JOIN
 JOIN
   platform
     ON calendar.platform_id = platform.id
+`;
+
+export const busiestDay = `
+SELECT
+  date,
+  total,
+  YEAR(date) as year
+FROM
+  calendar
+WHERE
+  total in (
+    SELECT max(c2.total) as total, YEAR(date)
+    FROM calendar c2
+    GROUP BY YEAR(date)
+  )
 `;

@@ -64,21 +64,12 @@ INSERT INTO languageSlice(
 VALUES (?,?,?,?);
 `;
 
-export const busiestDay = `
-INSERT INTO busiestDay(
-    date,
-    total
-)
-VALUES (?,?);
-`;
-
 export const statistic = `
 INSERT INTO statistic(
     year,
-    busiestDay_id,
     platform_id
 )
-VALUES (?,?,?);
+VALUES (?,?);
 `;
 
 export const streak = `

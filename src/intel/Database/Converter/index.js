@@ -235,19 +235,28 @@ function dictCalendarToArray(dict) {
 export function getStats(data) {
   let stats = data.exec(select.statistic);
   let totalContributionsPerYear = {};
+  let bDays = {};
 
   data.exec(select.totalContributions).forEach(elem => {
     totalContributionsPerYear[elem.year] = elem.num;
   });
+  data.exec(select.busiestDay).forEach(elem => {
+    let busiestDay = {};
+    busiestDay.date = elem.date;
+    busiestDay.total = elem.total;
+
+    bDays[elem.year] = busiestDay;
+
+  });
+  
 
   let statistics = {};
 
   stats.forEach(stat => {
     if(!statistics[stat.sYear]){
-      let busiestDay = {};
-      busiestDay.date = stat.bDate;
-      busiestDay.total = stat.bTotal;
-
+      let busiestDay = {}
+      busiestDay.date = bDays[stat.sYear].date;
+      busiestDay.total = bDays[stat.sYear].total;
       let statistic = {};
       statistic.streaks = [];
       statistic.busiestDay = busiestDay;
