@@ -9,6 +9,14 @@
   box-shadow: none;
 }
 
+// Custom mouse
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-help {
+  cursor: help;
+}
+
 // Custom colors
 .snek-dark {
   background-color: $snekDark !important;
@@ -57,7 +65,7 @@
   color: $snekBlue !important;
 }
 
-/** 
+/**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
  */
