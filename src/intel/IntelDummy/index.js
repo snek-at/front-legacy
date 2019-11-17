@@ -41,7 +41,10 @@ export function fill(user) {
   createDummy(
     insert.platform,
     [
-      "GitHub",
+      function() {
+        let types = ["GitHub", "GitLab", "Bitbucket"];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       faker.internet.url,
       faker.internet.avatar,
       faker.internet.url,
@@ -58,7 +61,7 @@ export function fill(user) {
   );
   createDummy(
     insert.organization,
-    [faker.internet.avatar, faker.internet.url, faker.internet.userName],
+    [faker.internet.avatar, faker.internet.userName, faker.internet.url],
     20
   );
   createDummy(
@@ -87,6 +90,7 @@ export function fill(user) {
     insert.repository,
     [
       faker.internet.avatar,
+      faker.internet.url,
       faker.internet.userName,
       function() {
         return random(count("member"));
@@ -128,7 +132,7 @@ export function fill(user) {
     insert.statistic,
     [
       function() {
-        return randomBtw(2001, 2019);
+        return randomBtw(2019, 2019);
       },
       function() {
         return random(count("busiestDay"));
