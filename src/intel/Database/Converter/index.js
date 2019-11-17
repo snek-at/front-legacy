@@ -220,6 +220,59 @@ function dictCalendarToArray(dict) {
   return obj;
 };
 
+export function getStats(data) {
+  let stats = data.exec(select.statistic);
+  let totalContributionsPerYear = {};
+
+  data.exec(select.totalContributions).forEach(elem => {
+    totalContributionsPerYear[elem.year] = elem.num;
+  });
+
+  let statistics = {};
+
+  stats.forEach(stat => {
+    if(!statistics[stat.sYear]){
+      let busiestDay = {};
+      busiestDay.date = stat.bDate;
+      busiestDay.total = stat.bTotal;
+
+      let statistic = {};
+      statistic.streaks = [];
+      statistic.busiestDay = busiestDay;
+      statistic.average = Math.round(totalContributionsPerYear[stat.sYear] / 365 * 100 ) / 100;
+
+      statistic.longestStreak = 0;
+      statistic.currentStreak = 0;
+
+      statistics[stat.sYear] = statistic;
+    }
+
+    let streak = {};
+    streak.startDate = stat.stsDate;
+    streak.endDate = stat.steDate;
+    streak.total = stat.stTotal;
+    statistics[stat.sYear].streaks.push(streak);
+  
+    // To calculate the no. of days between two dates 
+    const dateDiff = (date1, date2) => Math.abs(Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24)));
+
+    let streakDiff = dateDiff(streak.endDate, streak.startDate)
+    if(statistics[stat.sYear].longestStreak <= streakDiff){
+      statistics[stat.sYear].longestStreak = streakDiff;
+    };
+
+    let today = new Date();
+
+    if(streak.endDate.getFullYear() === today.getFullYear() &&
+          streak.endDate.getMonth() === today.getMonth() &&
+          streak.endDate.getDate() === today.getDate()){
+            statistics[stat.sYear].currentStreak = dateDiff(streak.endDate, streak.startDate)
+        }
+  });
+
+  return statistics;
+};
+};
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner

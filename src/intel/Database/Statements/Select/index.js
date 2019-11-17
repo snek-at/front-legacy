@@ -109,11 +109,12 @@ JOIN
 
 export const totalContributions = `
 SELECT
+  YEAR(contrib.datetime) as year,
   count(contrib.id) as num
 FROM
   contrib
-WHERE
-  YEAR(contrib.datetime) = ?
+GROUP BY
+  YEAR(contrib.datetime)
 `;
 
 export const baseYearOfPlatforms = `
@@ -122,3 +123,24 @@ SELECT
 FROM
   platform
 `;
+
+export const statistic = `
+SELECT
+  statistic.id as sId,
+  statistic.year as sYear,
+  streak.id as stId,
+  streak.startDate as stsDate,
+  streak.endDate as steDate,
+  streak.total as stTotal,
+  streak.statistic_id as stsId,
+  busiestDay.id as bId,
+  busiestDay.date as bDate,
+  busiestDay.total as bTotal
+FROM
+  statistic
+JOIN
+  streak
+    ON statistic.id = streak.statistic_id
+JOIN
+  busiestDay
+    ON statistic.busiestDay_id = busiestDay.id
