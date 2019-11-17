@@ -4,6 +4,7 @@ intel.fill({
   name: "torvalds",
   platformName: "gitlab",
   server: "gitlab.htl-villach.at",
+  token: ""
 }).then(() => {
   console.log(intel.templateSelect());
   console.log(intel.user());
