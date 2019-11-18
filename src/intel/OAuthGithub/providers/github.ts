@@ -34,7 +34,8 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
-  extractSession(redirectUrl: string): boolean {
+  async extractSession(redirectUrl: string) {
+    let data = null;
     let code = null;
     const codeMatch = redirectUrl.match(/code=([^&]+)/);
     if (codeMatch) {
@@ -50,7 +51,7 @@ export const githubProvider: IProvider<boolean> = {
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
         &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
-    fetch(AuthorizeUrl, {
+    await fetch(AuthorizeUrl, {
       headers: {
         Accept: "application/json",
         "Access-Allow-Credentials": "True",
@@ -62,17 +63,19 @@ export const githubProvider: IProvider<boolean> = {
       method: "POST",
     })
       .then(async res => await res.json())
-      .then(res => {
-        const access_token = res.access_token
-        fetch(`https://api.github.com/user?access_token=${access_token}`)
+      .then(async res => {
+        const access_token = res.access_token;
+        await fetch(`https://api.github.com/user?access_token=${access_token}`)
           .then(async res => await res.json())
           .then(res => {
             window.localStorage.setItem("access_token", access_token);
             window.localStorage.setItem("user", res.login);
+            data = { username: res.login, access_token: access_token };
+            return data;
           });
       });
-    return true;
-  },
+    return data;
+  }
 };
 
 /**
