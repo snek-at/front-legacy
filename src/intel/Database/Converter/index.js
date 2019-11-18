@@ -158,7 +158,7 @@ export function getCalendar(data) {
   let baseCalendarGrid = {};
 
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1));
+    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1), true);
   }
 
   let today = new Date();
