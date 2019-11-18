@@ -1,5 +1,6 @@
 import * as intel from "./intel";
 
+/*
 intel.fill({
   name: "torvalds",
   platformName: "gitlab",
@@ -15,4 +16,4 @@ intel.fill({
   console.log(intel.stats());
   console.log(intel.contribTypes());
 });
-
+*/

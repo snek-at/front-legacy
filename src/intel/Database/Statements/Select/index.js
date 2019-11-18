@@ -1,6 +1,6 @@
 export const platform = `
 SELECT * FROM platform
-`
+`;
 
 export const organization = `
 SELECT
@@ -21,7 +21,7 @@ LEFT OUTER JOIN
 LEFT OUTER JOIN
   member
     ON member.id = organization_has_member.member_id
-`
+`;
 
 export const repository = `
 SELECT
@@ -63,7 +63,7 @@ LEFT OUTER JOIN
 LEFT OUTER JOIN
   member
     ON member.id = repository_has_member.member_id
-`
+`;
 
 export const language = `
 SELECT
@@ -82,7 +82,6 @@ SELECT
 FROM
   languageSlice
 `;
-
 
 export const calendar = `
 SELECT
@@ -142,16 +141,16 @@ JOIN
 
 export const contribPerPlatform = `
 SELECT
-contrib.id as cId,
-contrib.datetime as cDatetime,
-contrib.nameWithOwner as cNameWithOwner,
-contrib.repoUrl as ctRepoUrl,
-contrib.additions as cAdditions,
-contrib.deletions as cDeletions,
-contrib.changedFiles as cChangedFiles,
-contrib.type as cType,
-platform.id as pId,
-platform.platformName as pName
+  contrib.id as cId,
+  contrib.datetime as cDatetime,
+  contrib.nameWithOwner as cNameWithOwner,
+  contrib.repoUrl as ctRepoUrl,
+  contrib.additions as cAdditions,
+  contrib.deletions as cDeletions,
+  contrib.changedFiles as cChangedFiles,
+  contrib.type as cType,
+  platform.id as pId,
+  platform.platformName as pName
 FROM
   contrib
 JOIN
@@ -171,7 +170,9 @@ FROM
   calendar
 WHERE
   total in (
-    SELECT max(c2.total) as total, YEAR(date)
+    SELECT
+      max(c2.total) as total,
+      YEAR(date)
     FROM calendar c2
     GROUP BY YEAR(date)
   )

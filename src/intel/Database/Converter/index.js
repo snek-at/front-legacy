@@ -1,7 +1,9 @@
 import * as select from "../Statements/Select";
 
 // Formats a date to YYYY-MM-DD format
-const formatDate = (date) => { return date.toISOString().split('T')[0] };
+const formatDate = date => {
+  return date.toISOString().split("T")[0];
+};
 
 export function getUser(data) {
   let platforms = data.exec(select.platform);
@@ -23,7 +25,7 @@ export function getUser(data) {
   user.location = platform.location;
 
   return user;
-};
+}
 
 export function getOrganizations(data) {
   let organizations = data.exec(select.organization);
@@ -38,9 +40,9 @@ export function getOrganizations(data) {
       org.memberCount = 0;
       org.members = [];
       orgs[orgWithMember.oId] = org;
-    };
+    }
 
-    if(orgWithMember.mId !== undefined){
+    if (orgWithMember.mId !== undefined) {
       let member = {};
       member.oid = orgWithMember.oId;
       member.name = orgWithMember.mName;
@@ -51,10 +53,10 @@ export function getOrganizations(data) {
 
       orgs[orgWithMember.oId].memberCount++;
       orgs[orgWithMember.oId].members.push(member);
-    };
+    }
   });
   return Object.values(orgs);
-};
+}
 
 export function getRepositories(data) {
   let repositories = data.exec(select.repository);
@@ -77,12 +79,12 @@ export function getRepositories(data) {
       repo.languagePie.slices = [];
 
       repo.members = [];
-      repo.memberCount = 0
+      repo.memberCount = 0;
 
       repos[repoWithExtras.rId] = repo;
-    };
+    }
 
-    if(repoWithExtras.mId !== undefined){
+    if (repoWithExtras.mId !== undefined) {
       let member = {};
       member.name = repoWithExtras.mName;
       member.login = repoWithExtras.mUsername;
@@ -92,21 +94,20 @@ export function getRepositories(data) {
 
       repos[repoWithExtras.rId].memberCount++;
       repos[repoWithExtras.rId].members.push(member);
-    };
+    }
 
-    if(repoWithExtras.sId !== undefined){
+    if (repoWithExtras.sId !== undefined) {
       let slice = {};
       slice.name = repoWithExtras.sName;
       slice.color = repoWithExtras.sColor;
       slice.size = repoWithExtras.sSize;
 
       repos[repoWithExtras.rId].languagePie.slices.push(slice);
-    };
-    
+    }
   });
 
   return Object.values(repos);
-};
+}
 
 export function getLanguages(data) {
   let languages = data.exec(select.language);
@@ -121,16 +122,19 @@ export function getLanguages(data) {
       slice.name = languageSlice.sName;
       slice.color = languageSlice.sColor;
       slice.size = languageSlice.sSize;
-      slice.share = Math.round(slice.size / totalSize * 100 * 100) / 100;
+      slice.share = Math.round((slice.size / totalSize) * 100 * 100) / 100;
 
       pie.slices[languageSlice.sName] = slice;
     } else {
       pie.slices[languageSlice.sName].size += languageSlice.sSize;
-      pie.slices[languageSlice.sName].share = Math.round(pie.slices[languageSlice.sName].size / totalSize * 100 * 100) / 100;
-    };
+      pie.slices[languageSlice.sName].share =
+        Math.round(
+          (pie.slices[languageSlice.sName].size / totalSize) * 100 * 100
+        ) / 100;
+    }
   });
   return pie;
-};
+}
 
 export function getCalendar(data) {
   let calendar = data.exec(select.calendar);
@@ -139,98 +143,102 @@ export function getCalendar(data) {
   let calendarGrid = {};
 
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1))
-  };
+    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1));
+  }
 
   let today = new Date();
   today.setDate(today.getDate() + 1);
 
   calendar.forEach(day => {
-    if(day.cYear){
+    if (day.cYear) {
       calendarGrid[day.cYear].total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday].color = day.cColor;
-    };
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
+        .total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
+        day.cWeekday
+      ].color = day.cColor;
+    }
   });
 
-  
   return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid));
-};
+}
 
 const generateCalendarGrid = (date, flag) => {
-    let emptyContributionYear = {};
-    emptyContributionYear.weeks = {};
-    emptyContributionYear.total = 0;
+  let emptyContributionYear = {};
+  emptyContributionYear.weeks = {};
+  emptyContributionYear.total = 0;
 
-    for (let indexW = 0; indexW < 53; indexW++) {
-      let week = {};
-      week.contributionDays = {};
+  for (let indexW = 0; indexW < 53; indexW++) {
+    let week = {};
+    week.contributionDays = {};
 
-      for (let indexD = 0; indexD <= 6; indexD++) {
-        let day = {};
-        if(flag){
-          date.setDate(date.getDate() + 1);
-        }else{
-          date.setDate(date.getDate() - 1);
-        };
-        day.total = 0;
-        day.date = formatDate(new Date(date));
-        day.color = "#ffffff";
-        week.contributionDays[indexD] = day;
-      };
+    for (let indexD = 0; indexD <= 6; indexD++) {
+      let day = {};
+      if (flag) {
+        date.setDate(date.getDate() + 1);
+      } else {
+        date.setDate(date.getDate() - 1);
+      }
+      day.total = 0;
+      day.date = formatDate(new Date(date));
+      day.color = "#ffffff";
+      week.contributionDays[indexD] = day;
+    }
 
-      emptyContributionYear.weeks[indexW] = week;
-    };
-    return emptyContributionYear;
+    emptyContributionYear.weeks[indexW] = week;
+  }
+  return emptyContributionYear;
 };
 
 // Fill the raw calendar structure with the correct colors
-const calculateColorsForCalendarDay = (rawCalendar) => {
+const calculateColorsForCalendarDay = rawCalendar => {
   Object.values(rawCalendar).forEach(_year => {
-      let busiestDay = 0;
-      // Calculate busiest day of the year
-      Object.values(_year.weeks).forEach(_week => {
-        Object.values(_week.contributionDays).forEach(_day => {
-          if (_day.total > busiestDay) {
-            busiestDay = _day.total;
-        };
-        });
+    let busiestDay = 0;
+    // Calculate busiest day of the year
+    Object.values(_year.weeks).forEach(_week => {
+      Object.values(_week.contributionDays).forEach(_day => {
+        if (_day.total > busiestDay) {
+          busiestDay = _day.total;
+        }
       });
+    });
 
-      Object.values(_year.weeks).forEach(_week => {
-        Object.values(_week.contributionDays).forEach(_day => {
-          let precision = _day.total / busiestDay;
-          if (precision > 0.8 && precision <= 1) {
-              _day.color = "#196127";
-          } else if (precision > 0.6 && precision <= 0.8) {
-              _day.color = "#239a3b";
-          } else if (precision > 0.4 && precision <= 0.6) {
-              _day.color = "#7bc96f";
-          } else if (precision > 0.0 && precision <= 0.4) {
-              _day.color = "#c6e48b";
-          } else if (precision === 0) {
-              _day.color = "#ebedf0";
-          };
-        });
+    Object.values(_year.weeks).forEach(_week => {
+      Object.values(_week.contributionDays).forEach(_day => {
+        let precision = _day.total / busiestDay;
+        if (precision > 0.8 && precision <= 1) {
+          _day.color = "#196127";
+        } else if (precision > 0.6 && precision <= 0.8) {
+          _day.color = "#239a3b";
+        } else if (precision > 0.4 && precision <= 0.6) {
+          _day.color = "#7bc96f";
+        } else if (precision > 0.0 && precision <= 0.4) {
+          _day.color = "#c6e48b";
+        } else if (precision === 0) {
+          _day.color = "#ebedf0";
+        }
       });
+    });
   });
-  
+
   return rawCalendar;
 };
 
 function dictCalendarToArray(dict) {
   let obj = JSON.parse(JSON.stringify(dict));
-  for(var year in dict){
-    for(var week in dict[year].weeks){
+  for (var year in dict) {
+    for (var week in dict[year].weeks) {
       obj[year].weeks[week].contributionDays = [];
-      for(var day in dict[year].weeks[week].contributionDays){
-        obj[year].weeks[week].contributionDays.push(dict[year].weeks[week].contributionDays[day]);
-      };
-    };
+      for (var day in dict[year].weeks[week].contributionDays) {
+        obj[year].weeks[week].contributionDays.push(
+          dict[year].weeks[week].contributionDays[day]
+        );
+      }
+    }
     obj[year].weeks = Object.values(obj[year].weeks);
-  };
+  }
   return obj;
-};
+}
 
 export function getStats(data) {
   let stats = data.exec(select.statistic);
@@ -246,21 +254,20 @@ export function getStats(data) {
     busiestDay.total = elem.total;
 
     bDays[elem.year] = busiestDay;
-
   });
-  
 
   let statistics = {};
 
   stats.forEach(stat => {
-    if(!statistics[stat.sYear]){
-      let busiestDay = {}
+    if (!statistics[stat.sYear]) {
+      let busiestDay = {};
       busiestDay.date = bDays[stat.sYear].date;
       busiestDay.total = bDays[stat.sYear].total;
       let statistic = {};
       statistic.streaks = [];
       statistic.busiestDay = busiestDay;
-      statistic.average = Math.round(totalContributionsPerYear[stat.sYear] / 365 * 100 ) / 100;
+      statistic.average =
+        Math.round((totalContributionsPerYear[stat.sYear] / 365) * 100) / 100;
 
       statistic.longestStreak = 0;
       statistic.currentStreak = 0;
@@ -273,26 +280,34 @@ export function getStats(data) {
     streak.endDate = stat.steDate;
     streak.total = stat.stTotal;
     statistics[stat.sYear].streaks.push(streak);
-  
-    // To calculate the no. of days between two dates 
-    const dateDiff = (date1, date2) => Math.abs(Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24)));
 
-    let streakDiff = dateDiff(streak.endDate, streak.startDate)
-    if(statistics[stat.sYear].longestStreak <= streakDiff){
+    // To calculate the no. of days between two dates
+    const dateDiff = (date1, date2) =>
+      Math.abs(
+        Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
+      );
+
+    let streakDiff = dateDiff(streak.endDate, streak.startDate);
+    if (statistics[stat.sYear].longestStreak <= streakDiff) {
       statistics[stat.sYear].longestStreak = streakDiff;
-    };
+    }
 
     let today = new Date();
 
-    if(streak.endDate.getFullYear() === today.getFullYear() &&
-          streak.endDate.getMonth() === today.getMonth() &&
-          streak.endDate.getDate() === today.getDate()){
-            statistics[stat.sYear].currentStreak = dateDiff(streak.endDate, streak.startDate)
-        }
+    if (
+      streak.endDate.getFullYear() === today.getFullYear() &&
+      streak.endDate.getMonth() === today.getMonth() &&
+      streak.endDate.getDate() === today.getDate()
+    ) {
+      statistics[stat.sYear].currentStreak = dateDiff(
+        streak.endDate,
+        streak.startDate
+      );
+    }
   });
 
   return statistics;
-};
+}
 
 export function getContribTypes(data) {
   let contribPerPlatforms = data.exec(select.contribPerPlatform);
@@ -303,7 +318,7 @@ export function getContribTypes(data) {
   contribTypes.contribs = {};
 
   contribPerPlatforms.forEach(contribPerPlatform => {
-    if(!contribTypes.platform[contribPerPlatform.pName]){
+    if (!contribTypes.platform[contribPerPlatform.pName]) {
       let platform = {};
       platform.share = 0;
       platform.count = 0;
@@ -312,9 +327,15 @@ export function getContribTypes(data) {
     }
 
     contribTypes.platform[contribPerPlatform.pName].count++;
-    contribTypes.platform[contribPerPlatform.pName].share = Math.round(contribTypes.platform[contribPerPlatform.pName].count / contribPerPlatforms.length * 100 * 100) / 100;
+    contribTypes.platform[contribPerPlatform.pName].share =
+      Math.round(
+        (contribTypes.platform[contribPerPlatform.pName].count /
+          contribPerPlatforms.length) *
+          100 *
+          100
+      ) / 100;
 
-    if(!contribTypes.user[contribPerPlatform.pId]){
+    if (!contribTypes.user[contribPerPlatform.pId]) {
       let platform = {};
       platform.share = 0;
       platform.count = 0;
@@ -324,9 +345,15 @@ export function getContribTypes(data) {
     }
 
     contribTypes.user[contribPerPlatform.pId].count++;
-    contribTypes.user[contribPerPlatform.pId].share = Math.round(contribTypes.user[contribPerPlatform.pId].count / contribPerPlatforms.length * 100 * 100) / 100;
+    contribTypes.user[contribPerPlatform.pId].share =
+      Math.round(
+        (contribTypes.user[contribPerPlatform.pId].count /
+          contribPerPlatforms.length) *
+          100 *
+          100
+      ) / 100;
 
-    if(!contribTypes.contribs[contribPerPlatform.cType]){
+    if (!contribTypes.contribs[contribPerPlatform.cType]) {
       let type = {};
       type.share = 0;
       type.count = 0;
@@ -335,41 +362,81 @@ export function getContribTypes(data) {
 
       contribTypes.contribs[contribPerPlatform.cType] = type;
     }
-    
-    contribTypes.contribs[contribPerPlatform.cType].count++;
-    contribTypes.contribs[contribPerPlatform.cType].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].count / contribPerPlatforms.length * 100 * 100) / 100;
 
-    if(!contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName]){
+    contribTypes.contribs[contribPerPlatform.cType].count++;
+    contribTypes.contribs[contribPerPlatform.cType].share =
+      Math.round(
+        (contribTypes.contribs[contribPerPlatform.cType].count /
+          contribPerPlatforms.length) *
+          100 *
+          100
+      ) / 100;
+
+    if (
+      !contribTypes.contribs[contribPerPlatform.cType].platform[
+        contribPerPlatform.pName
+      ]
+    ) {
       let platform = {};
       platform.share = 0;
       platform.count = 0;
 
-      contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName] = platform;
+      contribTypes.contribs[contribPerPlatform.cType].platform[
+        contribPerPlatform.pName
+      ] = platform;
     }
 
-    contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].count++;
-    contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].platform[contribPerPlatform.pName].count / contribPerPlatforms.filter(elem => {
-      return elem.cType === contribPerPlatform.cType;
-    }).length * 100 * 100) / 100 ;
-    
-    if(!contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId]){
+    contribTypes.contribs[contribPerPlatform.cType].platform[
+      contribPerPlatform.pName
+    ].count++;
+    contribTypes.contribs[contribPerPlatform.cType].platform[
+      contribPerPlatform.pName
+    ].share =
+      Math.round(
+        (contribTypes.contribs[contribPerPlatform.cType].platform[
+          contribPerPlatform.pName
+        ].count /
+          contribPerPlatforms.filter(elem => {
+            return elem.cType === contribPerPlatform.cType;
+          }).length) *
+          100 *
+          100
+      ) / 100;
+
+    if (
+      !contribTypes.contribs[contribPerPlatform.cType].user[
+        contribPerPlatform.pId
+      ]
+    ) {
       let platform = {};
       platform.share = 0;
       platform.count = 0;
       platform.name = contribPerPlatform.pName;
 
-      contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId] = platform;
+      contribTypes.contribs[contribPerPlatform.cType].user[
+        contribPerPlatform.pId
+      ] = platform;
     }
-    
-    contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].count++;
-    contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].share = Math.round(contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId].count / contribPerPlatforms.filter(elem => {
-      return elem.cType === contribPerPlatform.cType;
-    }).length * 100 * 100) / 100 ;
 
-      //contribTypes.platform[contribPerPlatform.pName] = platform
+    contribTypes.contribs[contribPerPlatform.cType].user[contribPerPlatform.pId]
+      .count++;
+    contribTypes.contribs[contribPerPlatform.cType].user[
+      contribPerPlatform.pId
+    ].share =
+      Math.round(
+        (contribTypes.contribs[contribPerPlatform.cType].user[
+          contribPerPlatform.pId
+        ].count /
+          contribPerPlatforms.filter(elem => {
+            return elem.cType === contribPerPlatform.cType;
+          }).length) *
+          100 *
+          100
+      ) / 100;
   });
-  return contribTypes
-};
+
+  return contribTypes;
+}
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
