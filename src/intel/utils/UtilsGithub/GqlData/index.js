@@ -60,8 +60,8 @@ const getCalendarQueryPart = (fromYear, toYear, c) => {
   console.log(fromYear,toYear)
   return `
   c${c}: contributionsCollection(from:"${fromYear}", to:"${toYear}" ){
-     contributionYears
-     contributionCalendar{
+    contributionYears
+    contributionCalendar{
         totalContributions
         weeks{
           contributionDays{
@@ -226,7 +226,7 @@ export const generateRepositoryHistoryQuery = (bigRepos) => {
                       ${part}
                   }
   `;
-  bigRepos.forEach(repo => {
+  bigRepos.forEach((repo) => {
     let runtime = ~~(repo.repository.defaultBranchRef.target.history.totalCount / 100)
     let cursor = repo.repository.defaultBranchRef.target.history.pageInfo.endCursor.split(" ")[0];
     //console.log(runtime)
