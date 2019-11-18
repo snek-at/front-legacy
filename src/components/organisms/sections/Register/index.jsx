@@ -77,7 +77,7 @@ class Register extends React.Component {
     });
   };
 
-  addToUsernames = username => {
+  addToUsernames = (username) => {
     let usernames = this.state.usernames;
     if (!usernames.includes(username)) {
       usernames.push(username);
@@ -87,7 +87,7 @@ class Register extends React.Component {
     }
   };
 
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -138,7 +138,7 @@ class Register extends React.Component {
     });
   };
 
-  removeSource = id => {
+  removeSource = (id) => {
     let sourceList = this.state.sourceList.filter(function(obj) {
       return obj.id !== id;
     });
@@ -147,7 +147,7 @@ class Register extends React.Component {
     });
   };
 
-  handleUserNamePick = username => {
+  handleUserNamePick = (username) => {
     this.setState({
       username
     });
@@ -264,7 +264,7 @@ class Register extends React.Component {
                 return (
                   <MDBInput
                     key={i}
-                    onClick={e => this.handleUserNamePick(username)}
+                    onClick={(e) => this.handleUserNamePick(username)}
                     checked={this.state.username === username ? true : false}
                     label={username}
                     type="radio"
