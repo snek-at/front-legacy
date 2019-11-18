@@ -8,7 +8,7 @@ let streakTotal = 0;
 
 //> Helper functions
 // Get an Array with Contributions from contributionsByRepository Object
-const genContributionsByRepositories = function * (contributionsByRepository, type, username) {
+const genContributionsByRepositories = function*(contributionsByRepository, type, username) {
   for (const repo of contributionsByRepository) {
     switch(type){
       case "commit":
@@ -58,8 +58,8 @@ const genContributionsByRepositories = function * (contributionsByRepository, ty
         break;
       default:
         return null
-    }
-  };
+    };
+  }
 };
 
 // Get the busiest Day from year Object
@@ -338,8 +338,8 @@ const fillCalendar = (objUser) => {
     "commit",
     user
   )).flat().reduce((h, obj) => {
-    let date = obj.datetime.split("T")[0]
-    return Object.assign(h, { [date]: (h[date] || []).concat(obj) })
+    let date = obj.datetime.split("T")[0];
+    return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
   }, {})
 
   keys.forEach((c) => {
@@ -350,25 +350,25 @@ const fillCalendar = (objUser) => {
       "issue",
       user
     )).flat().reduce((h, obj) => {
-      let date = obj.datetime.split("T")[0]
-      return Object.assign(h, { [date]: (h[date] || []).concat(obj) })
-    }, {})
+      let date = obj.datetime.split("T")[0];
+      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
+    }, {});
 
     let issues = Array.from(genContributionsByRepositories(
       year.pullRequestContributionsByRepository,
       "pullRequest",
       user
     )).flat().reduce((h, obj) => {
-      let date = obj.datetime.split("T")[0]
-      return Object.assign(h, { [date]: (h[date] || []).concat(obj) })
-    }, {})
+      let date = obj.datetime.split("T")[0];
+      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
+    }, {});
 
     let currentContributions = 0;
     let octoCats = [];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
         const datetime = day.date;
-        const date = datetime.split("T")[0]
+        const date = datetime.split("T")[0];
         const week = w;
         const weekday = d;
         const total = day.contributionCount;
@@ -391,17 +391,17 @@ const fillCalendar = (objUser) => {
           const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
 
           if (commits[date]) {
-            fillContribs(commits[date], "commit", calendarId)
+            fillContribs(commits[date], "commit", calendarId);
             count -= commits[date].length;
             currentContributions += commits[date].length;
           }
           if (issues[date]) {
-            fillContribs(issues[date], "issue", calendarId)
+            fillContribs(issues[date], "issue", calendarId);
             count -= issues[date].length;
             currentContributions += issues[date].length;
           }
           if (pullRequest[date]) {
-            fillContribs(pullRequest[date], "pullRequest", calendarId)
+            fillContribs(pullRequest[date], "pullRequest", calendarId);
             count -= pullRequest[date].length;
             currentContributions += pullRequest[date].length;
 
@@ -411,7 +411,7 @@ const fillCalendar = (objUser) => {
             octoCats.push({
               datetime: new Date(datetime),
               total: count,
-              calendarId: calendarId
+              calendarId
             })
           }
         }
@@ -428,19 +428,19 @@ const fillCalendar = (objUser) => {
             deletions: 0,
             changedFiles: 0,
           })
-          currentContributions++
+          currentContributions++;
         }
-        fillContribs(dDay, "codeReviews", cat.calendarId)
+        fillContribs(dDay, "codeReviews", cat.calendarId);
     }
 
     octoCats.forEach((cat) => {
       if(currentContributions + cat.total < year.contributionCalendar.totalContributions){
-        addOctocat(cat)
+        addOctocat(cat);
       }
     })
-    let lastCat = octoCats[octoCats.length-1]
+    let lastCat = octoCats[octoCats.length-1];
     lastCat.total = year.contributionCalendar.totalContributions - currentContributions;
-    addOctocat(lastCat)
+    addOctocat(lastCat);
   });
 
 };
