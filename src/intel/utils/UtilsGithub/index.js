@@ -16,22 +16,23 @@ export async function fill(db, user) {
     });
     
     const { data } = resProfile;
-    console.log("PROFILE DATA", data)
+
+    // Debugging point
+    //console.log("PROFILE DATA", data);
     const createdAtDate = new Date(data.user.createdAt);
 
     const resCalendar = await client.query({
       query: gqlData.getCalendar(username, createdAtDate)
     });
 
-    console.log(resCalendar.data.user);
-
-
+    // Debugging point
+    //console.log(resCalendar.data.user);
 
     let allReposWithHistory = {};
-    let reposPerName = {}
-    Object.values(resCalendar.data.user).forEach(c => {
+    let reposPerName = {};
+    Object.values(resCalendar.data.user).forEach((c) => {
       if(c !== "User"){
-        c.commitContributionsByRepository.forEach(repo => {
+        c.commitContributionsByRepository.forEach((repo) => {
           if(repo.repository.defaultBranchRef.target.history.totalCount >= 100){
             reposPerName[repo.repository.nameWithOwner] = repo;
             
@@ -41,17 +42,20 @@ export async function fill(db, user) {
       }
 
     });
-    console.log("allReposHistory",allReposWithHistory)
-    gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async q => {
+
+    // Debugging point
+    //console.log("allReposHistory",allReposWithHistory)
+
+    gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async (q) => {
       const resRepoHistory = await client.query({
         query: q
       });
-      Object.values(resRepoHistory.data).forEach(repo => {
+      Object.values(resRepoHistory.data).forEach((repo) => {
         let l1 = allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes;
-        let l2 = repo.defaultBranchRef.target.history.nodes
-        allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes = l1.concat(l2)
+        let l2 = repo.defaultBranchRef.target.history.nodes;
+        allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes = l1.concat(l2);
       });
-    })
+    });
     
     const objUser = {};
     objUser.profile = resProfile.data.user;
