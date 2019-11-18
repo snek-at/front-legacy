@@ -56,10 +56,12 @@ export const GET_PROFILE = gql`
 `;
 
 // Structure GQL calendar code
-const getCalendarQueryPart = (year, c) => {
+const getCalendarQueryPart = (fromYear, toYear, c) => {
+  console.log(fromYear,toYear)
   return `
-    c${c}: contributionsCollection(to:"${year}"){
-      contributionCalendar{
+  c${c}: contributionsCollection(from:"${fromYear}", to:"${toYear}" ){
+     contributionYears
+     contributionCalendar{
         totalContributions
         weeks{
           contributionDays{
@@ -70,28 +72,27 @@ const getCalendarQueryPart = (year, c) => {
         }
       }
       commitContributionsByRepository {
-        contributions{
-          totalCount
-        }
         url
         repository {
           defaultBranchRef{
             target{
-              ... on Commit {
-                history {
-                  edges {
-                    node {
-                      changedFiles
-                      additions
-                      deletions
-                      committedDate
-                      commitUrl
-                      author {
-                        user {
-                          login
-                        }
+              ... on Commit{
+                changedFiles
+                additions
+                deletions
+                committedDate
+                history{
+                  totalCount
+                  pageInfo{
+                    endCursor
+                  }
+                  nodes{
+                    committer{
+                      user{
+                        login
                       }
                     }
+                    committedDate
                   }
                 }
               }
@@ -119,9 +120,6 @@ const getCalendarQueryPart = (year, c) => {
         }
       }
       issueContributionsByRepository {
-        contributions{
-          totalCount
-        }
         repository {
           issues(first:100) {
             nodes{
@@ -153,9 +151,6 @@ const getCalendarQueryPart = (year, c) => {
         }
       }
       pullRequestContributionsByRepository {
-        contributions{
-          totalCount
-        }
         repository {
           pullRequests(first:100) {
             nodes{
@@ -193,16 +188,85 @@ const getCalendarQueryPart = (year, c) => {
   `;
 };
 
+const getRepositoryHistory = (owner, name, cursor, index) => {
+  return `
+  ${owner.replace(/-/g, '_')}${name.replace(/-/g, '_')}${index}:repository(owner:"${owner}", name:"${name}"){
+    nameWithOwner
+    defaultBranchRef{
+      target{
+        ... on Commit{
+          history (after:"${cursor} ${99+index*100}"){
+            totalCount
+            nodes{
+              committer{
+                user{
+                  login
+                }
+              }
+              committedDate
+              changedFiles
+              additions
+              deletions
+            }
+          }
+        }
+      }
+    }
+    
+  }
+  `;
+};
+
+export const generateRepositoryHistoryQuery = (bigRepos) => {
+  let queryParts = [] ;
+  const queries = [];
+  const query = (part) => gql`
+                  query
+                  {
+                      ${part}
+                  }
+  `;
+  bigRepos.forEach(repo => {
+    let runtime = ~~(repo.repository.defaultBranchRef.target.history.totalCount / 100)
+    let cursor = repo.repository.defaultBranchRef.target.history.pageInfo.endCursor.split(" ")[0];
+    //console.log(runtime)
+    let maxRuntime = 10;
+    let partsCount = 0;
+    for (let index = 0; index < runtime; index++) {
+      if(maxRuntime == 0){
+        queries.append(query(queryParts[partsCount]))
+        partsCount++;
+        maxRuntime = 10;
+      }
+      queryParts[partsCount] += getRepositoryHistory(repo.repository.owner.login, repo.repository.name, cursor, index)
+      
+      maxRuntime--;
+      //console.log(queryParts)
+    }
+    //console.log(queryParts)
+  });
+  //console.log(queryParts)
+  
+  //console.log(query)
+  return queries
+}
 // Generates a dynamic query structure
 const generateCalendarsQuery = (username, createdAtDate) => {
-  const date = new Date();
+  var currentYear = new Date().getFullYear();
+
+  var fromDate = new Date(createdAtDate.getFullYear(), 0, 2);
+  var toDate = new Date(createdAtDate.getFullYear() + 1, 0, 1);
+
   var query = "";
   var count = 1;
 
-  while (date.getFullYear() >= createdAtDate.getFullYear()) {
-    query += getCalendarQueryPart(date.toJSON(), count);
+  while (fromDate.getFullYear() <= currentYear) {
+    query += getCalendarQueryPart(fromDate.toJSON(), toDate.toJSON(), count);
+    console.log(fromDate.toJSON());
+    //console.log(date.setDate(date.getDate()-1))
 
-    date.setFullYear(date.getFullYear() - 1);
+    fromDate.setFullYear(fromDate.getFullYear() + 1);
+    toDate.setFullYear(toDate.getFullYear() + 1);
     count++;
   }
   return query;
@@ -211,12 +275,12 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 // Get calendar basic structure
 export const getCalendar = (username, createdAt) => {
   const query = gql`
-    query
-    {
-      user(login: "${username}") {
-        ${generateCalendarsQuery(username, createdAt)}
-      }
-    }
+                  query
+                  {
+                      user(login: "${username}") {
+                          ${generateCalendarsQuery(username, createdAt)}
+                      }
+                    }
   `;
   return query;
 };
