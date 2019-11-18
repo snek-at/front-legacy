@@ -9,11 +9,9 @@ export const exec = (statement, values) => {
 };
 
 export async function fill(user) {
-
-  if(user.platformName === "github"){
+  if (user.platformName === "github") {
     await github.fill(db, user);
-  }
-  else if (user.platformName === "gitlab"){
+  } else if (user.platformName === "gitlab") {
     await gitlab.fill(db, user);
   }
 }

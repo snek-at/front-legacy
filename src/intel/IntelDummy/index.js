@@ -28,9 +28,9 @@ const createDummy = (table, entries, c) => {
         //console.warn(e.message);
       } else {
         throw e;
-      };
-    };
-  };
+      }
+    }
+  }
 };
 
 export const exec = (statement, values) => {
@@ -134,7 +134,11 @@ export function fill(user) {
     insert.calendar,
     [
       function() {
-        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
         return types[Math.floor(Math.random() * types.length)];
       },
       function() {
@@ -157,7 +161,11 @@ export function fill(user) {
     insert.contrib,
     [
       function() {
-        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
         return types[Math.floor(Math.random() * types.length)];
       },
       faker.internet.userName,
@@ -185,11 +193,19 @@ export function fill(user) {
     insert.streak,
     [
       function() {
-        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
         return types[Math.floor(Math.random() * types.length)];
       },
       function() {
-        let types = [faker.date.past(1), faker.date.past(2), faker.date.past(3),];
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
         return types[Math.floor(Math.random() * types.length)];
       },
       function() {

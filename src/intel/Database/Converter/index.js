@@ -1,7 +1,7 @@
 import * as select from "../Statements/Select";
 
 // Formats a date to YYYY-MM-DD format
-const formatDate = date => {
+const formatDate = (date) => {
   return date.toISOString().split("T")[0];
 };
 
@@ -31,7 +31,7 @@ export function getOrganizations(data) {
   let organizations = data.exec(select.organization);
 
   let orgs = {};
-  organizations.forEach(orgWithMember => {
+  organizations.forEach((orgWithMember) => {
     if (!orgs[orgWithMember.oId]) {
       let org = {};
       org.name = orgWithMember.oName;
@@ -62,7 +62,7 @@ export function getRepositories(data) {
   let repositories = data.exec(select.repository);
 
   let repos = {};
-  repositories.forEach(repoWithExtras => {
+  repositories.forEach((repoWithExtras) => {
     if (!repos[repoWithExtras.rId]) {
       let repo = {};
       repo.name = repoWithExtras.rName;
@@ -116,7 +116,7 @@ export function getLanguages(data) {
   pie.slices = {};
   pie.total = totalSize;
 
-  languages.forEach(languageSlice => {
+  languages.forEach((languageSlice) => {
     if (!pie.slices[languageSlice.sName]) {
       let slice = {};
       slice.name = languageSlice.sName;
@@ -134,33 +134,6 @@ export function getLanguages(data) {
     }
   });
   return pie;
-}
-
-export function getCalendar(data) {
-  let calendar = data.exec(select.calendar);
-  let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
-
-  let calendarGrid = {};
-
-  for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1));
-  }
-
-  let today = new Date();
-  today.setDate(today.getDate() + 1);
-
-  calendar.forEach(day => {
-    if (day.cYear) {
-      calendarGrid[day.cYear].total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
-        .total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
-        day.cWeekday
-      ].color = day.cColor;
-    }
-  });
-
-  return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid));
 }
 
 const generateCalendarGrid = (date, flag) => {
@@ -191,20 +164,20 @@ const generateCalendarGrid = (date, flag) => {
 };
 
 // Fill the raw calendar structure with the correct colors
-const calculateColorsForCalendarDay = rawCalendar => {
-  Object.values(rawCalendar).forEach(_year => {
+const calculateColorsForCalendarDay = (rawCalendar) => {
+  Object.values(rawCalendar).forEach((_year) => {
     let busiestDay = 0;
     // Calculate busiest day of the year
-    Object.values(_year.weeks).forEach(_week => {
-      Object.values(_week.contributionDays).forEach(_day => {
+    Object.values(_year.weeks).forEach((_week) => {
+      Object.values(_week.contributionDays).forEach((_day) => {
         if (_day.total > busiestDay) {
           busiestDay = _day.total;
         }
       });
     });
 
-    Object.values(_year.weeks).forEach(_week => {
-      Object.values(_week.contributionDays).forEach(_day => {
+    Object.values(_year.weeks).forEach((_week) => {
+      Object.values(_week.contributionDays).forEach((_day) => {
         let precision = _day.total / busiestDay;
         if (precision > 0.8 && precision <= 1) {
           _day.color = "#196127";
@@ -224,12 +197,39 @@ const calculateColorsForCalendarDay = rawCalendar => {
   return rawCalendar;
 };
 
+export function getCalendar(data) {
+  let calendar = data.exec(select.calendar);
+  let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
+
+  let calendarGrid = {};
+
+  for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
+    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1));
+  }
+
+  let today = new Date();
+  today.setDate(today.getDate() + 1);
+
+  calendar.forEach((day) => {
+    if (day.cYear) {
+      calendarGrid[day.cYear].total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
+        .total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
+        day.cWeekday
+      ].color = day.cColor;
+    }
+  });
+
+  return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid));
+}
+
 function dictCalendarToArray(dict) {
   let obj = JSON.parse(JSON.stringify(dict));
-  for (var year in dict) {
-    for (var week in dict[year].weeks) {
+  for (let year in dict) {
+    for (let week in dict[year].weeks) {
       obj[year].weeks[week].contributionDays = [];
-      for (var day in dict[year].weeks[week].contributionDays) {
+      for (let day in dict[year].weeks[week].contributionDays) {
         obj[year].weeks[week].contributionDays.push(
           dict[year].weeks[week].contributionDays[day]
         );
@@ -245,10 +245,10 @@ export function getStats(data) {
   let totalContributionsPerYear = {};
   let bDays = {};
 
-  data.exec(select.totalContributions).forEach(elem => {
+  data.exec(select.totalContributions).forEach((elem) => {
     totalContributionsPerYear[elem.year] = elem.num;
   });
-  data.exec(select.busiestDay).forEach(elem => {
+  data.exec(select.busiestDay).forEach((elem) => {
     let busiestDay = {};
     busiestDay.date = elem.date;
     busiestDay.total = elem.total;
@@ -258,7 +258,7 @@ export function getStats(data) {
 
   let statistics = {};
 
-  stats.forEach(stat => {
+  stats.forEach((stat) => {
     if (!statistics[stat.sYear]) {
       let busiestDay = {};
       busiestDay.date = bDays[stat.sYear].date;
@@ -317,7 +317,7 @@ export function getContribTypes(data) {
   contribTypes.user = {};
   contribTypes.contribs = {};
 
-  contribPerPlatforms.forEach(contribPerPlatform => {
+  contribPerPlatforms.forEach((contribPerPlatform) => {
     if (!contribTypes.platform[contribPerPlatform.pName]) {
       let platform = {};
       platform.share = 0;
@@ -396,7 +396,7 @@ export function getContribTypes(data) {
         (contribTypes.contribs[contribPerPlatform.cType].platform[
           contribPerPlatform.pName
         ].count /
-          contribPerPlatforms.filter(elem => {
+          contribPerPlatforms.filter((elem) => {
             return elem.cType === contribPerPlatform.cType;
           }).length) *
           100 *
@@ -427,7 +427,7 @@ export function getContribTypes(data) {
         (contribTypes.contribs[contribPerPlatform.cType].user[
           contribPerPlatform.pId
         ].count /
-          contribPerPlatforms.filter(elem => {
+          contribPerPlatforms.filter((elem) => {
             return elem.cType === contribPerPlatform.cType;
           }).length) *
           100 *
