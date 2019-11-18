@@ -1,4 +1,6 @@
 import * as insert from "../../../Database/Statements/Insert";
+import { fill } from "..";
+
 let db;
 let streak = false;
 let streakStart = "";
@@ -6,30 +8,64 @@ let streakTotal = 0;
 
 //> Helper functions
 // Get an Array with Contributions from contributionsByRepository Object
-const getContributionsByRepositories = contributionsByRepository => {
-  let contribs = [];
-  contributionsByRepository.forEach(repo => {
-    const repoNameWithOwner = repo.repository.nameWithOwner;
-    const repoUrl = repo.repository.url;
-    repo.repository.defaultBranchRef.target.history.edges.forEach(edge => {
-      let contrib = {};
-      const date = edge.node.committedDate.split("T")[0];
-      contrib["date"] = date;
-      contrib["repoNameWithOwner"] = repoNameWithOwner;
-      contrib["repoUrl"] = repoUrl;
-      contrib["additions"] = edge.node.additions;
-      contrib["deletions"] = edge.node.deletions;
-      contrib["changedFiles"] = edge.node.changedFiles;
-      contribs.push(contrib);
-    });
-  });
-  return contribs;
+const genContributionsByRepositories = function* (contributionsByRepository, type, username) {
+  for (const repo of contributionsByRepository) {
+    switch(type){
+      case "commit":
+        yield repo.repository.defaultBranchRef.target.history.nodes.filter((contrib) => (
+        contrib.committer && 
+        contrib.committer.user && 
+        contrib.committer.user.login.toLowerCase() === username.toLowerCase())
+        ).map((_node) => {
+          let con = {};
+          con["datetime"] = _node.committedDate;
+          con["repoNameWithOwner"] = repo.repository.nameWithOwner;
+          con["repoUrl"] = repo.repository.url;
+          con["additions"] = repo.repository.defaultBranchRef.target.additions;
+          con["deletions"] = repo.repository.defaultBranchRef.target.deletions;
+          con["changedFiles"] = repo.repository.defaultBranchRef.target.changedFiles;
+          return con;
+        });
+        break;
+      case "issue":
+        yield repo.repository.issues.nodes.filter((contrib) => (
+          contrib.author && 
+          contrib.author.login && 
+          contrib.author.login.toLowerCase() === username.toLowerCase())
+        ).map((_node) => {
+          let con = {};
+          con["datetime"] = _node.createdAt;
+          con["repoNameWithOwner"] = repo.repository.nameWithOwner;
+          con["repoUrl"] = repo.repository.url;
+          return con;
+        });
+        break;
+      case "pullRequest":
+        yield repo.repository.pullRequests.nodes.filter((contrib) => (
+          contrib.author &&
+          contrib.author.login &&
+          contrib.author.login.toLowerCase() === username.toLowerCase())
+        ).map((_node) => {
+          let con = {};
+          con["datetime"] = _node.createdAt;
+          con["repoNameWithOwner"] = repo.repository.nameWithOwner;
+          con["repoUrl"] = repo.repository.url;
+          con["additions"] = _node.additions;
+          con["deletions"] = _node.deletions;
+          con["changedFiles"] = _node.changedFiles;
+          return con;
+        });
+        break;
+      default:
+        break;
+    }
+  }
 };
 
 // Get the busiest Day from year Object
-const getBusiestDay = year => {
+const getBusiestDay = (year) => {
   let busiestDay = null;
-  year.forEach(day => {
+  year.forEach((day) => {
     if (busiestDay == null) {
       busiestDay = day;
     } else {
@@ -44,7 +80,7 @@ const getBusiestDay = year => {
 // Get an Array of Days from User Object
 const getDaysArray = (objUser, keys) => {
   let days = [];
-  keys.forEach(c => {
+  keys.forEach((c) => {
     const year = objUser.calendar[c.toString()];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
@@ -57,9 +93,9 @@ const getDaysArray = (objUser, keys) => {
 
 // Get an Dictionary of Years from Days Array
 // Key: year, Value: Array of Days
-const getYearsDict = days => {
+const getYearsDict = (days) => {
   let years = {};
-  days.forEach(day => {
+  days.forEach((day) => {
     const year = new Date(day.date).getFullYear();
     if (years[parseInt(year)] === undefined) {
       years[parseInt(year)] = [];
@@ -71,7 +107,7 @@ const getYearsDict = days => {
 
 //> Fill functions
 // Fill the platform Table
-const fillPlatform = objUser => {
+const fillPlatform = (objUser) => {
   let statusMessage;
   let statusEmojiHTML;
 
@@ -90,6 +126,7 @@ const fillPlatform = objUser => {
   const fullName = objUser.profile.name;
   const createdAt = objUser.profile.createdAt;
   const location = objUser.profile.location;
+  const username = objUser.profile.login;
 
   db.exec(insert.platform, [
     "GitHub",
@@ -98,6 +135,7 @@ const fillPlatform = objUser => {
     websiteUrl,
     company,
     email,
+    username,
     fullName,
     createdAt,
     location,
@@ -108,7 +146,7 @@ const fillPlatform = objUser => {
 
 // Fill the member Table with Organization Members
 const fillOrgMembers = (nodes, orgId) => {
-  nodes.forEach(_member => {
+  nodes.forEach((_member) => {
     const memberAvatarUrl = _member.avatarUrl;
     const memberName = _member.name;
     const memberWebUrl = _member.url;
@@ -126,8 +164,8 @@ const fillOrgMembers = (nodes, orgId) => {
 };
 
 // Fill organization Table
-const fillOrganization = objUser => {
-  objUser.profile.organizations.edges.forEach(_org => {
+const fillOrganization = (objUser) => {
+  objUser.profile.organizations.edges.forEach((_org) => {
     const avatarUrl = _org.node.avatarUrl;
     const name = _org.node.name;
     const url = _org.node.url;
@@ -142,8 +180,8 @@ const fillOrganization = objUser => {
 };
 
 // Fill streak Table
-const fillStreak = year => {
-  year.forEach(day => {
+const fillStreak = (year) => {
+  year.forEach((day) => {
     const dayTotal = day.contributionCount;
     const dayDate = day.date;
 
@@ -156,15 +194,15 @@ const fillStreak = year => {
         streakTotal += dayTotal;
       }
     } else if (streakTotal !== 0) {
-      const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
-      db.exec(insert.streak, [
-        streakStart,
-        new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000)
-          .toISOString()
-          .substr(0, 10),
-        streakTotal,
-        statisticId
-      ]);
+      // const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
+      // db.exec(insert.streak, [
+      //   streakStart,
+      //   new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000)
+      //     .toISOString()
+      //     .substr(0, 10),
+      //   streakTotal,
+      //   statisticId
+      // ]);
       streak = false;
       streakStart = "";
       streakTotal = 0;
@@ -175,28 +213,28 @@ const fillStreak = year => {
 // Fill statistic Table
 const fillStatistic = (year, busiestDayDate) => {
   const yearNum = new Date(busiestDayDate).getFullYear();
-  const busiestDayId = db.exec("SELECT id FROM busiestDay").pop()["id"];
+  //const busiestDayId = db.exec("SELECT id FROM busiestDay").pop()["id"];
   const platformId = db.exec("SELECT id FROM platform").pop()["id"];
-  db.exec(insert.statistic, [yearNum, busiestDayId, platformId]);
+  //db.exec(insert.statistic, [yearNum, platformId]);
   fillStreak(year);
 };
 
 // Fill busiestDay Table
-const fillBusiestDay = years => {
-  Object.keys(years).forEach(y => {
+const fillBusiestDay = (years) => {
+  Object.keys(years).forEach((y) => {
     const year = years[parseInt(y)];
     const busiestDay = getBusiestDay(year);
     const busiestDayDate = busiestDay.date;
     const busiestDayCount = busiestDay.contributionCount;
-
-    db.exec(insert.busiestDay, [busiestDayDate, busiestDayCount]);
+    
+    //db.exec(insert.busiestDay, [busiestDayDate, busiestDayCount]);
     fillStatistic(year, busiestDayDate);
   });
 };
 
 // Prepare data to call functions related to Stats
-const fillStats = objUser => {
-  let keys = Object.keys(objUser.calendar).filter(str => {
+const fillStats = (objUser) => {
+  let keys = Object.keys(objUser.calendar).filter((str) => {
     return str.match(/c[0-9]+/);
   });
   const days = getDaysArray(objUser, keys);
@@ -205,7 +243,7 @@ const fillStats = objUser => {
 };
 
 // Fill repository Table
-const fillRepository = _repo => {
+const fillRepository = (_repo) => {
   const repoOwnerId = db.exec("SELECT id FROM member").pop()["id"];
   const name = _repo.repository.name;
   const repoUrl = _repo.repository.url;
@@ -217,7 +255,7 @@ const fillRepository = _repo => {
 };
 
 // Fill member Table with Repository Owner
-const fillRepoOwner = _repo => {
+const fillRepoOwner = (_repo) => {
   const repoOwnerUsername = _repo.repository.owner.login;
   const repoOwnerAvatarUrl = _repo.repository.owner.avatarUrl;
   const repoOwnerName = _repo.repository.owner.name;
@@ -232,9 +270,9 @@ const fillRepoOwner = _repo => {
 };
 
 // Fill languageSlice Table
-const fillLanguageSlice = _repo => {
+const fillLanguageSlice = (_repo) => {
   const pieId = db.exec("SELECT id FROM languagePie").pop()["id"];
-  _repo.repository.languages.edges.forEach(_edge => {
+  _repo.repository.languages.edges.forEach((_edge) => {
     const nodeName = _edge.node.name;
     const nodeSize = _edge.size;
     const nodeColor = _edge.node.color;
@@ -244,12 +282,12 @@ const fillLanguageSlice = _repo => {
 };
 
 // Fill languagePie Table
-const fillPie = reposi => {
-  reposi.forEach(_repo => {
+const fillPie = (reposi) => {
+  reposi.forEach((_repo) => {
     if (
       db.exec("SELECT name from repository WHERE name=?", [
         _repo.repository.name
-      ])[0] == null
+      ])[0] === null
     ) {
       const languagesCount = _repo.repository.languages.totalCount;
       const languagesSize = _repo.repository.languages.totalSize;
@@ -260,8 +298,8 @@ const fillPie = reposi => {
 };
 
 // Prepare data to call Tables related to Repositories
-const fillRepos = objUser => {
-  let keys = Object.keys(objUser.calendar).filter(str => {
+const fillRepos = (objUser) => {
+  let keys = Object.keys(objUser.calendar).filter((str) => {
     return str.match(/c[0-9]+/);
   });
   keys.forEach(c => {
@@ -273,9 +311,9 @@ const fillRepos = objUser => {
 
 // Fill contribs Table
 const fillContribs = (contribs, type, calendarId) => {
-  contribs.forEach(contrib => {
+  contribs.forEach((contrib) => {
     db.exec(insert.contrib, [
-      contrib.date,
+      contrib.datetime,
       contrib.repoNameWithOwner,
       contrib.repoUrl,
       contrib.additions,
@@ -288,44 +326,120 @@ const fillContribs = (contribs, type, calendarId) => {
 };
 
 // fill calendar Table
-const fillCalendar = objUser => {
-  let keys = Object.keys(objUser.calendar).filter(str => {
+const fillCalendar = (objUser) => {
+  let keys = Object.keys(objUser.calendar).filter((str) => {
     return str.match(/c[0-9]+/);
   });
-  keys.forEach(c => {
+
+  const user = db.exec("SELECT username FROM platform").pop()["username"];
+
+  let commits = Array.from(genContributionsByRepositories(
+    objUser.repoCommitHistory,
+    "commit",
+    user
+  )).flat().reduce((h, obj) => {
+    let date = obj.datetime.split("T")[0];
+    return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
+  }, {});
+
+  keys.forEach((c) => {
     const year = objUser.calendar[c.toString()];
+
+    let pullRequest = Array.from(genContributionsByRepositories(
+      year.issueContributionsByRepository,
+      "issue",
+      user
+    )).flat().reduce((h, obj) => {
+      let date = obj.datetime.split("T")[0];
+      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
+    }, {});
+
+    let issues = Array.from(genContributionsByRepositories(
+      year.pullRequestContributionsByRepository,
+      "pullRequest",
+      user
+    )).flat().reduce((h, obj) => {
+      let date = obj.datetime.split("T")[0];
+      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
+    }, {});
+
+    let currentContributions = 0;
+    let octoCats = [];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
-        const date = day.date;
+        const datetime = day.date;
+        const date = datetime.split("T")[0];
         const week = w;
         const weekday = d;
         const total = day.contributionCount;
         const color = day.color;
-        const platformId = db.exec("SELECT id FROM platform").pop()["id"];
-        db.exec(insert.calendar, [
-          date,
-          week,
-          weekday,
-          total,
-          color,
-          platformId
-        ]);
-        const commits = getContributionsByRepositories(
-          year.commitContributionsByRepository
-        );
-        const issues = getContributionsByRepositories(
-          year.issueContributionsByRepository
-        );
-        const pullRequests = getContributionsByRepositories(
-          year.pullRequestContributionsByRepository
-        );
-        const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
 
-        fillContribs(commits, "commit", calendarId);
-        fillContribs(issues, "issue", calendarId);
-        fillContribs(pullRequests, "pullRequest", calendarId);
+        let count = total;
+
+
+        if (total >= 0) {
+          const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+
+          db.exec(insert.calendar, [
+            date,
+            week,
+            weekday,
+            total,
+            color,
+            platformId
+          ]);
+          const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
+
+          if (commits[date]) {
+            fillContribs(commits[date], "commit", calendarId);
+            count -= commits[date].length;
+            currentContributions += commits[date].length;
+          }
+          if (issues[date]) {
+            fillContribs(issues[date], "issue", calendarId);
+            count -= issues[date].length;
+            currentContributions += issues[date].length;
+          }
+          if (pullRequest[date]) {
+            fillContribs(pullRequest[date], "pullRequest", calendarId);
+            count -= pullRequest[date].length;
+            currentContributions += pullRequest[date].length;
+          }
+
+          if (count >= 0) {
+            octoCats.push({
+              datetime: new Date(datetime),
+              total: count,
+              calendarId
+            });
+          }
+        }
       }
     }
+    const addOctocat = (cat) => {
+      let dDay = [];
+        for (let index = 0; index < cat.total; index++) {
+          dDay.push({
+            datetime: cat.datetime,
+            repoNameWithOwner: "octocat",
+            repoUrl: "https://github.com/octocat",
+            additions: 0,
+            deletions: 0,
+            changedFiles: 0,
+          });
+          currentContributions++;
+        }
+        fillContribs(dDay, "codeReviews", cat.calendarId);
+    };
+
+    octoCats.forEach((cat) => {
+      if(currentContributions + cat.total < year.contributionCalendar.totalContributions){
+        addOctocat(cat);
+      }
+    });
+    let lastCat = octoCats[octoCats.length-1];
+    lastCat.total = year.contributionCalendar.totalContributions - currentContributions;
+    addOctocat(lastCat);
   });
 };
 
