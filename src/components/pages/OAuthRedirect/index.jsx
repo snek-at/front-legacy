@@ -8,9 +8,12 @@ class Redirect extends React.Component {
   };
 
   getRedirect = async () => {
-    // Get name of window which was set by the parent to be the unique request key
+    // Get name of window which was set by the parent to be the unique
+    // request key
     const requestKey = window.name;
-    // Update corresponding entry with the redirected url which should contain either access token or failure reason in the query parameter / hash
+    // Update corresponding entry with the redirected url which should
+    // contain either access token or failure reason in the query
+    // parameter / hash
     localStorage.setItem(requestKey, window.location.href);
     window.close();
   };
