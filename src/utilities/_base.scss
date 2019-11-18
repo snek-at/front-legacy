@@ -2,7 +2,11 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  justify-content: space-between;
+}
+
+// Buttons
+.btn {
+  box-shadow: none;
 }
 
 // Custom colors
@@ -53,7 +57,7 @@
   color: $snekBlue !important;
 }
 
-/** 
+/**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner
  */
