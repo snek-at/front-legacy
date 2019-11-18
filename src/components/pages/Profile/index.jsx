@@ -32,7 +32,7 @@ import {
   ResumeTab,
   ProjectsTab,
   OverviewTab,
-  EducationTab
+  EducationTab,
 } from "../../organisms/tabs";
 
 //> Handlers
@@ -71,36 +71,18 @@ const tabitems = [
 ];
 
 class Dashboard extends React.Component {
-  state = {
-    data: undefined
-  };
-
-  componentDidMount = () => {
-    this.fetchData();
-  };
-
-  fetchData = async () => {
-    let data = localStorage.getItem("DUMMY_DATA");
-    if (data) {
-      let dataJSON = JSON.parse(data);
-      if (dataJSON) {
-        this.setState({
-          data: dataJSON
-        });
-      }
-    }
-  };
-
   render() {
     const { username } = this.props.match.params;
 
     // Debugging access point - get username from router
     //console.log("User via GET param: "+username);
 
-    const { data } = this.state;
+    const { globalStore } = this.props;
 
     // Debugging access point - state
-    //console.log(this.state);
+    //console.log(globalStore);
+
+    let data = globalStore.data;
 
     if (data) {
       return (

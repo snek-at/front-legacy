@@ -5,14 +5,27 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { SettingsPage, ProfilePage } from "./components/pages";
+import { SettingsPage, ProfilePage, LandingPage } from "./components/pages";
 
 class Routes extends React.Component {
   render() {
     return (
       <Switch>
+        <Route
+          exact
+          path="/"
+          component={(props) => (
+            <LandingPage globalStore={this.props} {...props} />
+          )}
+        />
         <Route exact path="/settings" component={SettingsPage} />
-        <Route exact path="/u/:username" component={ProfilePage} />
+        <Route
+          exact
+          path="/u/:username"
+          component={(props) => (
+            <ProfilePage globalStore={this.props} {...props} />
+          )}
+        />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
