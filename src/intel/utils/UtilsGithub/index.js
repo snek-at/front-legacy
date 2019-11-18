@@ -14,7 +14,7 @@ export async function fill(db, user) {
         username
       }
     });
-    
+
     const { data } = resProfile;
 
     // Debugging point
