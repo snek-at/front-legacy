@@ -1,6 +1,8 @@
+// Import Modules
 import { guid } from "../services/utilities";
 import { IProvider } from "react-very-simple-oauth";
 
+// Set the default values needed for an OAuth-Request
 const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
 const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 const state = guid();
@@ -8,6 +10,7 @@ const redirect_uri = encodeURIComponent(`https://snek.at/oauth`);
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const githubProvider: IProvider<boolean> = {
+  //Get Request to the GitHub OAuth Authorize-Site
   buildAuthorizeUrl(): string {
     return `https://github.com/login/oauth/authorize?redirect_uri=${redirect_uri}
         &client_id=${client_id}
@@ -16,6 +19,7 @@ export const githubProvider: IProvider<boolean> = {
         &state=${state}`;
   },
 
+  // Catch any error that appears during the OAuth process
   extractError(redirectUrl: string): Error | undefined {
     const errorMatch = redirectUrl.match(/error=([^&]+)/);
     if (!errorMatch) {
@@ -34,6 +38,7 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
+  // This function catches the the returned value
   async extractSession(redirectUrl: string) {
     let data = null;
     let code = null;
@@ -51,6 +56,7 @@ export const githubProvider: IProvider<boolean> = {
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
         &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
+    // POST request to get the access token from GitHub
     await fetch(AuthorizeUrl, {
       headers: {
         Accept: "application/json",
