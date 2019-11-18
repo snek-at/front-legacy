@@ -427,7 +427,7 @@ const fillCalendar = (objUser) => {
             additions: 0,
             deletions: 0,
             changedFiles: 0,
-          })
+          });
           currentContributions++;
         }
         fillContribs(dDay, "codeReviews", cat.calendarId);

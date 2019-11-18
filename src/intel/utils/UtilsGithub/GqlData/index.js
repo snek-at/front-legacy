@@ -57,7 +57,7 @@ export const GET_PROFILE = gql`
 
 // Structure GQL calendar code
 const getCalendarQueryPart = (fromYear, toYear, c) => {
-  console.log(fromYear,toYear)
+  //console.log(fromYear,toYear)
   return `
   c${c}: contributionsCollection(from:"${fromYear}", to:"${toYear}" ){
     contributionYears
@@ -190,7 +190,7 @@ const getCalendarQueryPart = (fromYear, toYear, c) => {
 
 const getRepositoryHistory = (owner, name, cursor, index) => {
   return `
-  ${owner.replace(/-/g, '_')}${name.replace(/-/g, '_')}${index}:repository(owner:"${owner}", name:"${name}"){
+  ${owner.replace(/-/g, "_")}${name.replace(/-/g, "_")}${index}:repository(owner:"${owner}", name:"${name}"){
     nameWithOwner
     defaultBranchRef{
       target{
@@ -227,18 +227,18 @@ export const generateRepositoryHistoryQuery = (bigRepos) => {
                   }
   `;
   bigRepos.forEach((repo) => {
-    let runtime = ~~(repo.repository.defaultBranchRef.target.history.totalCount / 100)
+    let runtime = ~~(repo.repository.defaultBranchRef.target.history.totalCount / 100);
     let cursor = repo.repository.defaultBranchRef.target.history.pageInfo.endCursor.split(" ")[0];
     //console.log(runtime)
     let maxRuntime = 10;
     let partsCount = 0;
     for (let index = 0; index < runtime; index++) {
-      if(maxRuntime == 0){
-        queries.append(query(queryParts[partsCount]))
+      if(maxRuntime === 0){
+        queries.append(query(queryParts[partsCount]));
         partsCount++;
         maxRuntime = 10;
       }
-      queryParts[partsCount] += getRepositoryHistory(repo.repository.owner.login, repo.repository.name, cursor, index)
+      queryParts[partsCount] += getRepositoryHistory(repo.repository.owner.login, repo.repository.name, cursor, index);
       
       maxRuntime--;
       //console.log(queryParts)
@@ -248,8 +248,8 @@ export const generateRepositoryHistoryQuery = (bigRepos) => {
   //console.log(queryParts)
   
   //console.log(query)
-  return queries
-}
+  return queries;
+};
 // Generates a dynamic query structure
 const generateCalendarsQuery = (username, createdAtDate) => {
   var currentYear = new Date().getFullYear();
@@ -262,7 +262,7 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 
   while (fromDate.getFullYear() <= currentYear) {
     query += getCalendarQueryPart(fromDate.toJSON(), toDate.toJSON(), count);
-    console.log(fromDate.toJSON());
+    //console.log(fromDate.toJSON());
     //console.log(date.setDate(date.getDate()-1))
 
     fromDate.setFullYear(fromDate.getFullYear() + 1);
