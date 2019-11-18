@@ -168,7 +168,7 @@ export function getCalendar(data) {
   today2.setFullYear(today2.getFullYear() - 1);
   baseCalendarGrid[today.getFullYear()] = generateCalendarGrid(today2, true);
   let offset = getWeekNumber(today2)[1] - 51;
-  calendar.forEach(day => {
+  calendar.forEach((day) => {
     if (day.cYear) {
       calendarGrid[day.cYear].total++;
       calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
