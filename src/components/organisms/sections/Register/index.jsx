@@ -109,6 +109,7 @@ class Register extends React.Component {
     let data = {
       username: "Aichnerc"
     };
+
     // Set the data and after the state is set, push it to the list to display
     this.setState(
       {
