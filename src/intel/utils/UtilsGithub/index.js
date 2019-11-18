@@ -6,7 +6,7 @@ import * as translator from "./Translator";
 export async function fill(db, user) {
   const getPlatform = async (db, username) => {
     const apiLink = "https://api.github.com/graphql";
-    const authorization = `Bearer ${process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN}`;
+    const authorization = `Bearer ${user.token}`;
     const client = apollo.init(apiLink, authorization);
     const resProfile = await client.query({
       query: gqlData.GET_PROFILE,
@@ -14,18 +14,52 @@ export async function fill(db, user) {
         username
       }
     });
-
+    
     const { data } = resProfile;
+    console.log("PROFILE DATA", data)
     const createdAtDate = new Date(data.user.createdAt);
 
     const resCalendar = await client.query({
       query: gqlData.getCalendar(username, createdAtDate)
     });
 
+    console.log(resCalendar.data.user);
+
+
+
+    let allReposWithHistory = {};
+    let reposPerName = {}
+    Object.values(resCalendar.data.user).forEach(c => {
+      if(c !== "User"){
+        c.commitContributionsByRepository.forEach(repo => {
+          if(repo.repository.defaultBranchRef.target.history.totalCount >= 100){
+            reposPerName[repo.repository.nameWithOwner] = repo;
+            
+          }
+          allReposWithHistory[repo.repository.nameWithOwner] = repo;
+        });
+      }
+
+    });
+    console.log("allReposHistory",allReposWithHistory)
+    gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async q => {
+      const resRepoHistory = await client.query({
+        query: q
+      });
+      Object.values(resRepoHistory.data).forEach(repo => {
+        let l1 = allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes;
+        let l2 = repo.defaultBranchRef.target.history.nodes
+        allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes = l1.concat(l2)
+      });
+    })
+    
     const objUser = {};
     objUser.profile = resProfile.data.user;
     objUser.calendar = resCalendar.data.user;
+    objUser.repoCommitHistory = Object.values(allReposWithHistory);
+
     translator.fillDB(db, objUser);
+
   };
   await getPlatform(db, user["username"]);
 }
