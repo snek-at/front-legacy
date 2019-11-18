@@ -404,7 +404,6 @@ const fillCalendar = (objUser) => {
             fillContribs(pullRequest[date], "pullRequest", calendarId);
             count -= pullRequest[date].length;
             currentContributions += pullRequest[date].length;
-
           }
 
           if (count >= 0) {
@@ -412,7 +411,7 @@ const fillCalendar = (objUser) => {
               datetime: new Date(datetime),
               total: count,
               calendarId
-            })
+            });
           }
         }
       }
