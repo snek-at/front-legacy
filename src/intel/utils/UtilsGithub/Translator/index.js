@@ -431,18 +431,17 @@ const fillCalendar = (objUser) => {
           currentContributions++;
         }
         fillContribs(dDay, "codeReviews", cat.calendarId);
-    }
+    };
 
     octoCats.forEach((cat) => {
       if(currentContributions + cat.total < year.contributionCalendar.totalContributions){
         addOctocat(cat);
       }
-    })
+    });
     let lastCat = octoCats[octoCats.length-1];
     lastCat.total = year.contributionCalendar.totalContributions - currentContributions;
     addOctocat(lastCat);
   });
-
 };
 
 // Fill the Database from User Object
