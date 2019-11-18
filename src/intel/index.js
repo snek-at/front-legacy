@@ -1,5 +1,5 @@
-//import * as data from "./IntelData";
-import * as data from "./IntelDummy";
+import * as data from "./IntelData";
+//import * as data from "./IntelDummy";
 
 import * as converter from "./Database/Converter";
 
