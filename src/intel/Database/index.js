@@ -8,7 +8,6 @@ const initTables = `
     ${create.languagePie}
     ${create.repository}
     ${create.languageSlice}
-    ${create.busiestDay}
     ${create.statistic}
     ${create.streak}
     ${create.calendar}

@@ -56,9 +56,10 @@ DROP TABLE IF EXISTS repository;
 CREATE TABLE IF NOT EXISTS repository (
     id INT NOT NULL AUTO_INCREMENT,
     avatarUrl VARCHAR(2048) NOT NULL,
+    url VARCHAR(2048) NOT NULL,
     name VARCHAR(80) NOT NULL,
     owner_id INT NULL,
-    languagePie_id INT NOT NULL,
+    languagePie_id INT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_repository_owner1
         FOREIGN KEY (owner_id)
@@ -84,27 +85,13 @@ CREATE TABLE IF NOT EXISTS languageSlice (
 );
 `;
 
-export const busiestDay = `
-DROP TABLE IF EXISTS busiestDay;
-CREATE TABLE IF NOT EXISTS busiestDay (
-    id INT NOT NULL AUTO_INCREMENT,
-    date DATE NOT NULL,
-    total INT NOT NULL,
-    PRIMARY KEY (id)
-);
-`;
-
 export const statistic = `
 DROP TABLE IF EXISTS statistic;
 CREATE TABLE IF NOT EXISTS statistic (
     id INT NOT NULL AUTO_INCREMENT,
     year INT NOT NULL,
-    busiestDay_id INT NOT NULL,
     platform_id INT NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_statistic_busiestDay1
-        FOREIGN KEY (busiestDay_id)
-        REFERENCES busiestDay (id),
     CONSTRAINT fk_statistic_platform
         FOREIGN KEY (platform_id)
         REFERENCES platform (id)
