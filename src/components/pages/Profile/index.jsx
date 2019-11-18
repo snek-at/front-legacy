@@ -18,7 +18,7 @@ import {
   MDBCardText,
   MDBAnimation,
   MDBAvatar,
-  MDBCardUp,
+  MDBCardUp
 } from "mdbreact";
 
 //> Images
@@ -26,11 +26,7 @@ import {
 
 //> Components
 // Molecules
-import { 
-  TabContainer,
-  Avatar,
-  Socialdata,
-} from "../../molecules";
+import { TabContainer, Avatar, Socialdata } from "../../molecules";
 // Organisms
 import {
   ResumeTab,
@@ -84,7 +80,7 @@ class Dashboard extends React.Component {
     const { globalStore } = this.props;
 
     // Debugging access point - state
-    console.log(globalStore);
+    //console.log(globalStore);
 
     let data = globalStore.data;
 

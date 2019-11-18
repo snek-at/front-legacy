@@ -16,7 +16,7 @@ import {
   MDBInput,
   MDBBtn,
   MDBBadge,
-  MDBIcon,
+  MDBIcon
 } from "mdbreact";
 
 //> CSS
@@ -26,49 +26,49 @@ import "./register.scss";
 const data = {
   sources: [
     {
-      id: (Math.random() * "Aichnerc".length + "gitlab".length),
+      id: Math.random() * "Aichnerc".length + "gitlab".length,
       source: "gitlab",
       username: "Aichnerc"
     },
     {
-      id: (Math.random() * "Kleberwald".length + "github".length),
+      id: Math.random() * "Kleberwald".length + "github".length,
       source: "github",
       username: "Kleberwald"
     },
     {
-      id: (Math.random() * "aichnerchristian".length + "bitbucket".length),
+      id: Math.random() * "aichnerchristian".length + "bitbucket".length,
       source: "bitbucket",
       username: "aichnerchristian"
     }
   ]
-}
+};
 
-class Register extends React.Component{
+class Register extends React.Component {
   state = {
     email: "",
     password: "",
     password1: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
-    sourceList: [],
-  }
+    sourceList: []
+  };
 
   componentDidMount = () => {
     // Preset some connected accounts for testing purposes
     this.setState({
       sourceList: data.sources
     });
-  }
+  };
 
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
-  }
+  };
 
   connectGitHub = () => {
     // Debugging
-    console.log("GitHub oAuth function called.");
+    //console.log("GitHub oAuth function called.");
 
     // Disable button while oAuth in progress
     this.setState({
@@ -81,67 +81,71 @@ class Register extends React.Component{
     // Replace with the data you get from oAuth
     let data = {
       username: "Aichnerc"
-    }
+    };
+
     // Set the data and after the state is set, push it to the list to display
-    this.setState({
-      oAuthGitHubData: data
-    }, () => this.pushToSourceList("github", data.username))
-  }
+    this.setState(
+      {
+        oAuthGitHubData: data
+      },
+      () => this.pushToSourceList("github", data.username)
+    );
+  };
 
   pushToSourceList = (source, username) => {
-    console.log(source,username);
-    let sourceList = this.state.sourceList; 
+    //console.log(source, username);
+    let sourceList = this.state.sourceList;
 
     sourceList.push({
       id: Math.random() * username.length + source.length,
-      source: source,
-      username: username,
+      source,
+      username
     });
     // Set the new list
     this.setState({
-      sourceList: sourceList
+      sourceList
     });
-  }
+  };
 
   removeSource = (id) => {
-    let sourceList = this.state.sourceList.filter(function( obj ) {
-        return obj.id !== id;
+    let sourceList = this.state.sourceList.filter(function(obj) {
+      return obj.id !== id;
     });
     this.setState({
-      sourceList: sourceList
+      sourceList
     });
-  }
+  };
 
-  render(){
-    return(
+  render() {
+    return (
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
           <h2>Join us</h2>
           <MDBInput
-          label="Email"
-          type="email"
-          name="email"
-          outline
-          value={this.state.username}
-          onChange={this.changeHandler}
-          size="lg"
+            label="Email"
+            type="email"
+            name="email"
+            outline
+            value={this.state.username}
+            onChange={this.changeHandler}
+            size="lg"
           />
           <div>
             <div>
-            <p className="lead">Connect your work</p>
+              <p className="lead">Connect your work</p>
               <small>
-              You can connect multiple accounts - even from the same platform.
+                You can connect multiple accounts - even from the same platform.
               </small>
             </div>
             <MDBBtn floating color="orange" className="mx-1" disabled>
               <MDBIcon fab icon="gitlab" />
             </MDBBtn>
-            <MDBBtn 
-            floating
-            social="git"
-            className="mx-1"
-            onClick={this.connectGitHub}
-            disabled={!this.state.oAuthGitHubButton}
+            <MDBBtn
+              floating
+              social="git"
+              className="mx-1"
+              onClick={this.connectGitHub}
+              disabled={!this.state.oAuthGitHubButton}
             >
               <MDBIcon fab icon="github" />
             </MDBBtn>
@@ -151,58 +155,53 @@ class Register extends React.Component{
           </div>
           <div>
             <MDBListGroup>
-            {this.state.sourceList.map((source, i) => {
-              return(
-                <MDBListGroupItem 
-                className={"list-item-"+source.source}
-                key={i}
-                >
-                  <div>
-                  <MDBIcon 
-                  fab
-                  icon={source.source}
-                  className="company-icon"
-                  />
-                  {source.username}
-                  </div>
-                  <MDBIcon 
-                  icon="times"
-                  className="close-icon"
-                  onClick={() => this.removeSource(source.id)}
-                  />
-                </MDBListGroupItem>
-              );
-            })}
+              {this.state.sourceList.map((source, i) => {
+                return (
+                  <MDBListGroupItem
+                    className={"list-item-" + source.source}
+                    key={i}
+                  >
+                    <div>
+                      <MDBIcon
+                        fab
+                        icon={source.source}
+                        className="company-icon"
+                      />
+                      {source.username}
+                    </div>
+                    <MDBIcon
+                      icon="times"
+                      className="close-icon"
+                      onClick={() => this.removeSource(source.id)}
+                    />
+                  </MDBListGroupItem>
+                );
+              })}
             </MDBListGroup>
           </div>
-          <MDBInput 
-          label="Password"
-          type="password"
-          name="password"
-          outline
-          value={this.state.password}
-          onChange={this.changeHandler}
-          size="lg"
+          <MDBInput
+            label="Password"
+            type="password"
+            name="password"
+            outline
+            value={this.state.password}
+            onChange={this.changeHandler}
+            size="lg"
           />
-          <MDBInput 
-          label="Repeat password"
-          type="password"
-          name="username2"
-          outline
-          value={this.state.password2}
-          onChange={this.changeHandler}
-          size="lg"
+          <MDBInput
+            label="Repeat password"
+            type="password"
+            name="username2"
+            outline
+            value={this.state.password2}
+            onChange={this.changeHandler}
+            size="lg"
           />
-          <MDBBtn
-          color="success"
-          className="w-100 py-3 font-weight-bold"
-          >
-          Sign up for SNEK
+          <MDBBtn color="success" className="w-100 py-3 font-weight-bold">
+            Sign up for SNEK
           </MDBBtn>
         </MDBCardBody>
-        <MDBCardFooter>
-
-        </MDBCardFooter>
+        <MDBCardFooter></MDBCardFooter>
       </MDBCard>
     );
   }

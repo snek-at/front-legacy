@@ -14,7 +14,7 @@ class Routes extends React.Component {
         <Route
           exact
           path="/"
-          component={props => (
+          component={(props) => (
             <LandingPage globalStore={this.props} {...props} />
           )}
         />
@@ -22,7 +22,7 @@ class Routes extends React.Component {
         <Route
           exact
           path="/u/:username"
-          component={props => (
+          component={(props) => (
             <ProfilePage globalStore={this.props} {...props} />
           )}
         />
