@@ -8,7 +8,7 @@ let streakTotal = 0;
 
 //> Helper functions
 // Get an Array with Contributions from contributionsByRepository Object
-const genContributionsByRepositories = function*(contributionsByRepository, type, username) {
+const genContributionsByRepositories = function* (contributionsByRepository, type, username) {
   for (const repo of contributionsByRepository) {
     switch(type){
       case "commit":
@@ -57,8 +57,8 @@ const genContributionsByRepositories = function*(contributionsByRepository, type
         });
         break;
       default:
-        return null
-    };
+        break;
+    }
   }
 };
 
@@ -340,7 +340,7 @@ const fillCalendar = (objUser) => {
   )).flat().reduce((h, obj) => {
     let date = obj.datetime.split("T")[0];
     return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
-  }, {})
+  }, {});
 
   keys.forEach((c) => {
     const year = objUser.calendar[c.toString()];
