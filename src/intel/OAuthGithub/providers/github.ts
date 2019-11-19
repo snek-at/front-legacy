@@ -1,13 +1,16 @@
+// Import Modules
 import { guid } from "../services/utilities";
 import { IProvider } from "react-very-simple-oauth";
 
+// Set the default values needed for an OAuth-Request
 const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
 const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 const state = guid();
-const redirect_uri = encodeURIComponent(`https://snek.at/oauth`);
+const redirect_uri = encodeURIComponent("https://snek.at/oauth");
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const githubProvider: IProvider<boolean> = {
+  //Get Request to the GitHub OAuth Authorize-Site
   buildAuthorizeUrl(): string {
     return `https://github.com/login/oauth/authorize?redirect_uri=${redirect_uri}
         &client_id=${client_id}
@@ -16,6 +19,7 @@ export const githubProvider: IProvider<boolean> = {
         &state=${state}`;
   },
 
+  // Catch any error that appears during the OAuth process
   extractError(redirectUrl: string): Error | undefined {
     const errorMatch = redirectUrl.match(/error=([^&]+)/);
     if (!errorMatch) {
@@ -34,7 +38,9 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
-  extractSession(redirectUrl: string): boolean {
+  // This function catches the the returned value
+  async extractSession(redirectUrl: string) {
+    let data = null;
     let code = null;
     const codeMatch = redirectUrl.match(/code=([^&]+)/);
     if (codeMatch) {
@@ -50,7 +56,8 @@ export const githubProvider: IProvider<boolean> = {
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
         &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
-    fetch(AuthorizeUrl, {
+    // POST request to get the access token from GitHub
+    await fetch(AuthorizeUrl, {
       headers: {
         Accept: "application/json",
         "Access-Allow-Credentials": "True",
@@ -61,17 +68,18 @@ export const githubProvider: IProvider<boolean> = {
       },
       method: "POST",
     })
+    .then(async res => await res.json())
+    .then(async res => {
+      const access_token = res.access_token
+      // GET request to get the user used for OAuth 
+      await fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
       .then(res => {
-        const access_token = res.access_token
-        fetch(`https://api.github.com/user?access_token=${access_token}`)
-          .then(async res => await res.json())
-          .then(res => {
-            window.localStorage.setItem("access_token", access_token);
-            window.localStorage.setItem("user", res.login);
-          });
+        data = {'username':res.login, 'access_token': access_token};
+        return data;
       });
-    return true;
+    });
+    return data;
   },
 };
 
