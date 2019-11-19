@@ -21,20 +21,14 @@ class TextTypist extends React.Component{
   }
 
   onTypingDone = () => {
-    this.setState(
-      {
-        scope: null
-      },
-      () =>
-        // run this callback after the state updates
-        this.setState({
-          scope: this.props.scope
-        })
-    );
+    this.setState({
+      scope: null
+    }, () => this.setState({
+      scope: this.props.scope
+    }));
   };
 
   render(){
-    console.log(this.state);
     if(this.state.scope){
       return(
         <Typist 
@@ -44,7 +38,7 @@ class TextTypist extends React.Component{
           blink: true,
           element: '_',
         }}
-        onTypingDone={this.onTypingDone}
+        onTypingDone={() => this.onTypingDone()}
         >
           <Typist.Delay ms={2000} />
           {this.state.scope.map((text, i) => {
