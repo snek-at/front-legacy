@@ -250,9 +250,9 @@ const fillLanguageSlice = (_repo) => {
 const fillPie = (reposi) => {
   reposi.forEach((_repo) => {
     if (
-      db.exec("SELECT name from repository WHERE name=?", [
-        _repo.repository.name
-      ])[0] === null
+      db.exec("SELECT url from repository WHERE url=?", [
+        _repo.repository.url
+      ])[0] === undefined
     ) {
       const languagesCount = _repo.repository.languages.totalCount;
       const languagesSize = _repo.repository.languages.totalSize;
