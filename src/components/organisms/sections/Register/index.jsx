@@ -259,7 +259,7 @@ class Register extends React.Component {
             onChange={this.changeHandler}
             size="lg"
           />
-          <MDBBtn color="success" className="w-100 py-3 font-weight-bold">
+          <MDBBtn color="success" className="w-100 py-3 font-weight-bold mx-0">
             Sign up for SNEK
           </MDBBtn>
         </MDBCardBody>
