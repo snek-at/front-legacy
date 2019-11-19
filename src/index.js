@@ -11,6 +11,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 //> Bootstrap
 import "bootstrap-css-only/css/bootstrap.min.css";
 
+//> Typist css
+import "react-typist/dist/Typist.css";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import "mdbreact/dist/css/mdb.css";
