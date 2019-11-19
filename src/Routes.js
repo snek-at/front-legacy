@@ -20,7 +20,10 @@ class Routes extends React.Component {
           exact
           path="/"
           component={(props) => (
-            <LandingPage globalStore={this.props} {...props} />
+            <LandingPage 
+            globalStore={this.props}
+            {...props}
+            />
           )}
         />
         <Route exact path="/settings" component={SettingsPage} />
