@@ -16,11 +16,16 @@ import {
   MDBNavbarToggler,
   MDBCollapse,
   MDBFormInline,
+  MDBInput,
+  MDBIcon,
   MDBDropdown,
   MDBDropdownToggle,
   MDBDropdownMenu,
   MDBDropdownItem
 } from "mdbreact";
+
+//> CSS
+import "./navbar.scss";
 
 class Navbar extends React.Component {
   state = {
@@ -42,42 +47,31 @@ class Navbar extends React.Component {
           </MDBNavbarBrand>
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
+            <div className="md-form my-0 mx-2">
+              <MDBInput
+                className="mr-sm-2"
+                outline
+                type="text"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <MDBIcon icon="search" />
+            </div>
             <MDBNavbarNav left>
               <MDBNavItem>
-                <MDBNavLink to="#!">Features</MDBNavLink>
+                <MDBNavLink to="#!">Ranking</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to="#!">Pricing</MDBNavLink>
+                <MDBNavLink to="#!">Developer</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBDropdown>
-                  <MDBDropdownToggle nav caret>
-                    <span className="mr-2">Services</span>
-                  </MDBDropdownToggle>
-                  <MDBDropdownMenu>
-                    <MDBDropdownItem href="#!">Action</MDBDropdownItem>
-                    <MDBDropdownItem href="#!">
-                      Another Action
-                    </MDBDropdownItem>
-                    <MDBDropdownItem href="#!">
-                      Something else here
-                    </MDBDropdownItem>
-                    <MDBDropdownItem href="#!">
-                      Something else here
-                    </MDBDropdownItem>
-                  </MDBDropdownMenu>
-                </MDBDropdown>
+                <MDBNavLink to="#!">Jobs</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
             <MDBNavbarNav right>
-              <div className="md-form my-0 mx-2">
-                <input
-                  className="form-control mr-sm-2"
-                  type="text"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
-              </div>
               <MDBNavItem active={data.pageLogin}>
               {location.pathname === "/" ? (
                 <span 
