@@ -118,13 +118,13 @@ class App extends React.Component {
   _loginUser = () => {
     this.props.login()
     .then(({data}) => {
-        if(data !== undefined){
-          this._setLogged(data.tokenAuth.token);
-        }
+      if(data !== undefined){
+        this._setLogged(data.tokenAuth.token);
+      }
     })
-    .catch(error => {
-        //console.error("Mutation error:",error);
-    })
+    .catch((error) => {
+      //console.error("Mutation error:",error);
+    });
   }
 
   _setLogged = (token) => {
