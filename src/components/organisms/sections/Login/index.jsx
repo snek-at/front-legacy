@@ -9,7 +9,7 @@ import { gql } from "apollo-boost";
 
 //> Additional modules
 // Password hashing
-import { sha256 } from 'js-sha256';
+import { sha256 } from "js-sha256";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -58,16 +58,16 @@ class Login extends React.Component{
       variables: { "username": this.state.username, "password": sha256(this.state.password) }
     })
     .then(({data}) => {
-        console.log(data);
-        if(data.tokenAuth){
-          if(data.tokenAuth.token){
-            this.props.loginHandler(data.tokenAuth.token);
-          }
+      //console.log(data);
+      if(data.tokenAuth){
+        if(data.tokenAuth.token){
+          this.props.loginHandler(data.tokenAuth.token);
         }
+      }
     })
-    .catch(error => {
-        console.warn("Mutation error:",error.message);
-    })
+    .catch((error) => {
+      //console.warn("Mutation error:",error.message);
+    });
   }
 
   render(){
@@ -107,7 +107,7 @@ class Login extends React.Component{
 }
 
 export default compose(
-  graphql(LOGIN_USER, { name: 'login' }),
+  graphql(LOGIN_USER, { name: "login" }),
 )(withApollo(Login));
 
 /**

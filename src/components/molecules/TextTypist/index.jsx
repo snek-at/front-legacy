@@ -36,7 +36,7 @@ class TextTypist extends React.Component{
         cursor={{
           show: true,
           blink: true,
-          element: '_',
+          element: "_",
         }}
         onTypingDone={() => this.onTypingDone()}
         >

@@ -37,7 +37,7 @@ class Landing extends React.Component {
   }
 
   logMeIn = (token) => {
-    localStorage.setItem('fprint', token);
+    localStorage.setItem("fprint", token);
   }
 
   render() {

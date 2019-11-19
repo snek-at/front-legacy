@@ -75,7 +75,7 @@ class App extends React.Component {
       pageLogin: false,
     });
 
-    if(localStorage.getItem('fprint') !== null){
+    if(localStorage.getItem("fprint") !== null){
       try {
         // Verify Token on first load
         this._verifyToken();
@@ -84,7 +84,7 @@ class App extends React.Component {
           this._verifyToken();
         }, 240000);
       } catch(e) {
-        console.log(e);
+        //console.log(e);
       }
     } else {
       this._loginUser();
@@ -93,7 +93,7 @@ class App extends React.Component {
 
   _verifyToken = () => {
     this.props.verify({
-      variables: { "token": localStorage.getItem('fprint') }
+      variables: { "token": localStorage.getItem("fprint") }
     })
     .then(({data}) => {
         if(data !== undefined){
@@ -104,10 +104,10 @@ class App extends React.Component {
               localStorage.getItem('fprint')
             );
           } else {
-            console.warn("No token in payload.");
+            //console.warn("No token in payload.");
           }
         } else {
-          console.warn("No token in payload.");
+          //console.warn("No token in payload.");
         }
     })
     .catch(error => {
@@ -123,15 +123,15 @@ class App extends React.Component {
         }
     })
     .catch(error => {
-        console.error("Mutation error:",error);
+        //console.error("Mutation error:",error);
     })
   }
 
   _setLogged = (token) => {
     this.setState({
-      token: token,
+      token,
       loaded: true,
-    }, () => localStorage.setItem('fprint', token));
+    }, () => localStorage.setItem("fprint", token));
   }
 
   _isLogged = (exp, orig, token) => {
@@ -155,12 +155,12 @@ class App extends React.Component {
       variables: { "token": token }
     })
     .then(({data}) => {
-        if(data !== undefined){
-          localStorage.setItem('fprint', data.refreshToken.token);
-        }
+      if(data !== undefined){
+        localStorage.setItem('fprint', data.refreshToken.token);
+      }
     })
-    .catch(error => {
-        console.warn("Mutation error:",error);
+    .catch((error) => {
+      //console.warn("Mutation error:",error);
     })
   }
 
@@ -173,7 +173,7 @@ class App extends React.Component {
   render() {
     // Debugging
     //console.log(this.state);
-    console.log(this.state);
+
     // Check if every state is set
     if (
       !this.state.contrib &&
@@ -209,9 +209,9 @@ class App extends React.Component {
 }
 
 export default compose(
-  graphql(VERIFY_TOKEN, { name: 'verify' }),
-  graphql(REFRESH_TOKEN, { name: 'refresh' }),
-  graphql(LOGIN_USER, { name: 'login' }),
+  graphql(VERIFY_TOKEN, { name: "verify" }),
+  graphql(REFRESH_TOKEN, { name: "refresh" }),
+  graphql(LOGIN_USER, { name: "login" }),
 )(withApollo(App));
 
 /**
