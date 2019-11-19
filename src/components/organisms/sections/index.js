@@ -1,8 +1,12 @@
 //> Components
 // Import all components to export them for easy access from parent components
 import Register from "./Register";
+import Login from "./Login";
 
-export { Register };
+export { 
+  Register,
+  Login,
+};
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
