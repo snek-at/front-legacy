@@ -190,7 +190,7 @@ const fillCalendar = async user => {
         .getElementsByTagName("time")[0]
         .getAttribute("datetime");
       datetime = new Date(datetime);
-      let date = `${datetime.getFullYear()}-${datetime.getMonth()}-${datetime.getDate()}`;
+      let date = `${datetime.getFullYear()}-${datetime.getMonth()+1}-${datetime.getDate()}`;
       let week = datetime.getWeekNumber().toString();
       let weekday = datetime.getDay().toString();
 
