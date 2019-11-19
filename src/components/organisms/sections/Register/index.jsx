@@ -26,27 +26,6 @@ import {
 //> CSS
 import "./register.scss";
 
-//> Dummy data
-const data = {
-  sources: [
-    {
-      id: Math.random() * "Aichnerc".length + "gitlab".length,
-      source: "gitlab",
-      username: "Aichnerc"
-    },
-    {
-      id: Math.random() * "Kleberwald".length + "github".length,
-      source: "github",
-      username: "Kleberwald"
-    },
-    {
-      id: Math.random() * "aichnerchristian".length + "bitbucket".length,
-      source: "bitbucket",
-      username: "aichnerchristian"
-    }
-  ]
-};
-
 class Register extends React.Component {
   state = {
     email: "",
@@ -61,20 +40,7 @@ class Register extends React.Component {
   };
 
   componentDidMount = () => {
-    // Preset some connected accounts for testing purposes
-    let usernames = this.state.usernames;
-    let sourceList = this.state.sourceList;
-
-    data.sources.map((source, i) => {
-      sourceList.push(source);
-
-      this.setState(
-        {
-          sourceList
-        },
-        () => this.addToUsernames(source.username)
-      );
-    });
+    document.title = "SNEK - Where sneks combine";
   };
 
   addToUsernames = (username) => {
