@@ -1,5 +1,19 @@
 import * as select from "../Statements/Select";
 
+function getWeekNumber(d) {
+  // Copy date so don't modify original
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  // Set to nearest Thursday: current date + 4 - current day number
+  // Make Sunday's day number 7
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  // Get first day of year
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  // Calculate full weeks to nearest Thursday
+  var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  // Return array of year and week number
+  return [d.getUTCFullYear(), weekNo];
+}
+
 // Formats a date to YYYY-MM-DD format
 const formatDate = (date) => {
   return date.toISOString().split("T")[0];
@@ -136,6 +150,57 @@ export function getLanguages(data) {
   return pie;
 }
 
+export function getCalendar(data) {
+  let calendar = data.exec(select.calendar);
+  let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
+
+  let calendarGrid = {};
+  let baseCalendarGrid = {};
+
+  for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
+    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1), true);
+  }
+
+  let today = new Date();
+  today.setDate(today.getDate() + 1);
+
+  let today2 = new Date();
+  today2.setFullYear(today2.getFullYear() - 1);
+  baseCalendarGrid[today.getFullYear()] = generateCalendarGrid(today2, true);
+  let offset = getWeekNumber(today2)[1] - 51;
+  calendar.forEach((day) => {
+    if (day.cYear) {
+      calendarGrid[day.cYear].total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
+        .total++;
+      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
+        day.cWeekday
+      ].color = day.cColor;
+
+      if (day.cYear === today2.getFullYear() - 1 && day.cWeek >= 52 - offset) {
+        baseCalendarGrid[day.cYear].total++;
+        baseCalendarGrid[day.cYear].weeks[day.cWeek + offset - 52]
+          .contributionDays[day.cWeekday].total++;
+      } else if (
+        day.cYear === today2.getFullYear() &&
+        day.cWeek <= 52 + offset
+      ) {
+        baseCalendarGrid[day.cYear].total++;
+        baseCalendarGrid[day.cYear].weeks[day.cWeek - offset].contributionDays[
+          day.cWeekday
+        ].total++;
+      }
+    }
+  });
+
+  return {
+    years: dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid)),
+    currentYear: dictCalendarToArray(
+      calculateColorsForCalendarDay(baseCalendarGrid)
+    )
+  };
+}
+
 const generateCalendarGrid = (date, flag) => {
   let emptyContributionYear = {};
   emptyContributionYear.weeks = {};
@@ -196,33 +261,6 @@ const calculateColorsForCalendarDay = (rawCalendar) => {
 
   return rawCalendar;
 };
-
-export function getCalendar(data) {
-  let calendar = data.exec(select.calendar);
-  let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
-
-  let calendarGrid = {};
-
-  for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1));
-  }
-
-  let today = new Date();
-  today.setDate(today.getDate() + 1);
-
-  calendar.forEach((day) => {
-    if (day.cYear) {
-      calendarGrid[day.cYear].total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[day.cWeekday]
-        .total++;
-      calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
-        day.cWeekday
-      ].color = day.cColor;
-    }
-  });
-
-  return dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid));
-}
 
 function dictCalendarToArray(dict) {
   let obj = JSON.parse(JSON.stringify(dict));
