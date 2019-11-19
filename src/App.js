@@ -91,7 +91,7 @@ class App extends React.Component {
     }
   };
 
-   _verifyToken = () => {
+  _verifyToken = () => {
     this.props.verify({
       variables: { "token": localStorage.getItem('fprint') }
     })
