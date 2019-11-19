@@ -62,21 +62,6 @@ const genContributionsByRepositories = function* (contributionsByRepository, typ
   }
 };
 
-// Get the busiest Day from year Object
-const getBusiestDay = (year) => {
-  let busiestDay = null;
-  year.forEach((day) => {
-    if (busiestDay == null) {
-      busiestDay = day;
-    } else {
-      if (day.contributionCount > busiestDay.contributionCount) {
-        busiestDay = day;
-      }
-    }
-  });
-  return busiestDay;
-};
-
 // Get an Array of Days from User Object
 const getDaysArray = (objUser, keys) => {
   let days = [];
@@ -179,59 +164,6 @@ const fillOrganization = (objUser) => {
   });
 };
 
-// Fill streak Table
-const fillStreak = (year) => {
-  year.forEach((day) => {
-    const dayTotal = day.contributionCount;
-    const dayDate = day.date;
-
-    if (dayTotal !== 0) {
-      if (!streak) {
-        streak = true;
-        streakStart = dayDate;
-        streakTotal = dayTotal;
-      } else {
-        streakTotal += dayTotal;
-      }
-    } else if (streakTotal !== 0) {
-      // const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
-      // db.exec(insert.streak, [
-      //   streakStart,
-      //   new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000)
-      //     .toISOString()
-      //     .substr(0, 10),
-      //   streakTotal,
-      //   statisticId
-      // ]);
-      streak = false;
-      streakStart = "";
-      streakTotal = 0;
-    }
-  });
-};
-
-// Fill statistic Table
-const fillStatistic = (year, busiestDayDate) => {
-  const yearNum = new Date(busiestDayDate).getFullYear();
-  //const busiestDayId = db.exec("SELECT id FROM busiestDay").pop()["id"];
-  const platformId = db.exec("SELECT id FROM platform").pop()["id"];
-  //db.exec(insert.statistic, [yearNum, platformId]);
-  fillStreak(year);
-};
-
-// Fill busiestDay Table
-const fillBusiestDay = (years) => {
-  Object.keys(years).forEach((y) => {
-    const year = years[parseInt(y)];
-    const busiestDay = getBusiestDay(year);
-    const busiestDayDate = busiestDay.date;
-    const busiestDayCount = busiestDay.contributionCount;
-    
-    //db.exec(insert.busiestDay, [busiestDayDate, busiestDayCount]);
-    fillStatistic(year, busiestDayDate);
-  });
-};
-
 // Prepare data to call functions related to Stats
 const fillStats = (objUser) => {
   let keys = Object.keys(objUser.calendar).filter((str) => {
@@ -239,7 +171,40 @@ const fillStats = (objUser) => {
   });
   const days = getDaysArray(objUser, keys);
   const years = getYearsDict(days);
-  fillBusiestDay(years);
+
+  Object.keys(years).forEach((y) => {
+    const yearObj = years[parseInt(y)];
+    const yearNum = y;
+    const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+
+    db.exec(insert.statistic, [yearNum, platformId]);
+
+    yearObj.forEach((day) => {
+      const dayTotal = day.contributionCount;
+      const dayDate = day.date;
+
+      if (dayTotal !== 0) {
+        if (!streak) {
+          streak = true;
+          streakStart = dayDate;
+          streakTotal = dayTotal;
+        } else {
+          streakTotal += dayTotal;
+        }
+      } else if (streakTotal !== 0) {
+      const statisticId = db.exec("SELECT id FROM statistic").pop()["id"];
+      db.exec(insert.streak, [
+        new Date(streakStart),
+        new Date(new Date(dayDate).getTime() - 24 * 60 * 60 * 1000),
+        streakTotal,
+        statisticId
+      ]);
+        streak = false;
+        streakStart = "";
+        streakTotal = 0;
+      }
+    });
+  });
 };
 
 // Fill repository Table
