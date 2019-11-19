@@ -101,7 +101,7 @@ class App extends React.Component {
             this._isLogged(
               data.verifyToken.payload.exp,
               data.verifyToken.payload.origIat,
-              localStorage.getItem('fprint')
+              localStorage.getItem("fprint")
             );
           } else {
             //console.warn("No token in payload.");
@@ -110,8 +110,8 @@ class App extends React.Component {
           //console.warn("No token in payload.");
         }
     })
-    .catch(error => {
-        console.warn("Mutation error:",error);
+    .catch((error) => {
+      //console.warn("Mutation error:",error);
     })
   }
 
@@ -152,16 +152,16 @@ class App extends React.Component {
 
   _refeshToken = (token) => {
     this.props.refresh({
-      variables: { "token": token }
+      variables: { token }
     })
     .then(({data}) => {
       if(data !== undefined){
-        localStorage.setItem('fprint', data.refreshToken.token);
+        localStorage.setItem("fprint", data.refreshToken.token);
       }
     })
     .catch((error) => {
       //console.warn("Mutation error:",error);
-    })
+    });
   }
 
   handleChangeState = (key, value) => {
