@@ -24,6 +24,11 @@ import {
   MDBDropdownItem
 } from "mdbreact";
 
+//> Components
+import { 
+  SearchBar
+} from "../../molecules";
+
 //> CSS
 import "./navbar.scss";
 
@@ -47,16 +52,7 @@ class Navbar extends React.Component {
           </MDBNavbarBrand>
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
-            <div className="md-form my-0 mx-2">
-              <MDBInput
-                className="mr-sm-2"
-                outline
-                type="text"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <MDBIcon icon="search" />
-            </div>
+            <SearchBar />
             <MDBNavbarNav left>
               <MDBNavItem>
                 <MDBNavLink to="#!">Ranking</MDBNavLink>

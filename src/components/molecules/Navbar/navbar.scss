@@ -26,8 +26,16 @@
 		.md-form.md-outline textarea.md-textarea:focus:not([readonly]) {
       border-color: #00e25b;
       box-shadow: inset 0 0 0 1px #00e25b;
-		}
-	}
+    }
+  }
+  .search-results{
+    position: absolute;
+    top: 60px;
+    width: 250px;
+    z-index: 999;
+    height: auto;
+    background: white;
+  }
 }
 
 /**

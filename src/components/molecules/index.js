@@ -8,6 +8,7 @@ import Calendar3D from "./Calendar3D";
 import LanguageChart from "./LanguageChart";
 import Navbar from "./Navbar";
 import TextTypist from "./TextTypist";
+import SearchBar from "./SearchBar";
 
 export {
   TabContainer,
@@ -18,6 +19,7 @@ export {
   LanguageChart,
   Navbar,
   TextTypist,
+  SearchBar,
 };
 
 /**
