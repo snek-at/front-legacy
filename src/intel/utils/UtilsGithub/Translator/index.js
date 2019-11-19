@@ -212,8 +212,9 @@ const fillRepository = (_repo) => {
   const repoOwnerId = db.exec("SELECT id FROM member").pop()["id"];
   const name = _repo.repository.name;
   const repoUrl = _repo.repository.url;
+  const avatarUrl = _repo.repository.openGraphImageUrl;
   const pieId = db.exec("SELECT id FROM languagePie").pop()["id"];
-  db.exec(insert.repository, [repoUrl, name, repoOwnerId, pieId]);
+  db.exec(insert.repository, [avatarUrl, repoUrl, name, repoOwnerId, pieId]);
   const repoId = db.exec("SELECT id FROM repository").pop()["id"];
   const platformId = db.exec("SELECT id FROM platform").pop()["id"];
   db.exec(insert.platformHasRepository, [platformId, repoId]);
