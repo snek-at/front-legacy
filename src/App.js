@@ -112,7 +112,7 @@ class App extends React.Component {
     })
     .catch((error) => {
       //console.warn("Mutation error:",error);
-    })
+    });
   }
 
   _loginUser = () => {
