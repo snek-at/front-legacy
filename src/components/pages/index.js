@@ -6,7 +6,7 @@ import ProfilePage from "./Profile";
 import LandingPage from "./Landing";
 
 export { 
-  RedirectPage
+  RedirectPage,
   SettingsPage,
   ProfilePage,
   LandingPage,
