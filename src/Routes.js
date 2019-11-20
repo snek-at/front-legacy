@@ -13,6 +13,7 @@ import {
 } from "./components/pages";
 
 class Routes extends React.Component {
+
   render() {
     return (
       <Switch>
@@ -22,6 +23,7 @@ class Routes extends React.Component {
           component={(props) => (
             <LandingPage 
             globalStore={this.props}
+            login={this.props.login}
             {...props}
             />
           )}
@@ -29,9 +31,11 @@ class Routes extends React.Component {
         <Route exact path="/settings" component={SettingsPage} />
         <Route
           exact
-          path="/u/:username"
+          path="/me"
           component={(props) => (
-            <ProfilePage globalStore={this.props} {...props} />
+            <ProfilePage 
+            globalStore={this.props} {...props}
+            />
           )}
         />
         <Route exact path="/oauth" component={RedirectPage} />

@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+// Router
+import { Redirect } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -38,10 +40,14 @@ class Landing extends React.Component {
 
   logMeIn = (token) => {
     localStorage.setItem("fprint", token);
+    console.log("Test");
+    this.props.login(token);
   }
 
   render() {
     const { globalStore } = this.props;
+
+    if(globalStore.data.logged) { return (<Redirect to="/me"/>) }
 
     if(globalStore.data.loaded){
       return (
