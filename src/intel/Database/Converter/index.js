@@ -246,8 +246,8 @@ const getCalendarFromDates = (fullDays) => {
   year.weeks = [];
   year.total = 0;
   year.fromDate = new Date(fullDays[0].date);
-  year.toDate = new Date(fullDays[fullDays.length -1 ].date);
-  
+  year.toDate = new Date(fullDays[fullDays.length - 1].date);
+
   for (let indexW = 0; indexW < 53; indexW++) {
     let week = {};
     week.contributionDays = [];
