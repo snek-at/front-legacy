@@ -4,7 +4,7 @@ import React from "react";
 
 //> Chart.js
 // "Material Design for Bootstrap" is using chart.js to generate its charts
-import { Polar } from "react-chartjs-2";
+import { Radar } from "react-chartjs-2";
 
 class LanguageChart extends React.Component {
   state = {
@@ -25,26 +25,56 @@ class LanguageChart extends React.Component {
     }
   };
 
+  componentDidMount = () => {
+    let languages = this.props.languages.slices;
+
+    let colors = [];
+    let labels = [];
+    let data = [];
+
+    Object.values(languages).map((language, i) => {
+      colors.push(language.color);
+      labels.push(language.name);
+      data.push(language.share);
+    });
+    console.log(colors, labels);
+
+    this.setState({
+      dataPolar: {
+        datasets: [
+          {
+            data,
+            backgroundColor: colors,
+            label: "Your top languages"
+          }
+        ],
+        labels
+      }
+    });
+  }
+
   render() {
     return (
       <>
         <p className="lead font-weight-bold text-center mt-3">
           Your top languages
         </p>
-        <Polar
-          className="w-100 h-auto"
-          data={this.state.dataPolar}
-          options={
-            ({
-              responsive: true
-            },
-            {
-              legend: {
-                display: false
-              }
-            })
-          }
-        />
+        {this.state.dataPolar &&
+          <Radar
+            className="w-100 h-auto"
+            data={this.state.dataPolar}
+            options={
+              ({
+                responsive: true
+              },
+              {
+                legend: {
+                  display: false
+                }
+              })
+            }
+          />
+        }
       </>
     );
   }

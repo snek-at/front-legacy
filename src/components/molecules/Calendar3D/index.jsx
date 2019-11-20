@@ -2,6 +2,10 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 
+//> Additional libraries
+// Time management
+import moment from "moment";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBRow, MDBCol } from "mdbreact";
@@ -10,7 +14,7 @@ import { MDBRow, MDBCol } from "mdbreact";
 import changeHue from "../../helpers/changeHue.js";
 
 //> Dummy data
-import dummyData from "./dummydata.js";
+//import dummyData from "./dummydata.js";
 
 //> CSS
 import "./calendar3d.scss";
@@ -38,24 +42,24 @@ class Calender3D extends React.Component {
   componentDidMount = () => {
     // Add resize listener
     window.addEventListener("resize", this.updateDimensions);
-    this.setState(
-      {
-        width: this.myInput.current.offsetWidth
-      },
-      () => this.renderIsometrics()
-    );
+    this.setState({
+      width: this.myInput.current.offsetWidth
+    }, () => this.renderIsometrics());
   };
 
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
 
-    countTotal = "1.641";
-    averageCount = "4.47";
-    datesTotal = "Oct 7, 2018 - Oct 9, 2019";
-    maxCount = "43";
-    dateBest = "Aug 14";
+    let contribData = this.props.contrib["2019"];
+    let contributionCalendar = this.props.calendar.currentYear["2019"];
 
-    // Dummy data
+    countTotal = contributionCalendar.total;
+    averageCount = contribData.average;
+    datesTotal = moment(new Date()).format("MMM DD, YYYY") + " - " + moment(new Date()).subtract(1, 'year').format("MMM DD, YYYY");
+    maxCount = contribData.busiestDay.total;
+    dateBest = moment(contribData.busiestDay.date).format("MMM DD");
+
+    // "Oct 7, 2018 - Oct 9, 2019"
 
     let html;
     html = `<div class="ic-stats-block ic-stats-top">\n
@@ -88,10 +92,17 @@ class Calender3D extends React.Component {
   renderBottomStats() {
     let streakLongest, datesLongest, streakCurrent, datesCurrent;
 
-    streakLongest = "46";
-    datesLongest = "Jul 30 - Sep 13";
-    streakCurrent = "5";
-    datesCurrent = "Oct 5 - Oct 9";
+    let contribData = this.props.contrib["2019"];
+    let contributionCalendar = this.props.calendar.currentYear["2019"];
+
+    streakLongest = contribData.longestStreak.total;
+    datesLongest = moment(contribData.longestStreak.startDate).format("MMM DD, YYYY") 
+    + " - " 
+    + moment(contribData.longestStreak.endDate).format("MMM DD, YYYY");
+    streakCurrent = contribData.currentStreak.total;
+    datesCurrent = moment(contribData.currentStreak.startDate).format("MMM DD, YYYY") 
+    + " - " 
+    + moment(contribData.currentStreak.endDate).format("MMM DD, YYYY");
 
     let html;
     html = `<div class="ic-stats-block ic-stats-bottom">\n
@@ -129,10 +140,8 @@ class Calender3D extends React.Component {
     // Canvas could be either DOM or jQuery element
     let pixelView = new obelisk.PixelView(this.context, point);
 
-    //> Dummy data
     // Get contribs
-    let contributions =
-      dummyData.data.viewer.contributionsCollection.contributionCalendar;
+    let contributions = this.props.calendar.currentYear["2019"];
 
     // Define basic variables
     let SIZE = 10;
@@ -147,8 +156,8 @@ class Calender3D extends React.Component {
       values[wkey] = [];
       week.contributionDays.map((day, dkey) => {
         // Get max number of contributions
-        if (day.contributionCount > maxCount) {
-          maxCount = day.contributionCount;
+        if (day.total > maxCount) {
+          maxCount = day.total;
         }
         values[wkey][dkey] = day;
       });
@@ -160,7 +169,7 @@ class Calender3D extends React.Component {
         let cubeHeight = 3;
         if (maxCount > 0) {
           cubeHeight += parseInt(
-            (MAXHEIGHT / maxCount) * day.contributionCount
+            (MAXHEIGHT / maxCount) * day.total
           );
         }
 
@@ -187,8 +196,7 @@ class Calender3D extends React.Component {
   };
 
   render() {
-    //console.log(this.state);
-    //console.log(this.state.contributionsList);
+    console.log(this.state);
     return (
       <div id="calendar3d">
         <div dangerouslySetInnerHTML={this.renderTopStats()} />
