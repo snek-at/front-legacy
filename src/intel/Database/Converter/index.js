@@ -198,7 +198,7 @@ export function getCalendar(data) {
   }
 
   let fullDays = expandDaysToFullYear(contributionDays);
-  let combinedCalendar = getCalendarFromDates(fullDays);
+  let currentCalendar = getCalendarFromDates(fullDays);
 
   for (let [k, v] of Object.entries(dictCalendarToArray(calendarGrid))) {
     calendarGrid[k] = calculateColorsForCalendarDay(v);
@@ -206,7 +206,7 @@ export function getCalendar(data) {
 
   return {
     years: calendarGrid,
-    currentYear: calculateColorsForCalendarDay(combinedCalendar)
+    currentYear: calculateColorsForCalendarDay(currentCalendar)
   };
 }
 
@@ -242,9 +242,12 @@ const expandDaysToFullYear = (days) => {
 
 const getCalendarFromDates = (fullDays) => {
   let year = {};
+  let count = 0;
   year.weeks = [];
   year.total = 0;
-  let count = 0;
+  year.fromDate = new Date(fullDays[0].date);
+  year.toDate = new Date(fullDays[fullDays.length -1 ].date);
+  
   for (let indexW = 0; indexW < 53; indexW++) {
     let week = {};
     week.contributionDays = [];
