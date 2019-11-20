@@ -193,7 +193,7 @@ class App extends React.Component {
         let platformData = JSON.parse(platformTemp);
 
         intel.fill({
-          username: "kleberbaum",
+          username: platformData.username,
           server: "",
           platformName: platformData.platformName,
           token: platformData.token

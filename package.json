@@ -13,7 +13,9 @@
     "apollo-client": "^2.6.4",
     "apollo-link-context": "^1.0.19",
     "apollo-link-http": "^1.5.16",
+    "build": "^0.1.4",
     "faker": "^4.1.0",
+    "gh-pages": "^2.1.1",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "js-sha256": "^0.9.0",
@@ -38,7 +40,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "test": "react-scripts test --env=jsdom",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
