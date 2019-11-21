@@ -22,6 +22,7 @@ import {
   MDBPopoverBody,
   MDBIcon,
 } from "mdbreact";
+import { async } from "q";
 
 class GitLab extends React.Component {
   state = {
@@ -36,8 +37,9 @@ class GitLab extends React.Component {
   }
 
   handleSubmit = () => {
-    console.log(this.state);
+    window.open(`http://localhost:3000/redirect?server=${this.state.server}&username=${this.state.username}`)
   }
+
   render() {
     return(
       <MDBCard id="gitlab" className="text-dark">
