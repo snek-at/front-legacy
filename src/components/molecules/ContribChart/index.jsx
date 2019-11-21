@@ -15,22 +15,6 @@ import {
   MDBContainer
 } from "mdbreact";
 
-//> Dummy data
-const data = [
-  {
-    source: "GitHub",
-    background: "rgba(51,51,51,0)",
-    border: "rgba(51,51,51,.4)",
-    data: [10, 15, 15, 70]
-  },
-  {
-    source: "GitLab",
-    background: "rgba(226,67,41,0)",
-    border: "rgba(226,67,41,.4)",
-    data: [17, 30, 25, 44]
-  }
-];
-
 class ChartsPage extends React.Component {
 
   state={
