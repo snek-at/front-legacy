@@ -10,6 +10,7 @@ import {
   ProfilePage,
   LandingPage,
   RedirectPage,
+  GitLab,
 } from "./components/pages";
 
 class Routes extends React.Component {
@@ -39,6 +40,7 @@ class Routes extends React.Component {
           )}
         />
         <Route exact path="/oauth" component={RedirectPage} />
+        <Route exact path="/gitlab" component={GitLab} />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
