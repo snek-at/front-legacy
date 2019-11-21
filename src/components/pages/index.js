@@ -4,12 +4,14 @@ import RedirectPage from "./OAuthRedirect";
 import SettingsPage from "./Settings";
 import ProfilePage from "./Profile";
 import LandingPage from "./Landing";
+import GitLab from "./GitLab";
 
 export { 
   RedirectPage,
   SettingsPage,
   ProfilePage,
   LandingPage,
+  GitLab,
 };
 
 /**
