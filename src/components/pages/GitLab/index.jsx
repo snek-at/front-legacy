@@ -24,6 +24,20 @@ import {
 } from "mdbreact";
 
 class GitLab extends React.Component {
+  state = {
+    username: "",
+    server: "",
+  }
+
+  changeHandler = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  }
+
+  handleSubmit = () => {
+    console.log(this.state);
+  }
   render() {
     return(
       <MDBCard id="gitlab" className="text-dark">
@@ -35,6 +49,8 @@ class GitLab extends React.Component {
         name="username"
         outline
         size="lg"
+        value={this.state.username}
+        onChange={this.changeHandler}
         />
         <MDBInput 
         label="Server"
@@ -42,10 +58,13 @@ class GitLab extends React.Component {
         name="server"
         outline
         size="lg"
+        value={this.state.server}
+        onChange={this.changeHandler}
         />
         <MDBBtn
         color="success"
         className="w-100 py-3 font-weight-bold mx-0"
+        onClick={this.handleSubmit}
         >
         Sign in
         </MDBBtn>
