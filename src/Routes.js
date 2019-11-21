@@ -39,7 +39,7 @@ class Routes extends React.Component {
             />
           )}
         />
-        <Route exact path="/oauth" component={RedirectPage} />
+        <Route exact path="/redirect" component={RedirectPage} />
         <Route exact path="/gitlab" component={GitLab} />
         <Route
           render={function() {
