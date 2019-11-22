@@ -27,11 +27,11 @@ class Socialdata extends React.Component {
     return (
       <MDBCardBody id="socialdata">
         <h4 className="font-weight-bold mb-4">{name}</h4>
-        {(status.message || status.emojiHTML) && (
+        {status && (status.message || status.icon) && (
           <>
             <hr />
-            {status.emojiHTML && (
-              <div dangerouslySetInnerHTML={{ __html: status.emojiHTML }}></div>
+            {status.icon && (
+              <div dangerouslySetInnerHTML={{ __html: status.icon }}></div>
             )}
             {status.message && (
               <p className="dark-grey-text">{status.message}</p>
@@ -72,7 +72,7 @@ class Socialdata extends React.Component {
               </span>
             </a>
           )}
-          <LanguageChart />
+          <LanguageChart languages={this.props.languages} />
         </div>
       </MDBCardBody>
     );
