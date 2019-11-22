@@ -163,11 +163,22 @@ class Register extends React.Component{
     this.props.register({
       variables: { "token": token, "values": values }
     })
-    .then(() => {
-        alert("Welcome to SNEK!")
+    .then((data) => {
+        alert(`Welcome to SNEK, ${data.username}!`)
     })
     .catch(error => {
-        console.warn("Mutation error:",error.message);
+        if (error.message.includes('Authentication Required'))
+        {
+          alert(`Welcome to SNEK, ${this.state.username}!`)
+        }
+        else if (error.message.includes('Duplicate entry'))
+        {
+          alert(`${this.state.username} is already taken!`)
+        }
+        else
+        {
+          alert(error.message)
+        }
     })
   }
 
