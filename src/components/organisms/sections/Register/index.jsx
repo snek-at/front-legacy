@@ -144,10 +144,8 @@ class Register extends React.Component{
         token: "32802d68bf4f97ca1826fc17da8dd3326c82ed0b"
       }
     };
-
     //> Debugging entry point
     //console.log(values);
-
     this.props.register({
       variables: { 
         token,
@@ -166,7 +164,6 @@ class Register extends React.Component{
     //> Debugging entry point
     //console.log(this.state);
     //console.log(this.props);
-
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>

@@ -75,7 +75,7 @@ const tabitems = [
 class Dashboard extends React.Component {
   render() {
     const { globalStore } = this.props;
-
+    
     //> Debugging access point - state
     //console.log(globalStore);
 
