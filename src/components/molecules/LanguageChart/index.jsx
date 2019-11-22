@@ -37,7 +37,6 @@ class LanguageChart extends React.Component {
       labels.push(language.name);
       data.push(language.share);
     });
-    console.log(colors, labels);
 
     this.setState({
       dataPolar: {
