@@ -4,7 +4,12 @@ import * as data from "./IntelData";
 import * as converter from "./Database/Converter";
 
 export async function fill(user) {
-  await data.fill(user);
+  try{
+    await data.fill(user);
+  }
+  catch{
+    console.error("Data fetching failed.. Please contact our support!", user)
+  }
 }
 
 export function templateSelect() {
