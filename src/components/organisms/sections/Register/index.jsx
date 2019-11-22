@@ -162,8 +162,7 @@ class Register extends React.Component{
 
   render(){
     //> Debugging entry point
-    //console.log(this.state);
-    //console.log(this.props);
+    //console.log(this.state, this.props);
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
