@@ -9,6 +9,7 @@ import LanguageChart from "./LanguageChart";
 import Navbar from "./Navbar";
 import TextTypist from "./TextTypist";
 import SearchBar from "./SearchBar";
+import ContribChart from "./ContribChart";
 
 export {
   TabContainer,
@@ -20,6 +21,7 @@ export {
   Navbar,
   TextTypist,
   SearchBar,
+  ContribChart,
 };
 
 /**
