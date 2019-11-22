@@ -134,7 +134,7 @@ SELECT
   streak.statistic_id as stsId
 FROM
   statistic
-JOIN
+LEFT JOIN
   streak
     ON statistic.id = streak.statistic_id
 `;
