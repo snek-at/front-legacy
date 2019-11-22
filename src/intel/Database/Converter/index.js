@@ -155,12 +155,15 @@ export function getCalendar(data) {
   let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
 
   let calendarGrid = {};
-
+  let today = new Date();
+  if(!baseYear){
+    baseYear = today.getFullYear();
+  }
+ 
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
     calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1), true);
   }
-
-  let today = new Date();
+  
   today.setDate(today.getDate() + 1);
 
   calendar.forEach((day) => {
@@ -346,6 +349,7 @@ export function getStats(data) {
   data.exec(select.totalContributions).forEach((elem) => {
     totalContributionsPerYear[elem.year] = elem.num;
   });
+  
   data.exec(select.busiestDay).forEach((elem) => {
     let busiestDay = {};
     busiestDay.date = elem.date;
@@ -366,7 +370,6 @@ export function getStats(data) {
       statistic.busiestDay = busiestDay;
       statistic.average =
         Math.round((totalContributionsPerYear[stat.sYear] / 365) * 100) / 100;
-
       statistic.longestStreak = {};
       statistic.longestStreak.total = 0;
       statistic.currentStreak = {};
@@ -375,7 +378,8 @@ export function getStats(data) {
       statistics[stat.sYear] = statistic;
     }
 
-    let streak = {};
+    if(stat.stId !== undefined){
+      let streak = {};
     streak.startDate = stat.stsDate;
     streak.endDate = stat.steDate;
     streak.total = stat.stTotal;
@@ -406,6 +410,9 @@ export function getStats(data) {
         streak.endDate
       );
     }
+    }
+
+    
   });
 
   return statistics;
