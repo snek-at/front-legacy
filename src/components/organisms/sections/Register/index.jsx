@@ -30,8 +30,9 @@ import {
 //> CSS
 import "./register.scss";
 
-// OAuth
+// Auth
 import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
+import { gitlabProvider } from "../../../../intel/AuthGitLab/providers/gitlab";
 import RSA from "react-very-simple-oauth";
 
 // Apollo
@@ -62,6 +63,7 @@ class Register extends React.Component{
     server: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
+    AuthGitLabButton: true,
     sourceList: [],
     customUsername: false,
     usernames: [],
@@ -98,7 +100,22 @@ class Register extends React.Component{
     }, () => this.pushToSourceList("github", data.username, "github.com", data.access_token));
   }
 
-  pushToSourceList = (source, username) => {
+  connectGitLab = async () => {
+    // Debugging
+    //console.log("GitHub oAuth function called.");
+    
+    // Disable button while oAuth in progress
+    this.setState({
+      AuthGitLabButton: false
+    });
+
+    const data = await RSA.acquireTokenAsync(gitlabProvider);
+    this.setState({
+      AuthGitLabButton: true,
+    }, () => this.pushToSourceList("gitlab", data.username, data.server, data.token));
+  }
+
+  pushToSourceList = (source, username, server, token) => {
     //console.log(source,username);
     let sourceList = this.state.sourceList;
 
@@ -180,7 +197,13 @@ class Register extends React.Component{
             <MDBTooltip
               placement="bottom"
             >
-              <MDBBtn floating color="orange" className="mx-1" disabled>
+              <MDBBtn 
+              floating 
+              color="orange" 
+              className="mx-1" 
+              onClick={this.connectGitLab}
+              disabled={!this.state.AuthGitLabButton}
+              >
                 <MDBIcon fab icon="gitlab" />
               </MDBBtn>
               <div>
@@ -237,6 +260,7 @@ class Register extends React.Component{
                     tag="span"
                     id="popper1"
                   >
+                      
                     <span>
                     <MDBIcon
                     icon="check"
