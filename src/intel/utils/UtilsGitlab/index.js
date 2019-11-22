@@ -204,6 +204,14 @@ const fillCalendar = async user => {
       let weekday = datetime.getDay().toString();
 
       const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+      const statYear = db.exec("SELECT year FROM statistic").pop();
+
+      let year = datetime.getFullYear();
+
+      if(!statYear){
+        db.exec(insert.statistic, [year,platformId]);
+      }
+
       let res = db
         .exec(`SELECT total FROM calendar WHERE date="${date}"`)
         .pop();
