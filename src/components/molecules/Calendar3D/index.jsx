@@ -55,7 +55,7 @@ class Calender3D extends React.Component {
 
     countTotal = contributionCalendar.total;
     averageCount = contribData.average;
-    datesTotal = moment(new Date()).format("MMM DD, YYYY") + " - " + moment(new Date()).subtract(1, 'year').format("MMM DD, YYYY");
+    datesTotal = moment(new Date()).format("MMM DD, YYYY") + " - " + moment(new Date()).subtract(1, "year'").format("MMM DD, YYYY");
     maxCount = contribData.busiestDay.total;
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
 
@@ -196,7 +196,8 @@ class Calender3D extends React.Component {
   };
 
   render() {
-    console.log(this.state);
+    //> Debugging Entry point
+    //console.log(this.state);
     return (
       <div id="calendar3d">
         <div dangerouslySetInnerHTML={this.renderTopStats()} />

@@ -27,7 +27,6 @@ class ChartsPage extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(this.props);
     this.setState({
       dataRadar: {
         labels: ["Code review", "Issues", "Pull request", "Commits"],
@@ -98,7 +97,7 @@ class ChartsPage extends React.Component {
       backgroundColor: "rgba(51,51,51,0)",
       borderColor: "rgba(51,51,51,.4)",
       data: values
-    })
+    });
     
     // Calculate averages
     let avgReviews, avgIssues, avgRequests, avgCommits;
@@ -120,8 +119,6 @@ class ChartsPage extends React.Component {
         avgCommits
       ]
     });*/
-
-    console.log(results);
 
     return results;
   }

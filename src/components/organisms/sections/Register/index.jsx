@@ -139,27 +139,35 @@ class Register extends React.Component{
       username: "Aichnerc",
       email: this.state.email,
       password: sha256(this.state.password),
-      platform_data: {
+      "platform_data": {
         server: "",
         platformName: "github",
         token: "32802d68bf4f97ca1826fc17da8dd3326c82ed0b"
       }
     };
-    console.log(values);
+
+    //> Debugging entry point
+    //console.log(values);
+
     this.props.register({
-      variables: { "token": token, "values": values }
+      variables: { 
+        token,
+        values
+      }
     })
     .then(({data}) => {
-        console.log(data);
+      //console.log(data);
     })
-    .catch(error => {
-        console.warn("Mutation error:",error.message);
-    })
+    .catch((error) => {
+      //console.warn("Mutation error:",error.message);
+    });
   }
 
   render(){
-    console.log(this.state);
-    console.log(this.props);
+    //> Debugging entry point
+    //console.log(this.state);
+    //console.log(this.props);
+
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
@@ -324,7 +332,7 @@ class Register extends React.Component{
 
 export default compose(
   graphql(CREATE_USER_MUTATION, {
-      name: 'register'
+      name: "register"
   })
 )(Register);
 

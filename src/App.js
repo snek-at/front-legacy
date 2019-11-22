@@ -185,7 +185,7 @@ class App extends React.Component {
       variables: { "token": localStorage.getItem("fprint") }
     }).then(({data}) => {
       if(data){
-        console.log(data);
+        //console.log(data);
         let registrationData = JSON.parse(data.user.registrationData);
 
         // Temp replace (Ugly)
@@ -199,7 +199,7 @@ class App extends React.Component {
           token: platformData.token
         })
         .then(() => {
-          console.log(intel.user());
+          //console.log(intel.user());
           this.setState({
             logged: true,
             contrib: intel.stats(),
@@ -221,13 +221,13 @@ class App extends React.Component {
       }
     })
     .catch((error) => {
-      console.warn(error.message);
+      //console.warn(error.message);
     });
   }
 
   render() {
     // Debugging
-    console.log(this.state);
+    //console.log(this.state);
 
     return (
       <Router>
