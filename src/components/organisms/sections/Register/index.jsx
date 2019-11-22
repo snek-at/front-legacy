@@ -91,7 +91,6 @@ class Register extends React.Component{
     });
 
     const data = await RSA.acquireTokenAsync(githubProvider);
-    console.log(data);
     this.setState({
       oAuthGitHubData: data,
       oAuthGitHubButton: true

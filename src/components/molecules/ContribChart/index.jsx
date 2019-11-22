@@ -72,7 +72,7 @@ class ChartsPage extends React.Component {
             }]
         }
     }
-    })
+    });
   }
 
   calculateSources = () => {
