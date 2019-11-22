@@ -37,7 +37,7 @@ class GitLab extends React.Component {
   }
 
   handleSubmit = () => {
-    window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self")
+    window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
   }
 
   render() {
@@ -72,7 +72,7 @@ class GitLab extends React.Component {
         </MDBBtn>
       </MDBCardBody>
     </MDBCard>
-    )
+    );
   }
 }
 export default GitLab;

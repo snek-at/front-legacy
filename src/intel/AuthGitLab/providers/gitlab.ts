@@ -40,7 +40,7 @@ export const gitlabProvider: IProvider<boolean> = {
       server = serverMatch[1];
     }
 
-    let data = {'server': server, 'username': username}
+    const data = {'server': server, 'username': username}
     return data;
   },
 };

@@ -46,7 +46,7 @@ class Landing extends React.Component {
   render() {
     const { globalStore } = this.props;
 
-    if(globalStore.data.logged) { return (<Redirect to="/me"/>) }
+    if(globalStore.data.logged) { return (<Redirect to="/me"/>); }
 
     if(globalStore.data.loaded){
       return (

@@ -157,28 +157,31 @@ class Register extends React.Component{
       username: this.state.username,
       email: this.state.email,
       password: sha256(this.state.password),
-      platform_data: JSON.stringify(this.state.sourceList),
+      "platform_data": JSON.stringify(this.state.sourceList),
     };
     this.props.register({
-      variables: { "token": token, "values": values }
+      variables: { 
+      token,
+      values 
+    }
     })
     .then((data) => {
-        alert(`Welcome to SNEK, ${data.username}!`)
+        alert(`Welcome to SNEK, ${data.username}!`);
     })
-    .catch(error => {
-        if (error.message.includes('Authentication Required'))
+    .catch((error) => {
+        if (error.message.includes("Authentication Required"))
         {
-          alert(`Welcome to SNEK, ${this.state.username}!`)
+          alert(`Welcome to SNEK, ${this.state.username}!`);
         }
-        else if (error.message.includes('Duplicate entry'))
+        else if (error.message.includes("Duplicate entry"))
         {
-          alert(`${this.state.username} is already taken!`)
+          alert(`${this.state.username} is already taken!`);
         }
         else
         {
-          alert(error.message)
+          alert(error.message);
         }
-    })
+    });
   }
 
   render(){
@@ -353,7 +356,7 @@ class Register extends React.Component{
 
 export default compose(
   graphql(CREATE_USER_MUTATION, {
-      name: 'register'
+      name: "register"
   })
 )(Register);
 
