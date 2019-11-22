@@ -58,6 +58,8 @@ class Register extends React.Component{
     password: "",
     password1: "",
     username: "",
+    plattform: "",
+    server: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
     sourceList: [],
@@ -92,9 +94,8 @@ class Register extends React.Component{
 
     const data = await RSA.acquireTokenAsync(githubProvider);
     this.setState({
-      oAuthGitHubData: data.access_token,
-      oAuthGitHubButton: true
-    }, () => this.pushToSourceList("github", data.username));
+      oAuthGitHubButton: true,
+    }, () => this.pushToSourceList("github", data.username, "github.com", data.access_token));
   }
 
   pushToSourceList = (source, username) => {
@@ -107,6 +108,8 @@ class Register extends React.Component{
       id: Math.random() * username.length + source.length,
       source,
       username,
+      server,
+      token,
     });
     // Set the new list
     this.setState({
@@ -132,18 +135,12 @@ class Register extends React.Component{
 
   handleSubmit = () => {
     let token = this.props.token;
-    
     let values = {
       sources: JSON.stringify(this.state.sourceList),
       username: this.state.username,
       email: this.state.email,
       password: sha256(this.state.password),
-      platform_data: {
-        server: "",
-        platformName: "github",
-        username: this.state.username,
-        token: this.state.oAuthGitHubData
-      }
+      platform_data: JSON.stringify(this.state.sourceList),
     };
     console.log(values);
     this.props.register({
