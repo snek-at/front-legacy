@@ -196,7 +196,6 @@ class Calender3D extends React.Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <div id="calendar3d">
         <div dangerouslySetInnerHTML={this.renderTopStats()} />

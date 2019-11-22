@@ -159,7 +159,6 @@ class Register extends React.Component{
       password: sha256(this.state.password),
       platform_data: JSON.stringify(this.state.sourceList),
     };
-    console.log(values);
     this.props.register({
       variables: { "token": token, "values": values }
     })
@@ -183,8 +182,6 @@ class Register extends React.Component{
   }
 
   render(){
-    console.log(this.state);
-    console.log(this.props);
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
