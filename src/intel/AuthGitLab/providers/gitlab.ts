@@ -4,7 +4,7 @@ import { IProvider } from "react-very-simple-oauth";
 export const gitlabProvider: IProvider<boolean> = {
   //Get Request to the GitHub OAuth Authorize-Site
   buildAuthorizeUrl(): string {
-    return `http://localhost:3000/gitlab`;
+    return `https://snek.at/gitlab`;
   },
 
   // Catch any error that appears during the OAuth process

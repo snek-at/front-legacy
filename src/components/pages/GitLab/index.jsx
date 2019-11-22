@@ -37,7 +37,7 @@ class GitLab extends React.Component {
   }
 
   handleSubmit = () => {
-    window.open(`http://localhost:3000/redirect?server=${this.state.server}&username=${this.state.username}`, "_self")
+    window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self")
   }
 
   render() {
