@@ -1,9 +1,6 @@
 // Import Modules
 import { IProvider } from "react-very-simple-oauth";
 
-// Set the default values needed for an OAuth-Request
-const redirect_uri = encodeURIComponent("https://snek.at/redirect");
-
 export const gitlabProvider: IProvider<boolean> = {
   //Get Request to the GitHub OAuth Authorize-Site
   buildAuthorizeUrl(): string {
