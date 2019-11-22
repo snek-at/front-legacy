@@ -138,7 +138,7 @@ class Register extends React.Component{
       username: "Aichnerc",
       email: this.state.email,
       password: sha256(this.state.password),
-      platform_data: {
+      "platform_data": {
         server: "",
         platformName: "github",
         token: "32802d68bf4f97ca1826fc17da8dd3326c82ed0b"
