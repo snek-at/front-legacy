@@ -49,7 +49,7 @@ const fillPlatform = async user => {
   const createdAt = new Date(date);
 
   db.exec(insert.platform, [
-    user.platformName,
+    user.source,
     url,
     avatarUrl,
     null,
