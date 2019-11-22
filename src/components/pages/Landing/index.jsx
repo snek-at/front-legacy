@@ -40,14 +40,13 @@ class Landing extends React.Component {
 
   logMeIn = (token) => {
     localStorage.setItem("fprint", token);
-    console.log("Test");
     this.props.login(token);
   }
 
   render() {
     const { globalStore } = this.props;
 
-    if(globalStore.data.logged) { return (<Redirect to="/me"/>) }
+    if(globalStore.data.logged) { return (<Redirect to="/me"/>); }
 
     if(globalStore.data.loaded){
       return (
