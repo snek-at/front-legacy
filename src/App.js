@@ -193,10 +193,10 @@ class App extends React.Component {
 
         intel
         .fill(Object.values(platformData))
-        .then(() =>{
-          intel.calendar()
-          intel.stats()
-          intel.repos()
+        .then(() => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
         })
         .then(() => {
           this.setState({
