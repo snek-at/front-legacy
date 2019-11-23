@@ -191,11 +191,12 @@ class App extends React.Component {
         let platformTemp = registrationData.platform_data.replace(/'/g,'"');
         let platformData = JSON.parse(platformTemp);
 
-        intel.fill({
-          username: platformData.username,
-          server: "",
-          platformName: platformData.platformName,
-          token: platformData.token
+        intel
+        .fill(Object.values(platformData))
+        .then(() =>{
+          intel.calendar()
+          intel.stats()
+          intel.repos()
         })
         .then(() => {
           this.setState({
