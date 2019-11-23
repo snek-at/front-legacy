@@ -66,7 +66,7 @@ class Login extends React.Component{
       }
     })
     .catch((error) => {
-      alert("Mutation error:",error.message);
+      //console.warn("Mutation error:",error.message);
     });
   }
 

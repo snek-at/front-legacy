@@ -219,7 +219,7 @@ class App extends React.Component {
       }
     })
     .catch((error) => {
-      alert(error.message);
+      //console.warn(error.message);
     });
   }
 
