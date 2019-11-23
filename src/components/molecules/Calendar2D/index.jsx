@@ -39,7 +39,7 @@ class Calender2D extends React.Component {
     // Add resize listener
     window.addEventListener("resize", this.updateDimensions);
 
-    let contributions = this.props.calendar.currentYear["2019"];
+    let contributions = this.props.calendar.currentYear;
 
     this.setState(
       {
