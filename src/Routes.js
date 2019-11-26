@@ -10,9 +10,11 @@ import {
   ProfilePage,
   LandingPage,
   RedirectPage,
+  GitLabPage,
 } from "./components/pages";
 
 class Routes extends React.Component {
+
   render() {
     return (
       <Switch>
@@ -22,6 +24,7 @@ class Routes extends React.Component {
           component={(props) => (
             <LandingPage 
             globalStore={this.props}
+            login={this.props.login}
             {...props}
             />
           )}
@@ -29,12 +32,15 @@ class Routes extends React.Component {
         <Route exact path="/settings" component={SettingsPage} />
         <Route
           exact
-          path="/u/:username"
+          path="/me"
           component={(props) => (
-            <ProfilePage globalStore={this.props} {...props} />
+            <ProfilePage 
+            globalStore={this.props} {...props}
+            />
           )}
         />
-        <Route exact path="/oauth" component={RedirectPage} />
+        <Route exact path="/redirect" component={RedirectPage} />
+        <Route exact path="/gitlab" component={GitLabPage} />
         <Route
           render={function() {
             return <h1>Not Found</h1>;

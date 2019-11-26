@@ -49,7 +49,7 @@ const fillPlatform = async user => {
   const createdAt = new Date(date);
 
   db.exec(insert.platform, [
-    user.platformName,
+    user.source,
     url,
     avatarUrl,
     null,
@@ -99,23 +99,31 @@ const fillOrganizations = async user => {
   }
 };
 
-const fillDummy = () => {
-  db.exec(insert.member, [
-    "https://snek.at/users/trash/avatar",
-    "Trash The User",
-    "trash",
-    "https://snek.at/users/trash"
-  ]);
-  db.exec(insert.languagePie, [-1, -1]);
-};
+// const fillDummy = () => {
+//   db.exec(insert.member, [
+//     "https://snek.at/users/trash/avatar",
+//     "Trash The User",
+//     "trash",
+//     "https://snek.at/users/trash"
+//   ]);
+//   db.exec(insert.languagePie, [-1, -1]);
+// };
 
 const fillRepositories = (user, nameWithOwner) => {
   let repository = {};
   repository.repoUrl = `https://${user.server}/${nameWithOwner}`;
   repository.avatarUrl = `https://${user.server}/${nameWithOwner}/-/avatar`;
   repository.name = nameWithOwner;
-  repository.ownerId = db.exec("SELECT id FROM member").pop()["id"];
-  repository.languagePieId = db.exec("SELECT id FROM languagePie").pop()["id"];
+  repository.ownerId = db.exec("SELECT id FROM member").pop();
+  repository.languagePieId = db.exec("SELECT id FROM languagePie").pop();
+
+  if(repository.ownerId){
+    repository.ownerId = repository.ownerId.id
+  }
+
+  if(repository.languagePieId){
+    repository.languagePieId = repository.languagePieId.id
+  }
 
   const repoExists = db.exec(
     `SELECT id FROM repository WHERE name="${repository.name}"`
@@ -123,6 +131,7 @@ const fillRepositories = (user, nameWithOwner) => {
   if (repoExists === undefined || repoExists.length === 0) {
     db.exec(insert.repository, [
       repository.avatarUrl,
+      repository.repoUrl,
       repository.name,
       repository.ownerId,
       repository.languagePieId
@@ -195,6 +204,14 @@ const fillCalendar = async user => {
       let weekday = datetime.getDay().toString();
 
       const platformId = db.exec("SELECT id FROM platform").pop()["id"];
+      const statYear = db.exec("SELECT year FROM statistic").pop();
+
+      let year = datetime.getFullYear();
+
+      if(!statYear){
+        db.exec(insert.statistic, [year,platformId]);
+      }
+
       let res = db
         .exec(`SELECT total FROM calendar WHERE date="${date}"`)
         .pop();
@@ -216,7 +233,6 @@ const fillCalendar = async user => {
 // Fill the Database from user object
 export const fill = (_db, user) => {
   db = _db;
-  fillDummy();
   return fillPlatform(user).then(
     async () => await fillOrganizations(user).then(await fillCalendar(user))
   );

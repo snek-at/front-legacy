@@ -39,20 +39,18 @@ class Calender2D extends React.Component {
     // Add resize listener
     window.addEventListener("resize", this.updateDimensions);
 
-    let contributions = this.props.contributions.years;
-    let cnew = contributions[0];
-    //console.log(cnew);
+    let contributions = this.props.calendar.currentYear;
 
     this.setState(
       {
         width: this.myInput.current.offsetWidth,
-        contributionsList: cnew
+        contributionsList: contributions
       },
       () => this.countContribs()
     );
 
     // Color RGB cycling
-    //let intervalID = window.setInterval(this.cycleHue, 70);
+    let intervalID = window.setInterval(this.cycleHue, 70);
   };
 
   cycleHue = () => {
@@ -134,7 +132,7 @@ class Calender2D extends React.Component {
           <svg className="calendar" height={(this.state.width / 53) * 7}>
             {this.state.contributionsList &&
               this.state.contributionsList.weeks.map((week, wkey) => {
-                return week.map((day, dkey) => {
+                return week.contributionDays.map((day, dkey) => {
                   if (wkey === 0) {
                     return (
                       <rect
@@ -142,7 +140,7 @@ class Calender2D extends React.Component {
                         y={
                           (this.state.width / 53) * 7 +
                           (this.state.width / 53) * dkey -
-                          week.length * (this.state.width / 53)
+                          week.contributionDays.length * (this.state.width / 53)
                         }
                         x={0}
                         width={this.state.width / 53}

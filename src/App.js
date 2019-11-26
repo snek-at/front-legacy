@@ -14,14 +14,17 @@ import { Navbar } from "./components/molecules";
 //> Routes
 import Routes from "./Routes";
 
-// Apollo
-import { graphql, withApollo } from "react-apollo";
-import * as compose from "lodash.flowright";
-import { gql } from "apollo-boost";
-
 //> Test
 // A test with the user "torvalds"
 import "./App.test";
+
+//> Intel
+import * as intel from "./intel";
+
+//> Apollo
+import { graphql, withApollo } from "react-apollo";
+import * as compose from "lodash.flowright";
+import { gql } from "apollo-boost";
 
 //> Queries / Mutations
 // Verify the token
@@ -30,6 +33,15 @@ const VERIFY_TOKEN = gql`
       verifyToken(token: $token) {
       payload
       }
+  }
+`;
+// Login real user
+const LOGIN_REAL_USER = gql`
+  query login($token: String!){
+  user: me(token: $token){
+      username
+      registrationData
+    }
   }
 `;
 // Refresh the token
@@ -61,6 +73,7 @@ class App extends React.Component {
     repos: null,
     token: "",
     loaded: false,
+    logged: false,
   };
 
   componentDidMount = () => {
@@ -170,41 +183,65 @@ class App extends React.Component {
     });
   }
 
-  render() {
-    // Debugging
-    //console.log(this.state);
+  handleLogin = (token) => {
+    this.props.client.query({
+      query: LOGIN_REAL_USER,
+      variables: { "token": localStorage.getItem("fprint") }
+    }).then(({data}) => {
+      if(data){
+        let registrationData = JSON.parse(data.user.registrationData);
 
-    // Check if every state is set
-    if (
-      !this.state.contrib &&
-      !this.state.contribCalendar &&
-      !this.state.contribTypes &&
-      !this.state.user &&
-      !this.state.languages &&
-      !this.state.repos
-    ) {
-      return (
-        <Router>
-          <div className="flyout">
-            <Navbar 
-            changeState={this.handleChangeState}
+        // Temp replace (Ugly)
+        let platformTemp = registrationData.platform_data.replace(/'/g,'"');
+        let platformData = JSON.parse(platformTemp);
+
+        intel
+        .fill(Object.values(platformData))
+        .then(() => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
+        })
+        .then(() => {
+          this.setState({
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          });
+        });
+      }
+    })
+    .catch((error) => {
+      //console.warn(error.message);
+    });
+  }
+
+  render() {
+    return (
+      <Router>
+        <div className="flyout">
+          <Navbar 
+          changeState={this.handleChangeState}
+          data={this.state}
+          />
+          <main>
+            <Routes 
             data={this.state}
+            changeState={this.handleChangeState}
+            login={this.handleLogin}
             />
-            <main>
-              <Routes 
-              data={this.state}
-              changeState={this.handleChangeState}
-              />
-            </main>
-            {/*
-            <Footer />
-            */}
-          </div>
-        </Router>
-      );
-    } else {
-      return null;
-    }
+          </main>
+          {/*
+          <Footer />
+          */}
+        </div>
+      </Router>
+    );
   }
 }
 

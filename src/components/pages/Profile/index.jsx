@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+// Router
+import { Redirect } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -72,15 +74,12 @@ const tabitems = [
 
 class Dashboard extends React.Component {
   render() {
-    const { username } = this.props.match.params;
-
-    // Debugging access point - get username from router
-    //console.log("User via GET param: "+username);
-
     const { globalStore } = this.props;
-
-    // Debugging access point - state
+    
+    //> Debugging access point - state
     //console.log(globalStore);
+
+    if(!globalStore.data.logged) { return (<Redirect to="/"/>); }
 
     let data = globalStore.data;
 
@@ -92,23 +91,32 @@ class Dashboard extends React.Component {
               <MDBCol md="4" className="text-center">
                 <MDBCard testimonial>
                   <MDBCardUp color="info" />
-                  <Avatar url={data.avatarUrl} alt={data.name} />
+                  <Avatar url={data.user.avatarUrl} alt={data.user.name} />
                   <Socialdata
-                    status={data.status}
-                    name={data.name}
-                    company={data.company}
-                    location={data.location}
-                    email={data.email}
-                    website={data.websiteUrl}
+                    status={{
+                      message: data.user.status, 
+                      icon: data.user.statusEmojiHTML
+                    }}
+                    name={data.user.name}
+                    company={data.user.company}
+                    location={data.user.location}
+                    email={data.user.email}
+                    languages={data.languages}
+                    website={data.user.websiteUrl}
                     accounts={{
-                      github: data
+                      github: data.user
                     }}
                   />
                 </MDBCard>
               </MDBCol>
               <MDBCol md="8">
                 <TabContainer items={tabitems} horizontal>
-                  <OverviewTab id={0} contributions={data.contributions} />
+                  <OverviewTab 
+                  id={0}
+                  contrib={data.contrib}
+                  calendar={data.contribCalendar}
+                  contribTypes={data.contribTypes}
+                  />
                   <ResumeTab id={1} />
                   <ProjectsTab id={2} repos={data.repos} />
                   <EducationTab id={3} />
