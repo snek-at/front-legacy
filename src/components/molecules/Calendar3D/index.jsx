@@ -13,9 +13,6 @@ import { MDBRow, MDBCol } from "mdbreact";
 //> Helpers
 import changeHue from "../../helpers/changeHue.js";
 
-//> Dummy data
-//import dummyData from "./dummydata.js";
-
 //> CSS
 import "./calendar3d.scss";
 
@@ -50,17 +47,15 @@ class Calender3D extends React.Component {
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
 
-    let contribData = this.props.contrib["2019"];
-    let contributionCalendar = this.props.calendar.currentYear["2019"];
+    let contribData = this.props.contrib[2019];
+    let contributionCalendar = this.props.calendar.currentYear;
 
     countTotal = contributionCalendar.total;
     averageCount = contribData.average;
-    datesTotal = moment(new Date()).format("MMM DD, YYYY") + 
-    " - " + moment(new Date()).subtract(1, "year").format("MMM DD, YYYY");
+    datesTotal = moment(contributionCalendar.fromDate).format("MMM DD, YYYY") + 
+    " - " + moment(contributionCalendar.toDate).format("MMM DD, YYYY");
     maxCount = contribData.busiestDay.total;
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
-
-    // "Oct 7, 2018 - Oct 9, 2019"
 
     let html;
     html = `<div class="ic-stats-block ic-stats-top">\n
@@ -197,8 +192,6 @@ class Calender3D extends React.Component {
   };
 
   render() {
-    //> Debugging Entry point
-    //console.log(this.state);
     return (
       <div id="calendar3d">
         <div dangerouslySetInnerHTML={this.renderTopStats()} />

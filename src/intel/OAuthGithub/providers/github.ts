@@ -3,10 +3,10 @@ import { guid } from "../services/utilities";
 import { IProvider } from "react-very-simple-oauth";
 
 // Set the default values needed for an OAuth-Request
-const client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-const client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+const client_id = "2148629809594d57c113";
+const client_secret = "64a37e4846387cfcaea35d83afca3c9c8689628c";
 const state = guid();
-const redirect_uri = encodeURIComponent("https://snek.at/oauth");
+const redirect_uri = encodeURIComponent("https://snek.at/redirect");
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const githubProvider: IProvider<boolean> = {

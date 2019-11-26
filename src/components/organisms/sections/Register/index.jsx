@@ -30,11 +30,12 @@ import {
 //> CSS
 import "./register.scss";
 
-// OAuth
+//> Auth
 import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
+import { gitlabProvider } from "../../../../intel/AuthGitLab/providers/gitlab";
 import RSA from "react-very-simple-oauth";
 
-// Apollo
+//> Apollo
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
@@ -58,8 +59,10 @@ class Register extends React.Component{
     password: "",
     password1: "",
     username: "",
+    server: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
+    AuthGitLabButton: true,
     sourceList: [],
     customUsername: false,
     usernames: [],
@@ -82,23 +85,28 @@ class Register extends React.Component{
   }
 
   connectGitHub = async () => {
-    // Debugging
-    //console.log("GitHub oAuth function called.");
-    
-    // Disable button while oAuth in progress
     this.setState({
       oAuthGitHubButton: false
     });
 
     const data = await RSA.acquireTokenAsync(githubProvider);
     this.setState({
-      oAuthGitHubData: data,
-      oAuthGitHubButton: true
-    }, () => this.pushToSourceList("github", data.username));
+      oAuthGitHubButton: true,
+    }, () => this.pushToSourceList("github", data.username, "github.com", data.access_token));
   }
 
-  pushToSourceList = (source, username) => {
-    //console.log(source,username);
+  connectGitLab = async () => {
+    this.setState({
+      AuthGitLabButton: false
+    });
+
+    const data = await RSA.acquireTokenAsync(gitlabProvider);
+    this.setState({
+      AuthGitLabButton: true,
+    }, () => this.pushToSourceList("gitlab", data.username, data.server, data.token));
+  }
+
+  pushToSourceList = (source, username, server, token) => {
     let sourceList = this.state.sourceList;
 
     this.addToUsernames(username);
@@ -107,7 +115,10 @@ class Register extends React.Component{
       id: Math.random() * username.length + source.length,
       source,
       username,
+      server,
+      token,
     });
+    
     // Set the new list
     this.setState({
       sourceList,
@@ -132,37 +143,39 @@ class Register extends React.Component{
 
   handleSubmit = () => {
     let token = this.props.token;
-    
     let values = {
       sources: JSON.stringify(this.state.sourceList),
-      username: "Aichnerc",
+      username: this.state.username,
       email: this.state.email,
       password: sha256(this.state.password),
-      "platform_data": {
-        server: "",
-        platformName: "github",
-        token: "32802d68bf4f97ca1826fc17da8dd3326c82ed0b"
-      }
+      "platform_data": JSON.stringify(this.state.sourceList),
     };
-    //> Debugging entry point
-    //console.log(values);
     this.props.register({
       variables: { 
-        token,
-        values
-      }
+      token,
+      values 
+    }
     })
-    .then(({data}) => {
-      //console.log(data);
+    .then((data) => {
+        alert(`Welcome to SNEK, ${data.username}!`);
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error.message);
+        if (error.message.includes("Authentication Required"))
+        {
+          alert(`Welcome to SNEK, ${this.state.username}!`);
+        }
+        else if (error.message.includes("Duplicate entry"))
+        {
+          alert(`${this.state.username} is already taken!`);
+        }
+        else
+        {
+          alert(error.message);
+        }
     });
   }
 
   render(){
-    //> Debugging entry point
-    //console.log(this.state, this.props);
     return(
       <MDBCard id="register" className="text-dark">
         <MDBCardBody>
@@ -186,7 +199,13 @@ class Register extends React.Component{
             <MDBTooltip
               placement="bottom"
             >
-              <MDBBtn floating color="orange" className="mx-1" disabled>
+              <MDBBtn 
+              floating 
+              color="orange" 
+              className="mx-1" 
+              onClick={this.connectGitLab}
+              disabled={!this.state.AuthGitLabButton}
+              >
                 <MDBIcon fab icon="gitlab" />
               </MDBBtn>
               <div>
@@ -243,6 +262,7 @@ class Register extends React.Component{
                     tag="span"
                     id="popper1"
                   >
+                      
                     <span>
                     <MDBIcon
                     icon="check"
