@@ -7,6 +7,7 @@ import Calendar2D from "./Calendar2D";
 import Calendar3D from "./Calendar3D";
 import LanguageChart from "./LanguageChart";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 import TextTypist from "./TextTypist";
 import SearchBar from "./SearchBar";
 import ContribChart from "./ContribChart";
@@ -19,6 +20,7 @@ export {
   Calendar3D,
   LanguageChart,
   Navbar,
+  Footer,
   TextTypist,
   SearchBar,
   ContribChart,

@@ -41,6 +41,11 @@ class Routes extends React.Component {
         />
         <Route exact path="/redirect" component={RedirectPage} />
         <Route exact path="/gitlab" component={GitLabPage} />
+        <Route 
+        exact
+        path='/about'
+        component={() => window.location = 'https://www.aichner-christian.com/about'}
+        />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
