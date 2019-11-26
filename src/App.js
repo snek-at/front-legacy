@@ -9,7 +9,10 @@ import { BrowserRouter as Router } from "react-router-dom";
  * Footer: Global Footer
  * Navbar: Global navigation bar
  */
-import { Navbar } from "./components/molecules";
+import { 
+  Navbar,
+  Footer,
+} from "./components/molecules";
 
 //> Routes
 import Routes from "./Routes";
@@ -236,9 +239,7 @@ class App extends React.Component {
             login={this.handleLogin}
             />
           </main>
-          {/*
           <Footer />
-          */}
         </div>
       </Router>
     );
