@@ -30,12 +30,12 @@ import {
 //> CSS
 import "./register.scss";
 
-// Auth
+//> Auth
 import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
 import { gitlabProvider } from "../../../../intel/AuthGitLab/providers/gitlab";
 import RSA from "react-very-simple-oauth";
 
-// Apollo
+//> Apollo
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
@@ -59,7 +59,6 @@ class Register extends React.Component{
     password: "",
     password1: "",
     username: "",
-    plattform: "",
     server: "",
     oAuthGitHubButton: true,
     oAuthGitHubData: null,
@@ -86,10 +85,6 @@ class Register extends React.Component{
   }
 
   connectGitHub = async () => {
-    // Debugging
-    //console.log("GitHub oAuth function called.");
-    
-    // Disable button while oAuth in progress
     this.setState({
       oAuthGitHubButton: false
     });
@@ -101,10 +96,6 @@ class Register extends React.Component{
   }
 
   connectGitLab = async () => {
-    // Debugging
-    //console.log("GitHub oAuth function called.");
-    
-    // Disable button while oAuth in progress
     this.setState({
       AuthGitLabButton: false
     });
@@ -116,7 +107,6 @@ class Register extends React.Component{
   }
 
   pushToSourceList = (source, username, server, token) => {
-    //console.log(source,username);
     let sourceList = this.state.sourceList;
 
     this.addToUsernames(username);
@@ -128,6 +118,7 @@ class Register extends React.Component{
       server,
       token,
     });
+    
     // Set the new list
     this.setState({
       sourceList,

@@ -14,13 +14,17 @@ import { Navbar } from "./components/molecules";
 //> Routes
 import Routes from "./Routes";
 
+//> Test
+// A test with the user "torvalds"
+import "./App.test";
+
+//> Intel
+import * as intel from "./intel";
+
 //> Apollo
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
-
-//> Intel
-import * as intel from "./intel";
 
 //> Queries / Mutations
 // Verify the token
@@ -210,13 +214,6 @@ class App extends React.Component {
             repos: intel.repos(),
           });
         });
-        /*this.setState({
-          logged: true,
-          userdata: {
-            username: data.user.username,
-            registrationData: registrationData,
-          }
-        });*/
       }
     })
     .catch((error) => {
@@ -225,8 +222,6 @@ class App extends React.Component {
   }
 
   render() {
-    // Debugging
-
     return (
       <Router>
         <div className="flyout">

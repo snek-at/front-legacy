@@ -4,14 +4,14 @@ import RedirectPage from "./Redirect";
 import SettingsPage from "./Settings";
 import ProfilePage from "./Profile";
 import LandingPage from "./Landing";
-import GitLab from "./GitLab";
+import GitLabPage from "./GitLab";
 
 export { 
   RedirectPage,
   SettingsPage,
   ProfilePage,
   LandingPage,
-  GitLab,
+  GitLabPage,
 };
 
 /**

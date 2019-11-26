@@ -22,7 +22,6 @@ import {
   MDBPopoverBody,
   MDBIcon,
 } from "mdbreact";
-import { async } from "q";
 
 class GitLab extends React.Component {
   state = {

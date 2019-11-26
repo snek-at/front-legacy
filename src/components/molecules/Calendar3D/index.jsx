@@ -13,9 +13,6 @@ import { MDBRow, MDBCol } from "mdbreact";
 //> Helpers
 import changeHue from "../../helpers/changeHue.js";
 
-//> Dummy data
-//import dummyData from "./dummydata.js";
-
 //> CSS
 import "./calendar3d.scss";
 
@@ -59,7 +56,6 @@ class Calender3D extends React.Component {
     " - " + moment(contributionCalendar.toDate).format("MMM DD, YYYY");
     maxCount = contribData.busiestDay.total;
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
-    // "Oct 7, 2018 - Oct 9, 2019"
 
     let html;
     html = `<div class="ic-stats-block ic-stats-top">\n

@@ -7,7 +7,7 @@ export const gitlabProvider: IProvider<boolean> = {
     return `https://snek.at/gitlab`;
   },
 
-  // Catch any error that appears during the OAuth process
+  // Catch any error that appears during the login process
   extractError(redirectUrl: string): Error | undefined {
     const errorMatch = redirectUrl.match(/error=([^&]+)/);
     if (!errorMatch) {
