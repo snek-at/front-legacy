@@ -155,19 +155,17 @@ export function getCalendar(data) {
   let baseYear = data.exec(select.baseYearOfPlatforms)[0].baseYear;
 
   let calendarGrid = {};
-  let baseCalendarGrid = {};
-
+  let today = new Date();
+  if(!baseYear){
+    baseYear = today.getFullYear();
+  }
+ 
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
     calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1), true);
   }
-
-  let today = new Date();
+  
   today.setDate(today.getDate() + 1);
 
-  let today2 = new Date();
-  today2.setFullYear(today2.getFullYear() - 1);
-  baseCalendarGrid[today.getFullYear()] = generateCalendarGrid(today2, true);
-  let offset = getWeekNumber(today2)[1] - 51;
   calendar.forEach((day) => {
     if (day.cYear) {
       calendarGrid[day.cYear].total++;
@@ -176,30 +174,97 @@ export function getCalendar(data) {
       calendarGrid[day.cYear].weeks[day.cWeek].contributionDays[
         day.cWeekday
       ].color = day.cColor;
-
-      if (day.cYear === today2.getFullYear() - 1 && day.cWeek >= 52 - offset) {
-        baseCalendarGrid[day.cYear].total++;
-        baseCalendarGrid[day.cYear].weeks[day.cWeek + offset - 52]
-          .contributionDays[day.cWeekday].total++;
-      } else if (
-        day.cYear === today2.getFullYear() &&
-        day.cWeek <= 52 + offset
-      ) {
-        baseCalendarGrid[day.cYear].total++;
-        baseCalendarGrid[day.cYear].weeks[day.cWeek - offset].contributionDays[
-          day.cWeekday
-        ].total++;
-      }
     }
   });
 
+  let nowYear = dictCalendarToArray(calendarGrid)[today.getFullYear()];
+  let lastYear = dictCalendarToArray(calendarGrid)[today.getFullYear() - 1];
+
+  let nowDate = new Date();
+  let contributionDays = [];
+  nowYear.weeks.reverse().forEach((week) => {
+    week.contributionDays.reverse().forEach((day) => {
+      if (new Date(day.date) < nowDate) {
+        contributionDays.push(day);
+      }
+    });
+  });
+
+  if (lastYear !== undefined) {
+    lastYear.weeks.reverse().forEach((week) => {
+      week.contributionDays.reverse().forEach((day) => {
+        if (contributionDays.length < 53 * 7) {
+          contributionDays.push(day);
+        }
+      });
+    });
+  }
+
+  let fullDays = expandDaysToFullYear(contributionDays);
+  let currentCalendar = getCalendarFromDates(fullDays);
+
+  for (let [k, v] of Object.entries(dictCalendarToArray(calendarGrid))) {
+    calendarGrid[k] = calculateColorsForCalendarDay(v);
+  }
+
   return {
-    years: dictCalendarToArray(calculateColorsForCalendarDay(calendarGrid)),
-    currentYear: dictCalendarToArray(
-      calculateColorsForCalendarDay(baseCalendarGrid)
-    )
+    years: calendarGrid,
+    currentYear: calculateColorsForCalendarDay(currentCalendar)
   };
 }
+
+const expandDaysToFullYear = (days) => {
+  // Add missing days to get all calendar days
+  let fullDays = [];
+  let startDay = days[days.length - 1];
+  let firstDate = new Date(startDay.date);
+  let breakDate = new Date(startDay.date);
+  firstDate.setDate(firstDate.getDate() - (365 - days.length));
+
+  // Reverse days
+  days = days.reverse();
+
+  for (let index = 0; index < 365; index++) {
+    let day = {
+      total: 0,
+      date: "",
+      color: "#ffffff"
+    };
+
+    if (firstDate < breakDate) {
+      day.date = formatDate(firstDate);
+      fullDays.push(day);
+      firstDate.setDate(firstDate.getDate() + 1);
+    } else {
+      fullDays.push(days[index - (365 - days.length)]);
+    }
+  }
+
+  return fullDays;
+};
+
+const getCalendarFromDates = (fullDays) => {
+  let year = {};
+  let count = 0;
+  year.weeks = [];
+  year.total = 0;
+  year.fromDate = new Date(fullDays[0].date);
+  year.toDate = new Date(fullDays[fullDays.length - 1].date);
+
+  for (let indexW = 0; indexW < 53; indexW++) {
+    let week = {};
+    week.contributionDays = [];
+    for (let indexD = 0; indexD <= 6; indexD++) {
+      if (fullDays[count] !== undefined) {
+        year.total += fullDays[count].total;
+        week.contributionDays.push(fullDays[count]);
+      }
+      count++;
+    }
+    year.weeks.push(week);
+  }
+  return year;
+};
 
 const generateCalendarGrid = (date, flag) => {
   let emptyContributionYear = {};
@@ -229,37 +294,35 @@ const generateCalendarGrid = (date, flag) => {
 };
 
 // Fill the raw calendar structure with the correct colors
-const calculateColorsForCalendarDay = (rawCalendar) => {
-  Object.values(rawCalendar).forEach((_year) => {
-    let busiestDay = 0;
-    // Calculate busiest day of the year
-    Object.values(_year.weeks).forEach((_week) => {
-      Object.values(_week.contributionDays).forEach((_day) => {
-        if (_day.total > busiestDay) {
-          busiestDay = _day.total;
-        }
-      });
-    });
-
-    Object.values(_year.weeks).forEach((_week) => {
-      Object.values(_week.contributionDays).forEach((_day) => {
-        let precision = _day.total / busiestDay;
-        if (precision > 0.8 && precision <= 1) {
-          _day.color = "#196127";
-        } else if (precision > 0.6 && precision <= 0.8) {
-          _day.color = "#239a3b";
-        } else if (precision > 0.4 && precision <= 0.6) {
-          _day.color = "#7bc96f";
-        } else if (precision > 0.0 && precision <= 0.4) {
-          _day.color = "#c6e48b";
-        } else if (precision === 0) {
-          _day.color = "#ebedf0";
-        }
-      });
+const calculateColorsForCalendarDay = (calendarYear) => {
+  let busiestDay = 0;
+  // Calculate busiest day of the year
+  calendarYear.weeks.forEach((_week) => {
+    _week.contributionDays.forEach((_day) => {
+      if (_day.total > busiestDay) {
+        busiestDay = _day.total;
+      }
     });
   });
 
-  return rawCalendar;
+  calendarYear.weeks.forEach((_week) => {
+    _week.contributionDays.forEach((_day) => {
+      let precision = _day.total / busiestDay;
+      if (precision > 0.8 && precision <= 1) {
+        _day.color = "#196127";
+      } else if (precision > 0.6 && precision <= 0.8) {
+        _day.color = "#239a3b";
+      } else if (precision > 0.4 && precision <= 0.6) {
+        _day.color = "#7bc96f";
+      } else if (precision > 0.0 && precision <= 0.4) {
+        _day.color = "#c6e48b";
+      } else if (precision === 0) {
+        _day.color = "#ebedf0";
+      }
+    });
+  });
+
+  return calendarYear;
 };
 
 function dictCalendarToArray(dict) {
@@ -286,6 +349,7 @@ export function getStats(data) {
   data.exec(select.totalContributions).forEach((elem) => {
     totalContributionsPerYear[elem.year] = elem.num;
   });
+  
   data.exec(select.busiestDay).forEach((elem) => {
     let busiestDay = {};
     busiestDay.date = elem.date;
@@ -306,7 +370,6 @@ export function getStats(data) {
       statistic.busiestDay = busiestDay;
       statistic.average =
         Math.round((totalContributionsPerYear[stat.sYear] / 365) * 100) / 100;
-
       statistic.longestStreak = {};
       statistic.longestStreak.total = 0;
       statistic.currentStreak = {};
@@ -315,7 +378,8 @@ export function getStats(data) {
       statistics[stat.sYear] = statistic;
     }
 
-    let streak = {};
+    if(stat.stId !== undefined){
+      let streak = {};
     streak.startDate = stat.stsDate;
     streak.endDate = stat.steDate;
     streak.total = stat.stTotal;
@@ -323,7 +387,7 @@ export function getStats(data) {
 
     // To calculate the no. of days between two dates
     const dateDiff = (date1, date2) =>
-        Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
+      Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
 
     let streakDiff = dateDiff(streak.startDate, streak.endDate);
     if (statistics[stat.sYear].longestStreak.total <= streakDiff) {
@@ -346,6 +410,9 @@ export function getStats(data) {
         streak.endDate
       );
     }
+    }
+
+    
   });
 
   return statistics;

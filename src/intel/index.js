@@ -3,12 +3,20 @@ import * as data from "./IntelData";
 
 import * as converter from "./Database/Converter";
 
-export async function fill(user) {
-  await data.fill(user);
+export async function fill(userList) {
+  try{
+    for (let index = 0; index < userList.length; index++) {
+      const user = userList[index]
+      await data.fill(user)
+    }
+  }
+  catch{
+    console.error("Data fetching failed.. Please contact our support!", user)
+  }
 }
 
 export function templateSelect() {
-  return data.exec("SELECT * FROM repository");
+  return data.exec("SELECT * FROM statistic");
 }
 
 export function user() {

@@ -75,6 +75,9 @@ const tabitems = [
 class Dashboard extends React.Component {
   render() {
     const { globalStore } = this.props;
+    
+    //> Debugging access point - state
+    //console.log(globalStore);
 
     if(!globalStore.data.logged) { return (<Redirect to="/"/>); }
 
@@ -108,7 +111,12 @@ class Dashboard extends React.Component {
               </MDBCol>
               <MDBCol md="8">
                 <TabContainer items={tabitems} horizontal>
-                  <OverviewTab id={0} contrib={data.contrib} calendar={data.contribCalendar} />
+                  <OverviewTab 
+                  id={0}
+                  contrib={data.contrib}
+                  calendar={data.contribCalendar}
+                  contribTypes={data.contribTypes}
+                  />
                   <ResumeTab id={1} />
                   <ProjectsTab id={2} repos={data.repos} />
                   <EducationTab id={3} />
