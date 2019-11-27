@@ -39,9 +39,12 @@ class Calender3D extends React.Component {
   componentDidMount = () => {
     // Add resize listener
     window.addEventListener("resize", this.updateDimensions);
-    this.setState({
-      width: this.myInput.current.offsetWidth
-    }, () => this.renderIsometrics());
+    this.setState(
+      {
+        width: this.myInput.current.offsetWidth
+      },
+      () => this.renderIsometrics()
+    );
   };
 
   renderTopStats() {
@@ -52,8 +55,10 @@ class Calender3D extends React.Component {
 
     countTotal = contributionCalendar.total;
     averageCount = contribData.average;
-    datesTotal = moment(contributionCalendar.fromDate).format("MMM DD, YYYY") + 
-    " - " + moment(contributionCalendar.toDate).format("MMM DD, YYYY");
+    datesTotal =
+      moment(contributionCalendar.fromDate).format("MMM DD, YYYY") +
+      " - " +
+      moment(contributionCalendar.toDate).format("MMM DD, YYYY");
     maxCount = contribData.busiestDay.total;
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
 
@@ -89,16 +94,18 @@ class Calender3D extends React.Component {
     let streakLongest, datesLongest, streakCurrent, datesCurrent;
 
     let contribData = this.props.contrib["2019"];
-    let contributionCalendar = this.props.calendar.currentYear["2019"];
+    let contributionCalendar = this.props.calendar.currentYear;
 
     streakLongest = contribData.longestStreak.total;
-    datesLongest = moment(contribData.longestStreak.startDate).format("MMM DD, YYYY") 
-    + " - " 
-    + moment(contribData.longestStreak.endDate).format("MMM DD, YYYY");
+    datesLongest =
+      moment(contribData.longestStreak.startDate).format("MMM DD, YYYY") +
+      " - " +
+      moment(contribData.longestStreak.endDate).format("MMM DD, YYYY");
     streakCurrent = contribData.currentStreak.total;
-    datesCurrent = moment(contribData.currentStreak.startDate).format("MMM DD, YYYY") 
-    + " - " 
-    + moment(contribData.currentStreak.endDate).format("MMM DD, YYYY");
+    datesCurrent =
+      moment(contribData.currentStreak.startDate).format("MMM DD, YYYY") +
+      " - " +
+      moment(contribData.currentStreak.endDate).format("MMM DD, YYYY");
 
     let html;
     html = `<div class="ic-stats-block ic-stats-bottom">\n
@@ -137,7 +144,7 @@ class Calender3D extends React.Component {
     let pixelView = new obelisk.PixelView(this.context, point);
 
     // Get contribs
-    let contributions = this.props.calendar.currentYear["2019"];
+    let contributions = this.props.calendar.currentYear;
 
     // Define basic variables
     let SIZE = 10;
@@ -164,9 +171,7 @@ class Calender3D extends React.Component {
         // Normalize the values to achieve even distribution
         let cubeHeight = 3;
         if (maxCount > 0) {
-          cubeHeight += parseInt(
-            (MAXHEIGHT / maxCount) * day.total
-          );
+          cubeHeight += parseInt((MAXHEIGHT / maxCount) * day.total);
         }
 
         // Offsets
