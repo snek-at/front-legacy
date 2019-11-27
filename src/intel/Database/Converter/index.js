@@ -199,45 +199,16 @@ export function getCalendar(data) {
   };
 }
 
-const expandDaysToFullYear = (days) => {
-  // Add missing days to get all calendar days
-  let fullDays = [];
-  let startDay = days[days.length - 1];
-  let firstDate = new Date(startDay.date);
-  let breakDate = new Date(startDay.date);
-  firstDate.setDate(firstDate.getDate() - (365 - days.length));
-
-  // Reverse days
-  days = days.reverse();
-
-  for (let index = 0; index < 365; index++) {
-    let day = {
-      total: 0,
-      date: "",
-      color: "#ffffff"
-    };
-
-    if (firstDate < breakDate) {
-      day.date = formatDate(firstDate);
-      fullDays.push(day);
-      firstDate.setDate(firstDate.getDate() + 1);
-    } else {
-      fullDays.push(days[index - (365 - days.length)]);
-    }
-  }
-
-  return fullDays;
-};
-
 const getCalendarFromDates = (fullDays) => {
   let year = {};
   let count = 0;
   year.weeks = [];
   year.total = 0;
   year.fromDate = new Date(fullDays[0].date);
+  ////console.log(fullDays)
   year.toDate = new Date(fullDays[fullDays.length - 1].date);
 
-  for (let indexW = 0; indexW < 53; indexW++) {
+  for (let indexW = 0; indexW <= 53; indexW++) {
     let week = {};
     week.contributionDays = [];
     for (let indexD = 0; indexD <= 6; indexD++) {
