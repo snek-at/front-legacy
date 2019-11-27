@@ -145,15 +145,14 @@ export function getCalendar(data) {
   if(!baseYear){
     baseYear = today.getFullYear();
   }
- 
+
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
     let date = new Date(indexY, 0, 1)
     let offset = 0;
     date.setDate(date.getDate() - date.getDay() - offset)
-    console.log(date)
     calendarGrid[indexY] = generateCalendarGrid(date, true);
   }
-  
+
   today.setDate(today.getDate() + 1);
 
   calendar.forEach((day) => {
@@ -190,8 +189,6 @@ export function getCalendar(data) {
     });
   }
 
-  let fullDays = expandDaysToFullYear(contributionDays);
-  let currentCalendar = getCalendarFromDates(fullDays);
   let currentCalendar = getCalendarFromDates(contributionDays.reverse());
 
   for (let [k, v] of Object.entries(dictCalendarToArray(calendarGrid))) {
@@ -210,7 +207,6 @@ const getCalendarFromDates = (fullDays) => {
   year.weeks = [];
   year.total = 0;
   year.fromDate = new Date(fullDays[0].date);
-  ////console.log(fullDays)
   year.toDate = new Date(fullDays[fullDays.length - 1].date);
 
   for (let indexW = 0; indexW <= 53; indexW++) {
