@@ -19,7 +19,7 @@ export async function fill(userList) {
     const maxRetries = 5;
       await retry(maxRetries, data.fill, [user]).catch((err) => {
         throw err;
-      })
+      });
     
   }
 }
