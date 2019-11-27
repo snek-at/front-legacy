@@ -38,7 +38,19 @@ class GitLab extends React.Component {
   }
 
   handleSubmit = () => {
-    window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
+    if (this.state.username != "")
+    {
+      if (this.state.server != "")
+      {
+        window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
+      }
+      else{
+        this.notify("warn","Enter a server!")
+      }
+    }
+    else{
+      this.notify("warn","Enter a username!")
+    }
   }
 
   notify = (type, message) => {
