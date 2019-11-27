@@ -4,14 +4,23 @@ import * as data from "./IntelData";
 import * as converter from "./Database/Converter";
 
 export async function fill(userList) {
-  try{
-    for (let index = 0; index < userList.length; index++) {
-      const user = userList[index]
-      await data.fill(user)
-    }
+
+  async function retry(maxRetries, fn, params) {
+      return await fn(...params).catch(() => {
+        if (maxRetries <= 0) {
+          throw new Error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
+        }
+        return retry(maxRetries - 1, fn, params);
+      });
   }
-  catch{
-    console.error("Data fetching failed.. Please contact our support!", user)
+
+  for (let index = 0; index < userList.length; index++) {
+    const user = userList[index]
+    const maxRetries = 5;
+      await retry(maxRetries, data.fill, [user]).catch((err) => {
+        throw err;
+      })
+    
   }
 }
 
