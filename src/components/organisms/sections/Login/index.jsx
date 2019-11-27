@@ -61,15 +61,15 @@ class Login extends React.Component{
       variables: { "username": this.state.username, "password": sha256(this.state.password) }
     })
     .then(({data}) => {
-      //console.log(data);
       if(data.tokenAuth){
         if(data.tokenAuth.token){
           this.props.loginHandler(data.tokenAuth.token);
+          this.notify("success", " Successfull login!");
         }
       }
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error.message);
+      this.notify("error", error.message.split(":")[1]);
     });
   }
   notify = (type, message) => {
