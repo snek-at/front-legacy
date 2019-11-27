@@ -159,21 +159,23 @@ class Register extends React.Component{
       values 
     }
     })
-    .then((data) => {
-        alert(`Welcome to SNEK, ${data.username}!`);
+    .then((result) => {
+        this.notify("warn","All fields have to be filled!");
     })
     .catch((error) => {
         if (error.message.includes("Authentication Required"))
         {
-          alert(`Welcome to SNEK, ${this.state.username}!`);
+          this.notify("success"," Welcome to SNEK!");
         }
         else if (error.message.includes("Duplicate entry"))
         {
-          alert(`${this.state.username} is already taken!`);
+          console.log(error.message);
+          this.notify("warn"," Username already taken!");
         }
         else
         {
-          alert(error.message);
+          console.log(error.message);
+          this.notify("error", "Something went wrong!")
         }
     });
   }
