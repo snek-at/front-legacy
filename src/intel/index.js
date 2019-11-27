@@ -4,14 +4,23 @@ import * as data from "./IntelData";
 import * as converter from "./Database/Converter";
 
 export async function fill(userList) {
-  try{
-    for (let index = 0; index < userList.length; index++) {
-      const user = userList[index]
-      await data.fill(user)
-    }
+
+  async function retry(maxRetries, fn, params) {
+      return await fn(...params).catch(() => {
+        if (maxRetries <= 0) {
+          throw new Error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
+        }
+        return retry(maxRetries - 1, fn, params);
+      });
   }
-  catch{
-    console.error("Data fetching failed.. Please contact our support!", user)
+
+  for (let index = 0; index < userList.length; index++) {
+    const user = userList[index]
+    const maxRetries = 5;
+      await retry(maxRetries, data.fill, [user]).catch((err) => {
+        throw err;
+      });
+    
   }
 }
 
@@ -20,31 +29,73 @@ export function templateSelect() {
 }
 
 export function user() {
-  return converter.getUser(data);
+  try{
+    return converter.getUser(data);
+  }
+  catch{
+    //console.warn("Converting user data failed..")
+    return undefined;
+  }
 }
 
 export function repos() {
-  return converter.getRepositories(data);
+  try{
+    return converter.getRepositories(data);
+  }
+  catch{
+    //console.warn("Converting repository data failed..")
+    return undefined;
+  }
 }
 
 export function orgs() {
-  return converter.getOrganizations(data);
+  try{
+    return converter.getOrganizations(data);
+  }
+  catch{
+    //console.warn("Converting organization data failed..")
+    return undefined;
+  }
 }
 
 export function languages() {
-  return converter.getLanguages(data);
+  try{
+    return converter.getLanguages(data);
+  }
+  catch{
+    //console.warn("Converting language data failed..")
+    return undefined;
+  }
 }
 
 export function calendar() {
-  return converter.getCalendar(data);
+  try{
+    return converter.getCalendar(data);
+  }
+  catch{
+    //console.warn("Converting calendar data failed..")
+    return undefined;
+  }
 }
 
 export function stats() {
-  return converter.getStats(data);
+  try{
+    return converter.getStats(data);
+  }
+  catch{
+    //console.warn("Converting statistic data failed..")
+    return undefined;
+  }
 }
 
 export function contribTypes() {
-  return converter.getContribTypes(data);
+  try{
+    return converter.getContribTypes(data);
+  }
+  catch{
+    //console.warn("Converting contrib type data failed..")
+    return undefined;
+  }
 }
 
 /**
