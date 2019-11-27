@@ -183,7 +183,7 @@ export function getCalendar(data) {
   if (lastYear !== undefined) {
     lastYear.weeks.reverse().forEach((week) => {
       week.contributionDays.reverse().forEach((day) => {
-        if (contributionDays.length < 365 + nowDate.getDay()) {
+        if (contributionDays.length <= 371 + nowDate.getDay()) {
           contributionDays.push(day);
         }
       });
