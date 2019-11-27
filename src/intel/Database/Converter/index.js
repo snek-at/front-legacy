@@ -179,7 +179,7 @@ export function getCalendar(data) {
   if (lastYear !== undefined) {
     lastYear.weeks.reverse().forEach((week) => {
       week.contributionDays.reverse().forEach((day) => {
-        if (contributionDays.length < 53 * 7) {
+        if (contributionDays.length < 365 + nowDate.getDay()) {
           contributionDays.push(day);
         }
       });
@@ -188,6 +188,7 @@ export function getCalendar(data) {
 
   let fullDays = expandDaysToFullYear(contributionDays);
   let currentCalendar = getCalendarFromDates(fullDays);
+  let currentCalendar = getCalendarFromDates(contributionDays.reverse());
 
   for (let [k, v] of Object.entries(dictCalendarToArray(calendarGrid))) {
     calendarGrid[k] = calculateColorsForCalendarDay(v);
