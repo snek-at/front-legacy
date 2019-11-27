@@ -147,7 +147,11 @@ export function getCalendar(data) {
   }
  
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
-    calendarGrid[indexY] = generateCalendarGrid(new Date(indexY, 0, 1), true);
+    let date = new Date(indexY, 0, 1)
+    let offset = 0;
+    date.setDate(date.getDate() - date.getDay() - offset)
+    console.log(date)
+    calendarGrid[indexY] = generateCalendarGrid(date, true);
   }
   
   today.setDate(today.getDate() + 1);
