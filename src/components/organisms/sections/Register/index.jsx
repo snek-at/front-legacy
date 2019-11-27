@@ -169,18 +169,16 @@ class Register extends React.Component{
         }
         else if (error.message.includes("Duplicate entry"))
         {
-          console.log(error.message);
           this.notify("warn"," Username already taken!");
         }
         else
         {
-          console.log(error.message);
           this.notify("error", "Something went wrong!")
         }
     });
   }
   notify = (type, message) => {
-      if (type == "success") {
+      if (type === "success") {
         toast.success(
           <div>
             <MDBIcon
@@ -191,7 +189,7 @@ class Register extends React.Component{
           </div>
         )
       }
-      if (type == "error"){
+      if (type === "error"){
         toast.error(
           <div>
             <MDBIcon
@@ -202,7 +200,7 @@ class Register extends React.Component{
           </div>
         )
       }
-      if (type == "warn"){
+      if (type === "warn"){
         toast.warn(
           <div>
             <MDBIcon
@@ -212,7 +210,7 @@ class Register extends React.Component{
             {message}
           </div>
         )
-      }
+      };
   };
 
   render(){

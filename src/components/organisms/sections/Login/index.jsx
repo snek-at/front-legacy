@@ -73,7 +73,7 @@ class Login extends React.Component{
     });
   }
   notify = (type, message) => {
-    if (type == "success") {
+    if (type === "success") {
       toast.success(
         <div>
           <MDBIcon
@@ -84,7 +84,7 @@ class Login extends React.Component{
         </div>
       )
     }
-    if (type == "error"){
+    if (type === "error"){
       toast.error(
         <div>
           <MDBIcon
@@ -95,7 +95,7 @@ class Login extends React.Component{
         </div>
       )
     }
-    if (type == "warn"){
+    if (type === "warn"){
       toast.warn(
         <div>
           <MDBIcon
@@ -105,7 +105,7 @@ class Login extends React.Component{
           {message}
         </div>
       )
-    }
+    };
   };
 
   render(){
