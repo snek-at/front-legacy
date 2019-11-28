@@ -21,6 +21,8 @@ import {
   MDBPopoverHeader,
   MDBPopoverBody,
   MDBIcon,
+  toast,
+  ToastContainer,
 } from "mdbreact";
 
 class GitLab extends React.Component {
@@ -36,12 +38,65 @@ class GitLab extends React.Component {
   }
 
   handleSubmit = () => {
-    window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
+    if (this.state.username !== "")
+    {
+      if (this.state.server !== "")
+      {
+        window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
+      }
+      else{
+        this.notify("warn","Enter a server!");
+      }
+    }
+    else{
+      this.notify("warn","Enter a username!");
+    }
+  }
+
+  notify = (type, message) => {
+    if (type === "success") {
+      toast.success(
+        <div>
+          <MDBIcon
+          icon="lock-open"
+          className="text ml-2 cursor-pointer"
+          />
+          {message}
+        </div>
+      );
+    }
+    if (type === "error"){
+      toast.error(
+        <div>
+          <MDBIcon
+          icon="lock"
+          className="text ml-2 cursor-pointer"
+          />
+          {message}
+        </div>
+      );
+    }
+    if (type === "warn"){
+      toast.warn(
+        <div>
+          <MDBIcon
+          icon="exclamation-triangle"
+          className="text ml-2 cursor-pointer"
+          />
+          {message}
+        </div>
+      );
+    }
   }
 
   render() {
     return(
       <MDBCard id="gitlab" className="text-dark">
+      <ToastContainer
+        hideProgressBar={true}
+        newestOnTop={true}
+        autoClose={5000}
+      />
       <MDBCardBody>
         <h2>GitLab</h2>
         <MDBInput

@@ -25,6 +25,9 @@ import {
   MDBPopoverHeader,
   MDBPopoverBody,
   MDBIcon,
+  toast,
+  ToastContainer,
+  MDBContainer,
 } from "mdbreact";
 
 //> CSS
@@ -156,28 +159,69 @@ class Register extends React.Component{
       values 
     }
     })
-    .then((data) => {
-        alert(`Welcome to SNEK, ${data.username}!`);
+    .then((result) => {
+        this.notify("warn","All fields have to be filled!");
     })
     .catch((error) => {
         if (error.message.includes("Authentication Required"))
         {
-          alert(`Welcome to SNEK, ${this.state.username}!`);
+          this.notify("success"," Welcome to SNEK!");
         }
         else if (error.message.includes("Duplicate entry"))
         {
-          alert(`${this.state.username} is already taken!`);
+          this.notify("warn"," Username already taken!");
         }
         else
         {
-          alert(error.message);
+          this.notify("error", "Something went wrong!");
         }
     });
   }
 
+  notify = (type, message) => {
+      if (type === "success") {
+        toast.success(
+          <div>
+            <MDBIcon
+            icon="lock-open"
+            className="text ml-2 cursor-pointer"
+            />
+            {message}
+          </div>
+        );
+      }
+      if (type === "error"){
+        toast.error(
+          <div>
+            <MDBIcon
+            icon="lock"
+            className="text ml-2 cursor-pointer"
+            />
+            {message}
+          </div>
+        );
+      }
+      if (type === "warn"){
+        toast.warn(
+          <div>
+            <MDBIcon
+            icon="exclamation-triangle"
+            className="text ml-2 cursor-pointer"
+            />
+            {message}
+          </div>
+        );
+      }
+  };
+
   render(){
     return(
       <MDBCard id="register" className="text-dark">
+        <ToastContainer
+        hideProgressBar={true}
+        newestOnTop={true}
+        autoClose={5000}
+        />
         <MDBCardBody>
           <h2>Join us</h2>
           <MDBInput
