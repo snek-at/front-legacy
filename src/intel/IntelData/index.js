@@ -4,11 +4,19 @@ import * as github from "../utils/UtilsGithub";
 
 let db = new Database("data");
 
-export const exec = value => {
-  return db.exec(value);
+export const exec = (statement, values) => {
+  return db.exec(statement, values);
 };
 
 export async function fill(user) {
-  //gitlab.fill(db, user);
-  await github.fill(db, user);
+  if (user.source === "github") {
+    await github.fill(db, user);
+  } else if (user.source === "gitlab") {
+    await gitlab.fill(db, user);
+  }
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */

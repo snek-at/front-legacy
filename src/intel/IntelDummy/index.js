@@ -33,15 +33,18 @@ const createDummy = (table, entries, c) => {
   }
 };
 
-export const exec = value => {
-  return db.exec(value);
+export const exec = (statement, values) => {
+  return db.exec(statement, values);
 };
 
 export function fill(user) {
   createDummy(
     insert.platform,
     [
-      "GitHub",
+      function() {
+        let types = ["GitHub", "GitLab", "Bitbucket"];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       faker.internet.url,
       faker.internet.avatar,
       faker.internet.url,
@@ -58,7 +61,7 @@ export function fill(user) {
   );
   createDummy(
     insert.organization,
-    [faker.internet.avatar, faker.internet.url, faker.internet.userName],
+    [faker.internet.avatar, faker.internet.userName, faker.internet.url],
     20
   );
   createDummy(
@@ -69,7 +72,7 @@ export function fill(user) {
       faker.internet.userName,
       faker.internet.url
     ],
-    20
+    50
   );
   createDummy(
     insert.languagePie,
@@ -87,6 +90,7 @@ export function fill(user) {
     insert.repository,
     [
       faker.internet.avatar,
+      faker.internet.url,
       faker.internet.userName,
       function() {
         return random(count("member"));
@@ -95,7 +99,7 @@ export function fill(user) {
         return random(count("languagePie"));
       }
     ],
-    20
+    30
   );
   createDummy(
     insert.languageSlice,
@@ -112,37 +116,31 @@ export function fill(user) {
         return random(count("languagePie"));
       }
     ],
-    20
-  );
-  createDummy(
-    insert.busiestDay,
-    [
-      faker.date.recent,
-      function() {
-        return randomBtw(1000, 2000);
-      }
-    ],
-    20
+    200
   );
   createDummy(
     insert.statistic,
     [
       function() {
-        return randomBtw(2001, 2019);
-      },
-      function() {
-        return random(count("busiestDay"));
+        return randomBtw(2016, 2019);
       },
       function() {
         return random(count("platform"));
       }
     ],
-    2
+    5
   );
   createDummy(
     insert.calendar,
     [
-      faker.date.recent,
+      function() {
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       function() {
         return randomBtw(0, 53);
       },
@@ -157,12 +155,19 @@ export function fill(user) {
         return random(count("platform"));
       }
     ],
-    300
+    500
   );
   createDummy(
     insert.contrib,
     [
-      faker.date.recent,
+      function() {
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       faker.internet.userName,
       faker.internet.url,
       function() {
@@ -182,13 +187,27 @@ export function fill(user) {
         return random(count("calendar"));
       }
     ],
-    22
+    5000
   );
   createDummy(
     insert.streak,
     [
-      faker.date.recent,
-      faker.date.recent,
+      function() {
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
+        return types[Math.floor(Math.random() * types.length)];
+      },
+      function() {
+        let types = [
+          faker.date.past(1),
+          faker.date.past(2),
+          faker.date.past(3)
+        ];
+        return types[Math.floor(Math.random() * types.length)];
+      },
       function() {
         return randomBtw(213, 500);
       },
@@ -249,3 +268,8 @@ export function fill(user) {
     20
   );
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
