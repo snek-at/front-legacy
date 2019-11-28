@@ -63,7 +63,7 @@ class GitLab extends React.Component {
           />
           {message}
         </div>
-      )
+      );
     }
     if (type === "error"){
       toast.error(
@@ -74,7 +74,7 @@ class GitLab extends React.Component {
           />
           {message}
         </div>
-      )
+      );
     }
     if (type === "warn"){
       toast.warn(
@@ -85,8 +85,8 @@ class GitLab extends React.Component {
           />
           {message}
         </div>
-      )
-    };
+      );
+    }
   }
 
   render() {

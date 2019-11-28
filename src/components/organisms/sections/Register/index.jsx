@@ -173,10 +173,11 @@ class Register extends React.Component{
         }
         else
         {
-          this.notify("error", "Something went wrong!")
+          this.notify("error", "Something went wrong!");
         }
     });
   }
+
   notify = (type, message) => {
       if (type === "success") {
         toast.success(
@@ -187,7 +188,7 @@ class Register extends React.Component{
             />
             {message}
           </div>
-        )
+        );
       }
       if (type === "error"){
         toast.error(
@@ -198,7 +199,7 @@ class Register extends React.Component{
             />
             {message}
           </div>
-        )
+        );
       }
       if (type === "warn"){
         toast.warn(
@@ -209,8 +210,8 @@ class Register extends React.Component{
             />
             {message}
           </div>
-        )
-      };
+        );
+      }
   };
 
   render(){

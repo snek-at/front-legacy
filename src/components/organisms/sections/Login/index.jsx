@@ -72,6 +72,7 @@ class Login extends React.Component{
       this.notify("error", error.message.split(":")[1]);
     });
   }
+
   notify = (type, message) => {
     if (type === "success") {
       toast.success(
@@ -82,7 +83,7 @@ class Login extends React.Component{
           />
           {message}
         </div>
-      )
+      );
     }
     if (type === "error"){
       toast.error(
@@ -93,7 +94,7 @@ class Login extends React.Component{
           />
           {message}
         </div>
-      )
+      );
     }
     if (type === "warn"){
       toast.warn(
@@ -104,8 +105,8 @@ class Login extends React.Component{
           />
           {message}
         </div>
-      )
-    };
+      );
+    }
   };
 
   render(){
