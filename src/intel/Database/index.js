@@ -8,7 +8,6 @@ const initTables = `
     ${create.languagePie}
     ${create.repository}
     ${create.languageSlice}
-    ${create.busiestDay}
     ${create.statistic}
     ${create.streak}
     ${create.calendar}
@@ -26,3 +25,8 @@ export function Database(dbName) {
 
   return db;
 }
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */

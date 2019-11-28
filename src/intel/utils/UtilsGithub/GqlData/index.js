@@ -98,6 +98,7 @@ const getCalendarQueryPart = (fromYear, toYear, c) => {
               }
             }
           }
+          openGraphImageUrl
           name
           nameWithOwner
           url
@@ -129,6 +130,7 @@ const getCalendarQueryPart = (fromYear, toYear, c) => {
               }
             }
           }
+          openGraphImageUrl
           name
           nameWithOwner
           url
@@ -163,6 +165,7 @@ const getCalendarQueryPart = (fromYear, toYear, c) => {
               }
             }
           }
+          openGraphImageUrl
           name
           nameWithOwner
           url
