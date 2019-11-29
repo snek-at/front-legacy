@@ -1,5 +1,9 @@
 async function head(link, token) {
-  return await fetch(link)
+  return await fetch(link, {
+    headers: {
+      authorization: `token: ${token}`
+    }
+  })
     .then(
       function (response) {
         if (response.status !== 200) {
@@ -32,13 +36,27 @@ export class Connection {
       this.commitLink = (repo, pageIndex) => `https://${this.link}/repos/${repo}/commits?author=${this.user.username}&page=${pageIndex}`;
       this.issueLink = (repo, pageIndex) => `https://${this.link}/repos/${repo}/issues?state=all&creator=${this.user.username}&page=${pageIndex}`;
       this.pullLink = (repo, pageIndex) => `https://${this.link}/search/issues?q=repo:${repo}+author:${this.user.username}+is:pr&page=${pageIndex}`;
+      this.pullAllLink = (repo, pageIndex) => `https://${this.link}/search/issues?q=repo:${repo}+reviewed-by:${this.user.username}+is:pr&page=${pageIndex}`;
+      this.reviewLink = (pullUrl, pageIndex) => `${pullUrl}/reviews?&page=${pageIndex}`;
     } else {
       throw "No valid link!"
     };
   }
 
+  /*
+  Deactivated due to to much pages
   async commits(){
     return await this.contributions(this.commitLink)
+  }
+  */
+
+  async reviews(){
+    return this.contributions(this.pullAllLink).then(pulls => {
+      
+      return this.contributionReviews(this.reviewLink, pulls).then(reviews => {
+        return reviews
+      })
+    })
   }
 
   async issues(){
@@ -85,6 +103,37 @@ export class Connection {
       }
     }
     return commitsOfUserPerRepo;
+  }
+
+  async contributionReviews(linkFn, repoWithPulls) {
+    let reviewsPerRepo = {};
+    for(const [repoName, pulls] of Object.entries(repoWithPulls)){
+      //console.log(repoName, pulls)
+      reviewsPerRepo[repoName] = []
+      var pill2kill = false;
+      for(const pull of pulls){
+        let pageIndex = 1
+        //console.log(pull)
+        while (!pill2kill) {
+          const res = await head
+            (linkFn(pull.pull_request.url, pageIndex), this.user.token);
+            //console.log(res)
+          if (res.length > 0) {
+            pageIndex++;
+            //console.log(res)
+            res.forEach(review => {
+              if(review.user.login === this.user.username){
+                reviewsPerRepo[repoName].push(review);
+              }
+            })
+          }else{
+            break;
+          }
+        }
+      }
+    }
+    return reviewsPerRepo
+    
   }
 
 }
