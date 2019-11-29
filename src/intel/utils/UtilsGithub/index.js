@@ -1,74 +1,59 @@
-import * as apollo from "./../UtilsApollo";
-import * as gqlData from "./GqlData";
+import * as v3 from "./API/v3";
+import * as v4 from "./API/v4";
 import * as translator from "./Translator";
 
-// Get profile and calendar
-export async function fill(db, user) {
-  const getPlatform = async (db, username) => {
-    const apiLink = "https://api.github.com/graphql";
-    const authorization = `Bearer ${user.token}`;
-    const client = apollo.init(apiLink, authorization);
-    const resProfile = await client.query({
-      query: gqlData.GET_PROFILE,
-      variables: {
-        username
+async function getReposNames(user) {
+  delete user["__typename"];
+  console.log(user)
+  let repos = [];
+  Object.values(user).forEach(year => {
+
+    year.commitContributionsByRepository.forEach(repo => {
+      if (!repos.includes(repo.repository.nameWithOwner)) {
+        repos.push(repo.repository.nameWithOwner)
       }
     });
-
-    const { data } = resProfile;
-
-    // Debugging point
-    //console.log("PROFILE DATA", data);
-    const createdAtDate = new Date(data.user.createdAt);
-
-    const resCalendar = await client.query({
-      query: gqlData.getCalendar(username, createdAtDate)
-    });
-
-    // Debugging point
-    //console.log(resCalendar.data.user);
-
-    let allReposWithHistory = {};
-    let reposPerName = {};
-    Object.values(resCalendar.data.user).forEach((c) => {
-      if(c !== "User"){
-        c.commitContributionsByRepository.forEach((repo) => {
-          if(repo.repository.defaultBranchRef.target.history.totalCount >= 100){
-            reposPerName[repo.repository.nameWithOwner] = repo;
-            
-          }
-          allReposWithHistory[repo.repository.nameWithOwner] = repo;
-        });
+    year.issueContributionsByRepository.forEach(repo => {
+      if (!repos.includes(repo.repository.nameWithOwner)) {
+        repos.push(repo.repository.nameWithOwner)
       }
-
     });
-
-    // Debugging point
-    //console.log("allReposHistory",allReposWithHistory)
-
-    gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async (q) => {
-      const resRepoHistory = await client.query({
-        query: q
-      });
-      Object.values(resRepoHistory.data).forEach((repo) => {
-        let l1 = allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes;
-        let l2 = repo.defaultBranchRef.target.history.nodes;
-        allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes = l1.concat(l2);
-      });
+    year.pullRequestContributionsByRepository.forEach(repo => {
+      if (!repos.includes(repo.repository.nameWithOwner)) {
+        repos.push(repo.repository.nameWithOwner)
+      }
     });
-    
-    const objUser = {};
-    objUser.profile = resProfile.data.user;
-    objUser.calendar = resCalendar.data.user;
-    objUser.repoCommitHistory = Object.values(allReposWithHistory);
-
-    translator.fillDB(db, objUser);
-
-  };
-  await getPlatform(db, user["username"]);
+  })
+  return repos;
 }
+export async function fill(db, user) {
 
-/**
- * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © 2019 Werbeagentur Christian Aichner
- */
+}
+export async function fill2(db, user) {
+  const v4Con = new v4.Connection("https://api.github.com/graphql", {
+    username: user.username,
+    token: user.token,
+  });
+
+  const data = await v4Con.profile().then(profile => {
+    return v4Con.calendar(new Date(profile.user.createdAt)).then(calendar => {
+      return getReposNames(calendar.user).then(repos => {
+        return {
+          profile,
+          calendar,
+          repos,
+        }
+      });
+    });
+  });
+
+  const v3Con = new v3.Connection("api.github.com", {
+    username: user.username,
+    repositories: data.repos
+  });
+  console.log(await v3Con.commits())
+  // translator.fillDB(db, {
+  //   profile,
+  //   calendar,
+  // });
+}
