@@ -203,7 +203,7 @@ class Calender3D extends React.Component {
         <div dangerouslySetInnerHTML={this.renderBottomStats()} />
         <div ref={this.myInput}>
           <canvas
-            ref={c => (this.context = c)}
+            ref={(c) => (this.context = c)}
             width={this.state.width}
             height="410"
           ></canvas>

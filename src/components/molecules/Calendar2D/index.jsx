@@ -72,7 +72,7 @@ class Calender2D extends React.Component {
     }
   };
 
-  getEachMonth = pos => {
+  getEachMonth = (pos) => {
     // Create new empty array
     let month = new Array();
 

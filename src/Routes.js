@@ -44,7 +44,7 @@ class Routes extends React.Component {
         <Route 
         exact
         path='/about'
-        component={() => window.location = 'https://www.aichner-christian.com/about'}
+        component={() => window.location = "https://www.aichner-christian.com/about"}
         />
         <Route
           render={function() {

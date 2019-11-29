@@ -17,10 +17,10 @@ Date.prototype.getWeekNumber = function() {
 
 //> Fill functions
 // Fill the platform table with data
-const fillPlatform = async user => {
+const fillPlatform = async (user) => {
   const url = `https://${user.server}/${user.username}`;
   const html = await webscrap.parseTextToDOM(
-    webscrap.fetchHtml(url).then(html => {
+    webscrap.fetchHtml(url).then((html) => {
       return html;
     })
   );
@@ -64,10 +64,10 @@ const fillPlatform = async user => {
   ]);
 };
 
-const fillOrganizations = async user => {
+const fillOrganizations = async (user) => {
   const url = `https://${user.server}/users/${user.username}/groups.json`;
   const html = await webscrap.parseJsonToDOM(
-    webscrap.fetchJson(url).then(html => {
+    webscrap.fetchJson(url).then((html) => {
       return html;
     })
   );
@@ -118,11 +118,11 @@ const fillRepositories = (user, nameWithOwner) => {
   repository.languagePieId = db.exec("SELECT id FROM languagePie").pop();
 
   if(repository.ownerId){
-    repository.ownerId = repository.ownerId.id
+    repository.ownerId = repository.ownerId.id;
   }
 
   if(repository.languagePieId){
-    repository.languagePieId = repository.languagePieId.id
+    repository.languagePieId = repository.languagePieId.id;
   }
 
   const repoExists = db.exec(
@@ -178,12 +178,12 @@ const fillContribution = (user, item) => {
   ]);
 };
 
-const fillCalendar = async user => {
+const fillCalendar = async (user) => {
   const limit = "2147483647";
   const url = `https://${user.server}/${user.username}?limit=${limit}`;
 
   const html = await webscrap.parseJsonToDOM(
-    webscrap.fetchJson(url).then(html => {
+    webscrap.fetchJson(url).then((html) => {
       return html;
     })
   );

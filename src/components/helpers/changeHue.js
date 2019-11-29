@@ -15,7 +15,7 @@ function rgbToHSL(rgb) {
   rgb = rgb.replace(/^\s*#|\s*$/g, "");
 
   // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-  if (rgb.length == 3) {
+  if (rgb.length === 3) {
     rgb = rgb.replace(/(.)/g, "$1$1");
   }
 
@@ -29,26 +29,26 @@ function rgbToHSL(rgb) {
     h = 0,
     s = 0;
 
-  if (delta == 0) {
+  if (delta === 0) {
     h = 0;
-  } else if (cMax == r) {
+  } else if (cMax === r) {
     h = 60 * (((g - b) / delta) % 6);
-  } else if (cMax == g) {
+  } else if (cMax === g) {
     h = 60 * ((b - r) / delta + 2);
   } else {
     h = 60 * ((r - g) / delta + 4);
   }
 
-  if (delta == 0) {
+  if (delta === 0) {
     s = 0;
   } else {
     s = delta / (1 - Math.abs(2 * l - 1));
   }
 
   return {
-    h: h,
-    s: s,
-    l: l
+    h,
+    s,
+    l
   };
 }
 
@@ -90,14 +90,14 @@ function hslToRGB(hsl) {
     b = x;
   }
 
-  r = normalize_rgb_value(r, m);
-  g = normalize_rgb_value(g, m);
-  b = normalize_rgb_value(b, m);
+  r = normalizeRGBValue(r, m);
+  g = normalizeRGBValue(g, m);
+  b = normalizeRGBValue(b, m);
 
   return rgbToHex(r, g, b);
 }
 
-function normalize_rgb_value(color, m) {
+function normalizeRGBValue(color, m) {
   color = Math.floor((color + m) * 255);
   if (color < 0) {
     color = 0;

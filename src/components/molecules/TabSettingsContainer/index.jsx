@@ -24,7 +24,7 @@ class TabSettingsContainer extends React.Component {
     activeItemInnerPills: 0
   };
 
-  toggleOuterTabs = tab => e => {
+  toggleOuterTabs = (tab) => (e) => {
     if (this.state.activeItemOuterTabs2 !== tab) {
       this.setState({
         activeItemOuterTabs: tab
@@ -32,7 +32,7 @@ class TabSettingsContainer extends React.Component {
     }
   };
 
-  toggleInnerPills = tab => e => {
+  toggleInnerPills = (tab) => (e) => {
     if (this.state.activeItemInnerPills !== tab) {
       this.setState({
         activeItemInnerPills: tab

@@ -268,7 +268,7 @@ const fillRepos = (objUser) => {
   let keys = Object.keys(objUser.calendar).filter((str) => {
     return str.match(/c[0-9]+/);
   });
-  keys.forEach(c => {
+  keys.forEach((c) => {
     const reposi =
       objUser.calendar[c.toString()].commitContributionsByRepository;
     fillPie(reposi);

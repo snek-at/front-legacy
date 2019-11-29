@@ -15,7 +15,7 @@ export async function fill(userList) {
   }
 
   for (let index = 0; index < userList.length; index++) {
-    const user = userList[index]
+    const user = userList[index];
     const maxRetries = 5;
       await retry(maxRetries, data.fill, [user]).catch((err) => {
         throw err;
