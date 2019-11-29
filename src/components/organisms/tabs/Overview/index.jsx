@@ -12,8 +12,7 @@ import {
 // Molecules
 import {
   Calendar2D,
-  Calendar3D,
-  ContribChart,
+  Calendar3D
 } from "../../../molecules";
 
 class Overview extends React.Component {
@@ -26,7 +25,6 @@ class Overview extends React.Component {
               <Calendar2D calendar={this.props.calendar} />
             )}
             <Calendar3D contrib={this.props.contrib} calendar={this.props.calendar} />
-            <ContribChart types={this.props.contribTypes} />
           </>
         )}
       </MDBTabPane>
