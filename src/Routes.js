@@ -43,7 +43,7 @@ class Routes extends React.Component {
         <Route exact path="/gitlab" component={GitLabPage} />
         <Route 
         exact
-        path='/about'
+        path="/about"
         component={() => window.location = "https://www.aichner-christian.com/about"}
         />
         <Route

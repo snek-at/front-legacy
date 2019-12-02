@@ -91,7 +91,7 @@ class App extends React.Component {
       pageLogin: false,
     });
 
-    if(localStorage.getItem("fprint") !== null){
+    if(localStorage.getItem("jwt_token") !== null){
       try {
         // Verify Token on first load
         this._verifyToken();
@@ -109,7 +109,7 @@ class App extends React.Component {
 
   _verifyToken = () => {
     this.props.verify({
-      variables: { "token": localStorage.getItem("fprint") }
+      variables: { "token": localStorage.getItem("jwt_token") }
     })
     .then(({data}) => {
         if(data !== undefined){
@@ -117,7 +117,7 @@ class App extends React.Component {
             this._isLogged(
               data.verifyToken.payload.exp,
               data.verifyToken.payload.origIat,
-              localStorage.getItem("fprint")
+              localStorage.getItem("jwt_token")
             );
           } else {
             //console.warn("No token in payload.");

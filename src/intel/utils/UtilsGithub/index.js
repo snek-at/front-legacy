@@ -1,5 +1,8 @@
+//> Apollo 
 import * as apollo from "./../UtilsApollo";
+// Queries for Apollo
 import * as gqlData from "./GqlData";
+// Used to put data to database
 import * as translator from "./Translator";
 
 // Get profile and calendar

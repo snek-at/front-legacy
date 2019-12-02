@@ -1,5 +1,9 @@
+//> Database
+// Insert statements
 import * as insert from "../../Database/Statements/Insert";
+// Update statements
 import * as update from "../../Database/Statements/Update";
+// Get html data from websites
 import * as webscrap from "../UtilsWebscrap";
 let db;
 
