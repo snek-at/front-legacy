@@ -76,7 +76,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    // Fill with data
+    // Clear state on reload
     this.setState({
       contrib: null,
       contribCalendar: null,
