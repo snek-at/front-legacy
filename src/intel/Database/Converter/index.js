@@ -23,6 +23,14 @@ export function getUser(data) {
   user.isEmployee = false;
   user.isHireable = false;
   user.location = platform.location;
+  user.platforms = [];
+
+  platforms.forEach(p => {
+    user.platforms.push({
+      platform: p.platformName,
+      username: p.username,
+    });
+  });
 
   return user;
 }
