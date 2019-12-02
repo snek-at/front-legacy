@@ -23,7 +23,7 @@ import {
 //> Components
 import { TabContainer } from "../../molecules";
 
-//> Data
+//> Dummy Data
 const settings = [
   {
     title: "General",

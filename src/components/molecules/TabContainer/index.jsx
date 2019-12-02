@@ -98,9 +98,6 @@ class TabContainer extends React.Component {
                             })}
                         </MDBNav>
                         <MDBTabContent activeItem={this.state.activeSubItem}>
-                          {/* 
-                                                To be added
-                                            */}
                         </MDBTabContent>
                       </MDBTabPane>
                     </>

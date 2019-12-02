@@ -3,7 +3,7 @@
 import React from "react";
 
 //> Additional modules
-// Password hashing
+// Used to hash the password with SHA256
 import { sha256 } from "js-sha256";
 
 //> MDB
@@ -43,6 +43,7 @@ import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
 
+//> Queries / Mutations
 // Register mutation
 const CREATE_USER_MUTATION = gql`
     mutation register($token: String!, $values: GenericScalar!) {
@@ -122,7 +123,7 @@ class Register extends React.Component{
       token,
     });
     
-    // Set the new list
+    // Set the new list of user information
     this.setState({
       sourceList,
       username: this.state.username ? this.state.username : sourceList[0].username
@@ -145,6 +146,7 @@ class Register extends React.Component{
   }
 
   handleSubmit = () => {
+    // JWT token
     let token = this.props.token;
     let values = {
       sources: JSON.stringify(this.state.sourceList),
@@ -235,7 +237,7 @@ class Register extends React.Component{
           />
           <div>
             <div>
-            <p className="lead">Connect your work</p>
+              <p className="lead">Connect your work</p>
               <small>
               You can connect multiple accounts - even from the same platform.
               </small>
@@ -305,8 +307,7 @@ class Register extends React.Component{
                     popover
                     tag="span"
                     id="popper1"
-                  >
-                      
+                  >   
                     <span>
                     <MDBIcon
                     icon="check"
@@ -382,7 +383,6 @@ class Register extends React.Component{
           </MDBBtn>
         </MDBCardBody>
         <MDBCardFooter>
-
         </MDBCardFooter>
       </MDBCard>
     );

@@ -1,8 +1,11 @@
+// Import Database
 import * as data from "./IntelData";
 //import * as data from "./IntelDummy";
 
+// Import Converter
 import * as converter from "./Database/Converter";
 
+// Return the database with user values
 export async function fill(userList) {
 
   async function retry(maxRetries, fn, params) {
@@ -33,7 +36,6 @@ export function user() {
     return converter.getUser(data);
   }
   catch{
-    //console.warn("Converting user data failed..")
     return undefined;
   }
 }
@@ -43,7 +45,6 @@ export function repos() {
     return converter.getRepositories(data);
   }
   catch{
-    //console.warn("Converting repository data failed..")
     return undefined;
   }
 }
@@ -53,7 +54,6 @@ export function orgs() {
     return converter.getOrganizations(data);
   }
   catch{
-    //console.warn("Converting organization data failed..")
     return undefined;
   }
 }
@@ -63,7 +63,6 @@ export function languages() {
     return converter.getLanguages(data);
   }
   catch{
-    //console.warn("Converting language data failed..")
     return undefined;
   }
 }
@@ -73,7 +72,6 @@ export function calendar() {
     return converter.getCalendar(data);
   }
   catch{
-    //console.warn("Converting calendar data failed..")
     return undefined;
   }
 }
@@ -83,7 +81,6 @@ export function stats() {
     return converter.getStats(data);
   }
   catch{
-    //console.warn("Converting statistic data failed..")
     return undefined;
   }
 }
@@ -93,7 +90,6 @@ export function contribTypes() {
     return converter.getContribTypes(data);
   }
   catch{
-    //console.warn("Converting contrib type data failed..")
     return undefined;
   }
 }

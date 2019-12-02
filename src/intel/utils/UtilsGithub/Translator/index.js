@@ -143,7 +143,6 @@ const fillOrgMembers = (nodes, orgId) => {
       memberWebUrl
     ]);
     const memberId = db.exec("SELECT id FROM member").pop()["id"];
-
     db.exec(insert.organizationHasMember, [orgId, memberId]);
   });
 };
@@ -339,9 +338,8 @@ const fillCalendar = (objUser) => {
         const weekday = d;
         const total = day.contributionCount;
         const color = day.color;
-
+        
         let count = total;
-
 
         if (total >= 0) {
           const platformId = db.exec("SELECT id FROM platform").pop()["id"];
@@ -355,23 +353,6 @@ const fillCalendar = (objUser) => {
             platformId
           ]);
           const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
-
-          // if (commits[date]) {
-          //   fillContribs(commits[date], "commit", calendarId);
-          //   count -= commits[date].length;
-          //   console.log(commits[date], commits[date].length)
-          //   currentContributions += commits[date].length;
-          // }
-          // if (issues[date]) {
-          //   fillContribs(issues[date], "issue", calendarId);
-          //   count -= issues[date].length;
-          //   currentContributions += issues[date].length;
-          // }
-          // if (pullRequest[date]) {
-          //   fillContribs(pullRequest[date], "pullRequest", calendarId);
-          //   count -= pullRequest[date].length;
-          //   currentContributions += pullRequest[date].length;
-          // }
 
           if (count >= 0) {
             octoCats.push({
@@ -400,13 +381,8 @@ const fillCalendar = (objUser) => {
     };
 
     octoCats.forEach((cat) => {
-      //if(currentContributions + cat.total < year.contributionCalendar.totalContributions){
         addOctocat(cat);
-      //}
     });
-    // let lastCat = octoCats[octoCats.length-1];
-    // lastCat.total = year.contributionCalendar.totalContributions - currentContributions;
-    // addOctocat(lastCat);
   });
 };
 

@@ -129,6 +129,7 @@ class GitLab extends React.Component {
     );
   }
 }
+
 export default GitLab;
 
 /**

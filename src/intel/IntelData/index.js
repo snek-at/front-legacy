@@ -1,5 +1,7 @@
 import { Database } from "../Database";
+// Get all utilities for GitLab
 import * as gitlab from "../utils/UtilsGitlab";
+// Get all utilities for GitHub
 import * as github from "../utils/UtilsGithub";
 
 let db = new Database("data");

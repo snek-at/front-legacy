@@ -1,5 +1,7 @@
-// Import Modules
+//> Import Packages
+// Radom Generator
 import { guid } from "../services/utilities";
+// Functionality for the provider
 import { IProvider } from "react-very-simple-oauth";
 
 // Set the default values needed for an OAuth-Request
@@ -38,7 +40,7 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
-  // This function catches the the returned value
+  // This function catches the returned value
   async extractSession(redirectUrl: string) {
     let data = null;
     let code = null;

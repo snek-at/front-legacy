@@ -41,9 +41,6 @@ class TabSettingsContainer extends React.Component {
   };
 
   render() {
-    // Debugging
-    //console.log(this.props);
-    
     return null;
   }
 }

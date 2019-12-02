@@ -9,15 +9,14 @@ import { Redirect } from "react-router-dom";
 import { MDBContainer, MDBRow, MDBCol } from "mdbreact";
 
 //> Components
-import {
-  TextTypist,
-} from "../../molecules";
-
-//> Components
 import { 
   Register,
   Login,
 } from "../../organisms/sections";
+
+import {
+  TextTypist,
+} from "../../molecules";
 
 //> CSS
 import "./landing.scss";
@@ -38,8 +37,10 @@ class Landing extends React.Component {
     super(props);
   }
 
+  // Log in with JWT token, received from engine.snek.at/api/graphiql
   logMeIn = (token) => {
-    localStorage.setItem("fprint", token);
+    // JWT Token
+    localStorage.setItem("jwt_token", token);
     this.props.login(token);
   }
 

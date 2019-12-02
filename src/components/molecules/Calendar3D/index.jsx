@@ -2,13 +2,13 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 
-//> Additional libraries
-// Time management
-import moment from "moment";
-
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBRow, MDBCol } from "mdbreact";
+
+//> Additional packages
+// Used to display the time in a readable format
+import moment from "moment";
 
 //> Helpers
 import changeHue from "../../helpers/changeHue.js";
@@ -49,7 +49,6 @@ class Calender3D extends React.Component {
 
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
-
     let contribData = this.props.contrib[2019];
     let contributionCalendar = this.props.calendar.currentYear;
 
@@ -63,6 +62,7 @@ class Calender3D extends React.Component {
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
 
     let html;
+
     html = `<div class="ic-stats-block ic-stats-top">\n
     <span class="ic-stats-table">\n
     <span class="ic-stats-row">\n
@@ -92,7 +92,6 @@ class Calender3D extends React.Component {
 
   renderBottomStats() {
     let streakLongest, datesLongest, streakCurrent, datesCurrent;
-
     let contribData = this.props.contrib["2019"];
     let contributionCalendar = this.props.calendar.currentYear;
 
@@ -108,6 +107,7 @@ class Calender3D extends React.Component {
       moment(contribData.currentStreak.endDate).format("MMM DD, YYYY");
 
     let html;
+
     html = `<div class="ic-stats-block ic-stats-bottom">\n
     <span class="ic-stats-table">\n
     <span class="ic-stats-row">\n
@@ -143,7 +143,7 @@ class Calender3D extends React.Component {
     // Canvas could be either DOM or jQuery element
     let pixelView = new obelisk.PixelView(this.context, point);
 
-    // Get contribs
+    // Get contribs of the current year
     let contributions = this.props.calendar.currentYear;
 
     // Define basic variables
@@ -179,7 +179,6 @@ class Calender3D extends React.Component {
         let y = di;
 
         // Create cube dimension and color instance
-        //let gray = obelisk.ColorPattern.GRAY;
         let fill = day.color;
         let color = new obelisk.CubeColor().getByHorizontalColor(
           parseInt("0x" + fill.replace("#", ""))

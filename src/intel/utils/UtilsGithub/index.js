@@ -1,5 +1,8 @@
+//> Apollo 
 import * as apollo from "./../UtilsApollo";
+// Queries for Apollo
 import * as gqlData from "./GqlData";
+// Used to put data to database
 import * as translator from "./Translator";
 
 // Get profile and calendar
@@ -18,15 +21,11 @@ export async function fill(db, user) {
     const { data } = resProfile;
 
     // Debugging point
-    //console.log("PROFILE DATA", data);
     const createdAtDate = new Date(data.user.createdAt);
 
     const resCalendar = await client.query({
       query: gqlData.getCalendar(username, createdAtDate)
     });
-
-    // Debugging point
-    //console.log(resCalendar.data.user);
 
     let allReposWithHistory = {};
     let reposPerName = {};
@@ -40,11 +39,7 @@ export async function fill(db, user) {
           allReposWithHistory[repo.repository.nameWithOwner] = repo;
         });
       }
-
     });
-
-    // Debugging point
-    //console.log("allReposHistory",allReposWithHistory)
 
     gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async (q) => {
       const resRepoHistory = await client.query({
@@ -63,7 +58,6 @@ export async function fill(db, user) {
     objUser.repoCommitHistory = Object.values(allReposWithHistory);
 
     translator.fillDB(db, objUser);
-
   };
   await getPlatform(db, user["username"]);
 }

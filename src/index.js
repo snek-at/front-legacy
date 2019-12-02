@@ -11,9 +11,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 //> Bootstrap
 import "bootstrap-css-only/css/bootstrap.min.css";
 
-//> Typist css
-import "react-typist/dist/Typist.css";
-
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import "mdbreact/dist/css/mdb.css";
@@ -22,10 +19,12 @@ import "mdbreact/dist/css/mdb.css";
 // Root SCSS file
 import "./index.scss";
 
+//> Typist css
+import "react-typist/dist/Typist.css";
+
 //> Apollo
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
-import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
@@ -37,7 +36,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 // API Link
 const httpLink = createHttpLink({
-  uri: "https://api.snek.at"
+  uri: "https://engine.snek.at/api/graphiql"
 });
 
 // Apollo Client

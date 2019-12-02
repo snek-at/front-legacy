@@ -1,4 +1,5 @@
-// Import Modules
+//> Additional packages
+// Functionality for the provider
 import { IProvider } from "react-very-simple-oauth";
 
 export const gitlabProvider: IProvider<boolean> = {

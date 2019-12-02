@@ -3,6 +3,7 @@
 import React from "react";
 
 //> Additional packages
+// Contains all the functionality necessary to define Typist components
 import Typist from "react-typist";
 
 class TextTypist extends React.Component{

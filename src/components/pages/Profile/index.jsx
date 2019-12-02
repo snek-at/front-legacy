@@ -23,9 +23,6 @@ import {
   MDBCardUp
 } from "mdbreact";
 
-//> Images
-// To be added
-
 //> Components
 // Molecules
 import { TabContainer, Avatar, Socialdata } from "../../molecules";
@@ -36,9 +33,6 @@ import {
   OverviewTab,
   EducationTab,
 } from "../../organisms/tabs";
-
-//> Handlers
-// To be added
 
 //> CSS
 import "./profile.scss";
@@ -77,7 +71,7 @@ class Dashboard extends React.Component {
     const { globalStore } = this.props;
     
     //> Debugging access point - state
-    //console.log(globalStore);
+    //console.log(TSID 1, globalStore);
 
     if(!globalStore.data.logged) { return (<Redirect to="/"/>); }
 

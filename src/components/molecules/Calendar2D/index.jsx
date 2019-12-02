@@ -109,8 +109,6 @@ class Calender2D extends React.Component {
   };
 
   render() {
-    //console.log(this.state);
-    //console.log(this.state.contributionsList);
     return (
       <div id="calendar2d">
         <div className="text-right">

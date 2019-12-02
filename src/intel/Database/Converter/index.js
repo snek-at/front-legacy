@@ -1,3 +1,4 @@
+// Import all statements
 import * as select from "../Statements/Select";
 
 // Formats a date to YYYY-MM-DD format
@@ -146,6 +147,7 @@ export function getCalendar(data) {
     baseYear = today.getFullYear();
   }
 
+  // Loop for each day of the year
   for (let indexY = baseYear; indexY <= new Date().getFullYear(); indexY++) {
     let date = new Date(indexY, 0, 1);
     let offset = 0;
@@ -224,6 +226,7 @@ const getCalendarFromDates = (fullDays) => {
   return year;
 };
 
+// Generate the grid used for a calendar
 const generateCalendarGrid = (date, flag) => {
   let emptyContributionYear = {};
   emptyContributionYear.weeks = {};
@@ -368,11 +371,8 @@ export function getStats(data) {
         streak.endDate
       );
     }
-    }
-
-    
+  }
   });
-
   return statistics;
 }
 

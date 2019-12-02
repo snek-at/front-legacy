@@ -17,10 +17,6 @@ import {
 //> Routes
 import Routes from "./Routes";
 
-//> Test
-// A test with the user "torvalds"
-import "./App.test";
-
 //> Intel
 import * as intel from "./intel";
 
@@ -66,7 +62,7 @@ const LOGIN_USER = gql`
 `;
 
 class App extends React.Component {
-  // Init state
+  // Initialize state
   state = {
     contrib: null,
     contribCalendar: null,
@@ -91,16 +87,16 @@ class App extends React.Component {
       pageLogin: false,
     });
 
-    if(localStorage.getItem("fprint") !== null){
+    if(localStorage.getItem("jwt_token") !== null){
       try {
-        // Verify Token on first load
+        // Verify JWT Token on first load
         this._verifyToken();
-        // Refresh token every 4 minutes
+        // Refresh JWT token every 4 minutes
         setInterval(async () => {
           this._verifyToken();
         }, 240000);
       } catch(e) {
-        //console.log(e);
+        //console.log(TSID 2, e);
       }
     } else {
       this._loginUser();
@@ -109,7 +105,7 @@ class App extends React.Component {
 
   _verifyToken = () => {
     this.props.verify({
-      variables: { "token": localStorage.getItem("fprint") }
+      variables: { "token": localStorage.getItem("jwt_token") }
     })
     .then(({data}) => {
         if(data !== undefined){
@@ -117,17 +113,17 @@ class App extends React.Component {
             this._isLogged(
               data.verifyToken.payload.exp,
               data.verifyToken.payload.origIat,
-              localStorage.getItem("fprint")
+              localStorage.getItem("jwt_token")
             );
           } else {
-            //console.warn("No token in payload.");
+            //console.warn(TSID 3, "No token in payload.");
           }
         } else {
-          //console.warn("No token in payload.");
+          //console.warn(TSID 3, "No token in payload.");
         }
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error);
+      //console.warn(TSID 4, "Mutation error:",error);
     });
   }
 
@@ -135,19 +131,21 @@ class App extends React.Component {
     this.props.login()
     .then(({data}) => {
       if(data !== undefined){
+        // Set JWT token, received from engine.snek.at/api/graphiql
         this._setLogged(data.tokenAuth.token);
       }
     })
     .catch((error) => {
-      //console.error("Mutation error:",error);
+      //console.error(TSID 4, "Mutation error:",error);
     });
   }
 
+  // Set JWT token, received from engine.snek.at/api/graphiql
   _setLogged = (token) => {
     this.setState({
       token,
       loaded: true,
-    }, () => localStorage.setItem("fprint", token));
+    }, () => localStorage.setItem("jwt_token", token));
   }
 
   _isLogged = (exp, orig, token) => {
@@ -156,9 +154,9 @@ class App extends React.Component {
      * Ref: https://flaviocopes.com/how-to-get-timestamp-javascript/
      */
     let currentTS = ~~(Date.now() / 1000);
-    // Check if the token is still valid
+    // Check if the JWT token is still valid
     if(currentTS > exp){
-      // Token has expired
+      // JWT Token has expired
       this._refeshToken(token);
     } else {
       // Only if anything has changed, update the data
@@ -172,11 +170,11 @@ class App extends React.Component {
     })
     .then(({data}) => {
       if(data !== undefined){
-        localStorage.setItem("fprint", data.refreshToken.token);
+        localStorage.setItem("jwt_token", data.refreshToken.token);
       }
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error);
+      //console.warn(TSID 4, "Mutation error:",error);
     });
   }
 
@@ -186,15 +184,15 @@ class App extends React.Component {
     });
   }
 
+  // Handle login with JWT token
   handleLogin = (token) => {
     this.props.client.query({
       query: LOGIN_REAL_USER,
-      variables: { "token": localStorage.getItem("fprint") }
+      variables: { "token": localStorage.getItem("jwt_token") }
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
 
-        // Temp replace (Ugly)
         let platformTemp = registrationData.platform_data.replace(/'/g,'"');
         let platformData = JSON.parse(platformTemp);
 
@@ -220,7 +218,7 @@ class App extends React.Component {
       }
     })
     .catch((error) => {
-      //console.warn(error.message);
+      //console.warn(TSID 5, error.message);
     });
   }
 
@@ -246,6 +244,7 @@ class App extends React.Component {
   }
 }
 
+// Graphql-Server is engine.snek.at/api/graphiql
 export default compose(
   graphql(VERIFY_TOKEN, { name: "verify" }),
   graphql(REFRESH_TOKEN, { name: "refresh" }),

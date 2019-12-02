@@ -15,7 +15,6 @@ import {
 } from "mdbreact";
 
 class ChartsPage extends React.Component {
-
   state={
     dataRadar: {
       labels: ["Loading"],
@@ -105,19 +104,6 @@ class ChartsPage extends React.Component {
     avgIssues = parseInt(totalIssues) / parseInt(totalSources);
     avgRequests = parseInt(totalRequests) / parseInt(totalSources);
     avgCommits = parseInt(totalCommits) / parseInt(totalSources);
-
-    // Create average data points
-    /*results.push({
-      label: "Average",
-      backgroundColor: "rgba(33, 181, 33, .7)",
-      borderColor: "rgba(33, 181, 33, .3)",
-      data: [
-        avgReviews,
-        avgIssues,
-        avgReviews,
-        avgCommits
-      ]
-    });*/
 
     return results;
   }

@@ -8,7 +8,7 @@ import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
 
 //> Additional modules
-// Password hashing
+// Used to hash the password with SHA256
 import { sha256 } from "js-sha256";
 
 //> MDB
@@ -35,6 +35,8 @@ import {
   MDBToast,
 } from "mdbreact";
 
+//> Queries / Mutations
+// Get the JWT token
 const LOGIN_USER = gql`
     mutation tokenAuth($username: String!, $password: String!){
         tokenAuth(username:$username,password:$password){
@@ -44,7 +46,6 @@ const LOGIN_USER = gql`
 `;
 
 class Login extends React.Component{
-
   state = {
     username: "",
     password: "",

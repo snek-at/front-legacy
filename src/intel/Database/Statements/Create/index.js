@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS platform_has_repository (
     CONSTRAINT fk_platform_has_repository_repository1
         FOREIGN KEY (repository_id)
         REFERENCES repository (id)
-);
+    );
 `;
 
 /**

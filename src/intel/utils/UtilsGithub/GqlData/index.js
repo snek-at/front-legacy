@@ -57,7 +57,6 @@ export const GET_PROFILE = gql`
 
 // Structure GQL calendar code
 const getCalendarQueryPart = (fromYear, toYear, c) => {
-  //console.log(fromYear,toYear)
   return `
   c${c}: contributionsCollection(from:"${fromYear}", to:"${toYear}" ){
     contributionYears
@@ -232,7 +231,6 @@ export const generateRepositoryHistoryQuery = (bigRepos) => {
   bigRepos.forEach((repo) => {
     let runtime = ~~(repo.repository.defaultBranchRef.target.history.totalCount / 100);
     let cursor = repo.repository.defaultBranchRef.target.history.pageInfo.endCursor.split(" ")[0];
-    //console.log(runtime)
     let maxRuntime = 10;
     let partsCount = 0;
     for (let index = 0; index < runtime; index++) {
@@ -244,13 +242,8 @@ export const generateRepositoryHistoryQuery = (bigRepos) => {
       queryParts[partsCount] += getRepositoryHistory(repo.repository.owner.login, repo.repository.name, cursor, index);
       
       maxRuntime--;
-      //console.log(queryParts)
     }
-    //console.log(queryParts)
   });
-  //console.log(queryParts)
-  
-  //console.log(query)
   return queries;
 };
 // Generates a dynamic query structure
@@ -265,8 +258,6 @@ const generateCalendarsQuery = (username, createdAtDate) => {
 
   while (fromDate.getFullYear() <= currentYear) {
     query += getCalendarQueryPart(fromDate.toJSON(), toDate.toJSON(), count);
-    //console.log(fromDate.toJSON());
-    //console.log(date.setDate(date.getDate()-1))
 
     fromDate.setFullYear(fromDate.getFullYear() + 1);
     toDate.setFullYear(toDate.getFullYear() + 1);

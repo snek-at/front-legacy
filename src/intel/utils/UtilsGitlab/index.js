@@ -1,5 +1,9 @@
+//> Database
+// Insert statements
 import * as insert from "../../Database/Statements/Insert";
+// Update statements
 import * as update from "../../Database/Statements/Update";
+// Get html data from websites
 import * as webscrap from "../UtilsWebscrap";
 let db;
 
@@ -34,6 +38,7 @@ const fillPlatform = async (user) => {
     .getElementsByClassName("avatar-holder")[0]
     .getElementsByTagName("a")[0]
     .getAttribute("href");
+
   const links = html.getElementsByClassName("profile-link-holder")[0];
   const message = null;
   const emojiHTML = null;
@@ -78,10 +83,12 @@ const fillOrganizations = async (user) => {
     let avatarUrl = _org
       .getElementsByClassName("avatar")[0]
       .getAttribute("data-src");
+
     const name = _org
       .getElementsByClassName("group-name")[0]
       .getAttribute("href")
       .substring(1);
+
     let orgUrl = `https://${user.server}/${name}`;
 
     if (avatarUrl) {
@@ -98,16 +105,6 @@ const fillOrganizations = async (user) => {
     db.exec(insert.platformHasOrganization, [idPlatform, idOrganization]);
   }
 };
-
-// const fillDummy = () => {
-//   db.exec(insert.member, [
-//     "https://snek.at/users/trash/avatar",
-//     "Trash The User",
-//     "trash",
-//     "https://snek.at/users/trash"
-//   ]);
-//   db.exec(insert.languagePie, [-1, -1]);
-// };
 
 const fillRepositories = (user, nameWithOwner) => {
   let repository = {};
@@ -162,6 +159,7 @@ const fillContribution = (user, item) => {
     .getElementsByClassName("event-scope")[0]
     .getElementsByTagName("a")[0]
     .getAttribute("href");
+    
   nameWithOwner = nameWithOwner.substring(1);
 
   const repository = fillRepositories(user, nameWithOwner);
@@ -215,7 +213,6 @@ const fillCalendar = async (user) => {
       let res = db
         .exec(`SELECT total FROM calendar WHERE date="${date}"`)
         .pop();
-      //console.log(total)
       if (res === undefined || res.length === 0) {
         db.exec(insert.calendar, [date, week, weekday, 1, null, platformId]);
       } else {
