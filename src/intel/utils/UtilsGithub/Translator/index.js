@@ -1,5 +1,4 @@
 import * as insert from "../../../Database/Statements/Insert";
-import { fill } from "..";
 
 let db;
 let streak = false;
