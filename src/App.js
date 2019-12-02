@@ -87,7 +87,7 @@ class App extends React.Component {
       pageLogin: false,
     });
 
-    if(localStorage.getItem("jwt_token") !== null){
+    if(localStorage.getItem("jwt_snek") !== null){
       try {
         // Verify JWT Token on first load
         this._verifyToken();
@@ -96,7 +96,7 @@ class App extends React.Component {
           this._verifyToken();
         }, 240000);
       } catch(e) {
-        //console.log(TSID 2, e);
+        //console.log(2, e);
       }
     } else {
       this._loginUser();
@@ -105,7 +105,7 @@ class App extends React.Component {
 
   _verifyToken = () => {
     this.props.verify({
-      variables: { "token": localStorage.getItem("jwt_token") }
+      variables: { "token": localStorage.getItem("jwt_snek") }
     })
     .then(({data}) => {
         if(data !== undefined){
@@ -113,39 +113,48 @@ class App extends React.Component {
             this._isLogged(
               data.verifyToken.payload.exp,
               data.verifyToken.payload.origIat,
-              localStorage.getItem("jwt_token")
+              localStorage.getItem("jwt_snek")
             );
           } else {
-            //console.warn(TSID 3, "No token in payload.");
+            //> Troubleshooting Point 2
+            // Missing token payload @ Token verification with snek server (App.js)
+            //console.warn(TSID2, "No token in payload.");
           }
         } else {
-          //console.warn(TSID 3, "No token in payload.");
+          //> Troubleshooting Point 2
+          // Missing token payload @ Token verification with snek server (App.js)
+          //console.warn(TSID2, "No token in payload.");
         }
     })
     .catch((error) => {
-      //console.warn(TSID 4, "Mutation error:",error);
+      //> Troubleshooting Point 3
+      // GraphQL mutation error @ Verify snek JWT (App.js)
+      //console.warn(TSID3, "Mutation error:",error);
     });
   }
 
+  // Reuqest JWT from engine.snek.at/api/graphiql
   _loginUser = () => {
     this.props.login()
     .then(({data}) => {
       if(data !== undefined){
-        // Set JWT token, received from engine.snek.at/api/graphiql
+        // Set JWT, received from engine.snek.at/api/graphiql
         this._setLogged(data.tokenAuth.token);
       }
     })
     .catch((error) => {
-      //console.error(TSID 4, "Mutation error:",error);
+      //> Troubleshooting Point 4
+      // GraphQL mutation error @ Login snek JWT (App.js)
+      //console.error(TSID4, "Mutation error:",error);
     });
   }
 
-  // Set JWT token, received from engine.snek.at/api/graphiql
+  // Set JWT, received from engine.snek.at/api/graphiql
   _setLogged = (token) => {
     this.setState({
       token,
       loaded: true,
-    }, () => localStorage.setItem("jwt_token", token));
+    }, () => localStorage.setItem("jwt_snek", token));
   }
 
   _isLogged = (exp, orig, token) => {
@@ -156,7 +165,7 @@ class App extends React.Component {
     let currentTS = ~~(Date.now() / 1000);
     // Check if the JWT token is still valid
     if(currentTS > exp){
-      // JWT Token has expired
+      // JWT has expired
       this._refeshToken(token);
     } else {
       // Only if anything has changed, update the data
@@ -170,11 +179,13 @@ class App extends React.Component {
     })
     .then(({data}) => {
       if(data !== undefined){
-        localStorage.setItem("jwt_token", data.refreshToken.token);
+        localStorage.setItem("jwt_snek", data.refreshToken.token);
       }
     })
     .catch((error) => {
-      //console.warn(TSID 4, "Mutation error:",error);
+      //> Troubleshooting Point 5
+      // GraphQL mutation error @ Refreshing snek JWT every 2min (App.js)
+      //console.warn(TSID5, "Mutation error:",error);
     });
   }
 
@@ -188,7 +199,7 @@ class App extends React.Component {
   handleLogin = (token) => {
     this.props.client.query({
       query: LOGIN_REAL_USER,
-      variables: { "token": localStorage.getItem("jwt_token") }
+      variables: { "token": localStorage.getItem("jwt_snek") }
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
@@ -218,7 +229,9 @@ class App extends React.Component {
       }
     })
     .catch((error) => {
-      //console.warn(TSID 5, error.message);
+      //> Troubleshooting Point 6
+      // Database error message @ Saving generated user data (App.js)
+      //console.warn(TSID6, error.message);
     });
   }
 

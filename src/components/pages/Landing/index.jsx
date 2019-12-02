@@ -40,7 +40,7 @@ class Landing extends React.Component {
   // Log in with JWT token, received from engine.snek.at/api/graphiql
   logMeIn = (token) => {
     // JWT Token
-    localStorage.setItem("jwt_token", token);
+    localStorage.setItem("jwt_snek", token);
     this.props.login(token);
   }
 
