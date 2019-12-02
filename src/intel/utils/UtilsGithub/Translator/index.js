@@ -298,37 +298,9 @@ const fillCalendar = (objUser) => {
 
   const user = db.exec("SELECT username FROM platform").pop()["username"];
 
-  let commits = Array.from(genContributionsByRepositories(
-    objUser.repoCommitHistory,
-    "commit",
-    user
-  )).flat().reduce((h, obj) => {
-    let date = obj.datetime.split("T")[0];
-    return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
-  }, {});
-
   keys.forEach((c) => {
     const year = objUser.calendar[c.toString()];
 
-    let pullRequest = Array.from(genContributionsByRepositories(
-      year.issueContributionsByRepository,
-      "issue",
-      user
-    )).flat().reduce((h, obj) => {
-      let date = obj.datetime.split("T")[0];
-      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
-    }, {});
-
-    let issues = Array.from(genContributionsByRepositories(
-      year.pullRequestContributionsByRepository,
-      "pullRequest",
-      user
-    )).flat().reduce((h, obj) => {
-      let date = obj.datetime.split("T")[0];
-      return Object.assign(h, { [date]: (h[date] || []).concat(obj) });
-    }, {});
-
-    let currentContributions = 0;
     let octoCats = [];
     for (const [w, week] of year.contributionCalendar.weeks.entries()) {
       for (const [d, day] of week.contributionDays.entries()) {
@@ -375,7 +347,6 @@ const fillCalendar = (objUser) => {
             deletions: 0,
             changedFiles: 0,
           });
-          currentContributions++;
         }
         fillContribs(dDay, "codeReviews", cat.calendarId);
     };

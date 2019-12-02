@@ -48,22 +48,10 @@ export async function fill(db, user) {
 
     // Debugging point
     //console.log("allReposHistory",allReposWithHistory)
-
-    gqlData.generateRepositoryHistoryQuery(Object.values(reposPerName)).forEach(async (q) => {
-      const resRepoHistory = await client.query({
-        query: q
-      });
-      Object.values(resRepoHistory.data).forEach((repo) => {
-        let l1 = allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes;
-        let l2 = repo.defaultBranchRef.target.history.nodes;
-        allReposWithHistory[repo.nameWithOwner].repository.defaultBranchRef.target.history.nodes = l1.concat(l2);
-      });
-    });
     
     const objUser = {};
     objUser.profile = resProfile.data.user;
     objUser.calendar = resCalendar.data.user;
-    objUser.repoCommitHistory = Object.values(allReposWithHistory);
 
     translator.fillDB(db, objUser);
 
