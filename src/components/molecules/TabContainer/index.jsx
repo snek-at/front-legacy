@@ -99,8 +99,8 @@ class TabContainer extends React.Component {
                         </MDBNav>
                         <MDBTabContent activeItem={this.state.activeSubItem}>
                           {/* 
-                                                To be added
-                                            */}
+                              To be added
+                          */}
                         </MDBTabContent>
                       </MDBTabPane>
                     </>
@@ -113,7 +113,7 @@ class TabContainer extends React.Component {
     } else if (this.props.horizontal) {
       return (
         <>
-          <MDBNav className="nav-tabs mt-5">
+          <MDBNav className="nav-tabs">
             {this.props.items &&
               this.props.items.map((item, key) => {
                 if (item.visible) {

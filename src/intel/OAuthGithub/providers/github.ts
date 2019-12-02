@@ -6,7 +6,10 @@ import { IProvider } from "react-very-simple-oauth";
 const client_id = "2148629809594d57c113";
 const client_secret = "64a37e4846387cfcaea35d83afca3c9c8689628c";
 const state = guid();
-const redirect_uri = encodeURIComponent("https://snek.at/redirect");
+// Live version
+//const redirect_uri = encodeURIComponent("https://snek.at/redirect");
+// Development version
+const redirect_uri = encodeURIComponent("http://localhost:3000/redirect");
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export const githubProvider: IProvider<boolean> = {

@@ -21,10 +21,10 @@ class Overview extends React.Component {
       <MDBTabPane tabId={this.props.id} role="tabpanel">
         {(this.props.contrib && this.props.calendar) && (
           <>
+            <Calendar3D contrib={this.props.contrib} calendar={this.props.calendar} />
             {this.props.contrib && (
               <Calendar2D calendar={this.props.calendar} />
             )}
-            <Calendar3D contrib={this.props.contrib} calendar={this.props.calendar} />
           </>
         )}
       </MDBTabPane>

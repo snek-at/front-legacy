@@ -97,8 +97,8 @@ class App extends React.Component {
         this._verifyToken();
         // Refresh token every 4 minutes
         setInterval(async () => {
-          this._verifyToken();
-        }, 240000);
+          this._refreshToken();
+        }, 120000);
       } catch(e) {
         //console.log(e);
       }
@@ -147,15 +147,20 @@ class App extends React.Component {
     this.setState({
       token,
       loaded: true,
-    }, () => localStorage.setItem("fprint", token));
+    }, () => localStorage.setItem("jwt_token", token));
+    this.handleLogin();
   }
 
   _isLogged = (exp, orig, token) => {
+    console.log(exp, orig, token);
     /**
      * Generate current timestamp
      * Ref: https://flaviocopes.com/how-to-get-timestamp-javascript/
      */
     let currentTS = ~~(Date.now() / 1000);
+
+    console.log(currentTS, exp, currentTS > exp);
+
     // Check if the token is still valid
     if(currentTS > exp){
       // Token has expired
@@ -166,13 +171,13 @@ class App extends React.Component {
     }
   }
 
-  _refeshToken = (token) => {
+  _refreshToken = () => {
     this.props.refresh({
-      variables: { token }
+      variables: { "token": localStorage.getItem("jwt_token") }
     })
     .then(({data}) => {
       if(data !== undefined){
-        localStorage.setItem("fprint", data.refreshToken.token);
+        localStorage.setItem("jwt_token", data.refreshToken.token);
       }
     })
     .catch((error) => {
@@ -189,7 +194,7 @@ class App extends React.Component {
   handleLogin = (token) => {
     this.props.client.query({
       query: LOGIN_REAL_USER,
-      variables: { "token": localStorage.getItem("fprint") }
+      variables: { "token": localStorage.getItem("jwt_token") }
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
@@ -225,6 +230,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(this.props, this.state);
     return (
       <Router>
         <div className="flyout">

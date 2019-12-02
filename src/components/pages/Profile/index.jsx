@@ -43,36 +43,57 @@ import {
 //> CSS
 import "./profile.scss";
 
-//> Dummy data
-// Tab headers
-const tabitems = [
-  {
-    title: "Overview",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Resume",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Projects",
-    visible: true,
-    pill: "22",
-    notification: false
-  },
-  {
-    title: "Education",
-    visible: true,
-    pill: "0",
-    notification: true
-  }
-];
-
 class Dashboard extends React.Component {
+
+  state = {};
+
+  setTabItems = () => {
+
+    // Get project count
+    console.log(this.props.globalStore.data);
+    const projectcount = this.props.globalStore.data.repos.length;
+
+    this.setState({
+      tabitems: [
+        {
+          title: "Overview",
+          visible: true,
+          pill: false,
+          notification: false
+        },
+        {
+          title: "Projects",
+          visible: true,
+          pill: projectcount,
+          notification: true
+        },
+        {
+          title: "Education",
+          visible: true,
+          notification: false
+        },
+        {
+          title: "Posts",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+        {
+          title: "Papers",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+        {
+          title: "Talks",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+      ]
+    });
+  }
+
   render() {
     const { globalStore } = this.props;
     
@@ -82,11 +103,16 @@ class Dashboard extends React.Component {
     if(!globalStore.data.logged) { return (<Redirect to="/"/>); }
 
     let data = globalStore.data;
+  
+    // Get tab items
+    if(data && !this.state.tabitems){
+      this.setTabItems();
+    }
 
-    if (data) {
+    if (data && this.state.tabitems) {
       return (
         <div id="profile">
-          <MDBContainer className="pt-5">
+          <MDBContainer className="py-5">
             <MDBRow>
               <MDBCol md="4" className="text-center">
                 <MDBCard testimonial>
@@ -110,7 +136,7 @@ class Dashboard extends React.Component {
                 </MDBCard>
               </MDBCol>
               <MDBCol md="8">
-                <TabContainer items={tabitems} horizontal>
+                <TabContainer items={this.state.tabitems} horizontal>
                   <OverviewTab 
                   id={0}
                   contrib={data.contrib}

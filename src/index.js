@@ -37,7 +37,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 // API Link
 const httpLink = createHttpLink({
-  uri: "https://api.snek.at"
+  uri: "https://engine.snek.at/api/graphiql"
 });
 
 // Apollo Client
