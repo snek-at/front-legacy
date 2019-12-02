@@ -1,3 +1,5 @@
+//> Database tools
+// SQL statements to select data from the database
 import * as insert from "../../../Database/Statements/Insert";
 
 let db;
