@@ -21,8 +21,32 @@ class Socialdata extends React.Component {
       location,
       email,
       website,
-      accounts
+      accounts,
+      platforms,
+      organisations,
     } = this.props;
+
+    let platformsJoined = {
+      github: false,
+      gitlab: false,
+      bitbucket: false,
+    }
+
+    platforms.map((platform, i) => {
+      switch(platform.platform){
+        case "GitHub":
+          platformsJoined.github = true;
+          return true;
+        case "GitLab":
+          platformsJoined.gitlab = true;
+          return true;
+        case "BitBucket":
+          platformsJoined.bitbucket = true;
+          return true;
+        default:
+          return false;
+      }
+    });
 
     return (
       <MDBCardBody id="socialdata">
@@ -72,6 +96,30 @@ class Socialdata extends React.Component {
               </span>
             </a>
           )}
+          <div className="platform-list my-3 py-3">
+          {platformsJoined.gitlab &&
+            <MDBIcon fab icon="gitlab" size="lg" />
+          }
+          {platformsJoined.github &&
+            <MDBIcon fab icon="github" size="lg" />
+          }
+          {platformsJoined.bitbucket &&
+            <MDBIcon fab icon="bitbucket" size="lg" />
+          }
+          </div>
+          <div className="organisation-list my-3 pb-3">
+            {organisations.map((item, i) => {
+              return(
+                <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                <img src={item.avatarUrl} alt={item.name+" logo"}/>
+                </a>
+              );
+            })}
+          </div>
           <LanguageChart languages={this.props.languages} />
         </div>
       </MDBCardBody>

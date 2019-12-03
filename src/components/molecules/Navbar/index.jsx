@@ -41,9 +41,19 @@ class Navbar extends React.Component {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
+  logout = () => {
+      // Remove the JSON Web Token
+      localStorage.removeItem("jwt_token");
+      // Redirect to login
+      window.location.href = "/"; 
+  }
+
   render() {
     const { location } = this.props;
     const { data } = this.props;
+
+    console.log(data);
+
     return (
       <MDBNavbar color="elegant-color" dark expand="md">
         <MDBContainer>
@@ -67,32 +77,46 @@ class Navbar extends React.Component {
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
-            <MDBNavbarNav right>
-              <MDBNavItem active={data.pageLogin}>
-              {location.pathname === "/" ? (
-                <span 
-                className="nav-link cursor-pointer"
-                onClick={() => this.props.changeState("pageLogin", true)}
-                >
-                Sign in
-                </span>
+            
+              {data.logged ? (
+                <MDBNavbarNav right>
+                  <MDBNavItem>
+                    <span 
+                    className="nav-link cursor-pointer"
+                    onClick={this.logout}
+                    >
+                    Logout
+                    </span>
+                  </MDBNavItem>
+                </MDBNavbarNav>
               ) : (
-                <MDBNavLink to="/">Sign in</MDBNavLink>
+                <MDBNavbarNav right>
+                  <MDBNavItem active={data.pageLogin}>
+                  {location.pathname === "/" ? (
+                    <span 
+                    className="nav-link cursor-pointer"
+                    onClick={() => this.props.changeState("pageLogin", true)}
+                    >
+                    Sign in
+                    </span>
+                  ) : (
+                    <MDBNavLink to="/">Sign in</MDBNavLink>
+                  )}
+                  </MDBNavItem>
+                  <MDBNavItem active={!data.pageLogin}>
+                    {location.pathname === "/" ? (
+                    <span 
+                    className="nav-link cursor-pointer"
+                    onClick={() => this.props.changeState("pageLogin", false)}
+                    >
+                    Sign up
+                    </span>
+                  ) : (
+                    <MDBNavLink to="/">Sign up</MDBNavLink>
+                  )}
+                  </MDBNavItem>
+                </MDBNavbarNav>
               )}
-              </MDBNavItem>
-              <MDBNavItem active={!data.pageLogin}>
-                {location.pathname === "/" ? (
-                <span 
-                className="nav-link cursor-pointer"
-                onClick={() => this.props.changeState("pageLogin", false)}
-                >
-                Sign up
-                </span>
-              ) : (
-                <MDBNavLink to="/">Sign up</MDBNavLink>
-              )}
-              </MDBNavItem>
-            </MDBNavbarNav>
           </MDBCollapse>
         </MDBContainer>
       </MDBNavbar>

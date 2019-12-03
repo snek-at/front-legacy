@@ -20,6 +20,9 @@ class Projects extends React.Component {
 
   getBadge = async (name, url) => {
     if(!this.state[name]){
+      this.setState({
+        [name]: null
+      });
       let response = await fetch(url);
       if (response.ok) {
         let badge = await response.text();
@@ -37,7 +40,6 @@ class Projects extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <MDBTabPane tabId={this.props.id} role="tabpanel">
         {this.props.repos && (

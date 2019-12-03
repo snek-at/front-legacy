@@ -129,9 +129,8 @@ class Dashboard extends React.Component {
                     email={data.user.email}
                     languages={data.languages}
                     website={data.user.websiteUrl}
-                    accounts={{
-                      github: data.user
-                    }}
+                    organisations={data.orgs}
+                    platforms={data.user.platforms}
                   />
                 </MDBCard>
               </MDBCol>
@@ -143,9 +142,8 @@ class Dashboard extends React.Component {
                   calendar={data.contribCalendar}
                   contribTypes={data.contribTypes}
                   />
-                  <ResumeTab id={1} />
-                  <ProjectsTab id={2} repos={data.repos} />
-                  <EducationTab id={3} />
+                  <ProjectsTab id={1} repos={data.repos} />
+                  <EducationTab id={2} />
                 </TabContainer>
               </MDBCol>
             </MDBRow>
