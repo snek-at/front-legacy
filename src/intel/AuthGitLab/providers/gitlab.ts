@@ -33,12 +33,12 @@ export const gitlabProvider: IProvider<boolean> = {
     let username = null;
     const usernameMatch = redirectUrl.match(/username=([^&]+)/);
     if (usernameMatch) {
-      username = usernameMatch[1];
+      username = usernameMatch[1].replace(/__/g,'.');
     }
 
     const serverMatch = redirectUrl.match(/server=([^&]+)/);
     if (serverMatch) {
-      server = serverMatch[1];
+      server = serverMatch[1].replace(/__/g,'.');
     }
 
     const data = {'server': server, 'username': username}
