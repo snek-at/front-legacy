@@ -42,8 +42,8 @@ class GitLabPage extends React.Component {
     {
       if (this.state.server !== "")
       {
-        this.state.username = this.state.username.replace(/\./g,'__');
-        this.state.server = this.state.server.replace(/\./g,'__');
+        this.state.username = this.state.username.replace(/\./g,"__");
+        this.state.server = this.state.server.replace(/\./g,"__");
         window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
       }
       else{
