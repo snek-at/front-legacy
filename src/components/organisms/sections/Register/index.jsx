@@ -162,7 +162,14 @@ class Register extends React.Component{
     }
     })
     .then((result) => {
-        this.notify("warn","All fields have to be filled!");
+        if (result.message === "FAIL")
+        {
+          this.notify("warn","All fields have to be filled!");
+        }
+        else 
+        {
+          this.notify("success"," Welcome to SNEK!");
+        }
     })
     .catch((error) => {
         if (error.message.includes("Authentication Required"))
