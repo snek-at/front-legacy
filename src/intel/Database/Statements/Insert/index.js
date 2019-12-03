@@ -46,11 +46,12 @@ VALUES (?,?);
 export const repository = `
 INSERT INTO repository(
     avatarUrl,
+    url,
     name,
     owner_id,
     languagePie_id
 )
-VALUES (?,?,?,?);
+VALUES (?,?,?,?,?);
 `;
 
 export const languageSlice = `
@@ -63,21 +64,12 @@ INSERT INTO languageSlice(
 VALUES (?,?,?,?);
 `;
 
-export const busiestDay = `
-INSERT INTO busiestDay(
-    date,
-    total
-)
-VALUES (?,?);
-`;
-
 export const statistic = `
 INSERT INTO statistic(
     year,
-    busiestDay_id,
     platform_id
 )
-VALUES (?,?,?);
+VALUES (?,?);
 `;
 
 export const streak = `
@@ -147,3 +139,8 @@ INSERT INTO repository_has_member(
 )
 VALUES (?,?);
 `;
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
