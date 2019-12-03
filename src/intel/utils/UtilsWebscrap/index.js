@@ -1,6 +1,6 @@
 //> Send request functions
 // Proxy to bypass CORS
-const proxy = "https://c-hive-proxy.herokuapp.com/";
+const proxy = "https://cors-anywhere.herokuapp.com/";
 
 // Fetch JSON from url
 export const fetchJson = (urlIn) => {
