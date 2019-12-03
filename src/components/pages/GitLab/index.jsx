@@ -25,7 +25,7 @@ import {
   ToastContainer,
 } from "mdbreact";
 
-class GitLab extends React.Component {
+class GitLabPage extends React.Component {
   state = {
     username: "",
     server: "",
@@ -132,7 +132,7 @@ class GitLab extends React.Component {
   }
 }
 
-export default GitLab;
+export default GitLabPage;
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
