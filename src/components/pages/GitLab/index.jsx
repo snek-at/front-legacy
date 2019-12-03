@@ -37,6 +37,7 @@ class GitLabPage extends React.Component {
     });
   }
 
+  // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = () => {
     if (this.state.username !== "")
     {

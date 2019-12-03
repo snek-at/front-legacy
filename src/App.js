@@ -157,6 +157,7 @@ class App extends React.Component {
     }, () => localStorage.setItem("jwt_snek", token));
   }
 
+  // Login with JWT, received from engine.snek.at/api/graphiql
   _isLogged = (exp, orig, token) => {
     /**
      * Generate current timestamp
@@ -173,6 +174,7 @@ class App extends React.Component {
     }
   }
 
+  // Refresh JWT, received from engine.snek.at/api/graphiql
   _refeshToken = (token) => {
     this.props.refresh({
       variables: { token }

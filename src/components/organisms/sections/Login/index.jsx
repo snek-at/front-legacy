@@ -38,11 +38,11 @@ import {
 //> Queries / Mutations
 // Get the JWT token
 const LOGIN_USER = gql`
-    mutation tokenAuth($username: String!, $password: String!){
-        tokenAuth(username:$username,password:$password){
-            token
-        }
+  mutation tokenAuth($username: String!, $password: String!){
+    tokenAuth(username:$username,password:$password){
+      token
     }
+  }
 `;
 
 class Login extends React.Component{
@@ -57,6 +57,7 @@ class Login extends React.Component{
     });
   }
 
+  // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = () => {
     this.props.login({
       variables: { "username": this.state.username, "password": sha256(this.state.password) }

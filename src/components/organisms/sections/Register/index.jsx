@@ -46,15 +46,15 @@ import { gql } from "apollo-boost";
 //> Queries / Mutations
 // Register mutation
 const CREATE_USER_MUTATION = gql`
-    mutation register($token: String!, $values: GenericScalar!) {
-        registrationFormPage(token: $token, url: "/registration", values: $values) {
-            result
-            errors {
-            name
-            errors
-            }
-        }
+  mutation register($token: String!, $values: GenericScalar!) {
+    registrationFormPage(token: $token, url: "/registration", values: $values) {
+      result
+      errors {
+        name
+        errors
+      }
     }
+  }
 `;
 
 class Register extends React.Component{
@@ -144,7 +144,7 @@ class Register extends React.Component{
       username
     });
   }
-
+  // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = () => {
     // JWT token
     let token = this.props.token;
