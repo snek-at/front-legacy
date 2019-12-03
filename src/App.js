@@ -80,6 +80,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
+    document.title = "SNEK";
     // Fill with data
     this.setState({
       contrib: null,
