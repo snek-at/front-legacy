@@ -176,6 +176,45 @@ const fillContribution = (user, item) => {
   ]);
 };
 
+const fillStreaks = (contribs) => {
+  contribs.sort((a,b) => (a.datetime > b.datetime) ? 1 : -1);
+  const uniqueContribs = Array.from(new Set(contribs.map(a => a.datetime.toISOString().split("T")[0])))
+  .map(datetime => {
+    return contribs.find(a => a.datetime.toISOString().split("T")[0] === datetime)
+  });
+  let streak = false;
+  let count;
+  let dateFrom;
+  for(let i = 0; i < uniqueContribs.length; i++) {
+    console.log(uniqueContribs[i].datetime.toISOString().split("T")[0])
+    const prevDay = new Date(uniqueContribs[i].datetime.getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+    if(i>0) {
+      if(prevDay === uniqueContribs[i-1].datetime.toISOString().split("T")[0]) {
+        if(!streak){
+          dateFrom = uniqueContribs[i-1].datetime.toISOString().split("T")[0];
+          count = 2;
+          streak = true;
+        }
+        else {
+          count++;
+        }
+      }
+      else if(count > 0) {
+        const statisticId = db.exec(`SELECT id FROM statistic WHERE year=${new Date(dateFrom).getFullYear()}`).pop()["id"];
+        db.exec(insert.streak, [
+          new Date(dateFrom),
+          new Date(uniqueContribs[i-1].datetime.toISOString().split("T")[0]),
+          count,
+          statisticId
+        ]);
+        streak = false;
+        count = 0;
+        dateFrom = null;
+      }
+    }
+  }
+}
+
 const fillCalendar = async (user) => {
   const limit = "2147483647";
   const url = `https://${user.server}/${user.username}?limit=${limit}`;
@@ -225,6 +264,7 @@ const fillCalendar = async (user) => {
       fillContribution(user, item);
     }
   }
+  fillStreaks(db.exec("SELECT * FROM contrib"));
 };
 
 //> Export functions
