@@ -202,11 +202,12 @@ const fillCalendar = async (user) => {
       let weekday = datetime.getDay().toString();
 
       const platformId = db.exec("SELECT id FROM platform").pop()["id"];
-      const statYear = db.exec("SELECT year FROM statistic").pop();
-
+      const statYears = db.exec("SELECT year FROM statistic");
       let year = datetime.getFullYear();
 
-      if(!statYear){
+      const uniqueYears = Array.from(new Set(statYears.map(a => a.year)))
+      
+      if(!uniqueYears.includes(year)) {
         db.exec(insert.statistic, [year,platformId]);
       }
 
