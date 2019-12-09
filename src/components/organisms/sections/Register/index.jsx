@@ -3,7 +3,7 @@
 import React from "react";
 
 //> Additional modules
-// Password hashing
+// Used to hash the password with SHA256
 import { sha256 } from "js-sha256";
 
 //> MDB
@@ -33,6 +33,9 @@ import {
 //> CSS
 import "./register.scss";
 
+//> Intel
+import * as intel from "../../../../intel";
+
 //> Auth
 import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
 import { gitlabProvider } from "../../../../intel/AuthGitLab/providers/gitlab";
@@ -42,18 +45,20 @@ import RSA from "react-very-simple-oauth";
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
+import { async } from "q";
 
+//> Queries / Mutations
 // Register mutation
 const CREATE_USER_MUTATION = gql`
-    mutation register($token: String!, $values: GenericScalar!) {
-        registrationFormPage(token: $token, url: "/registration", values: $values) {
-            result
-            errors {
-            name
-            errors
-            }
-        }
+  mutation register($token: String!, $values: GenericScalar!) {
+    registrationFormPage(token: $token, url: "/registration", values: $values) {
+      result
+      errors {
+        name
+        errors
+      }
     }
+  }
 `;
 
 class Register extends React.Component{
@@ -122,7 +127,7 @@ class Register extends React.Component{
       token,
     });
     
-    // Set the new list
+    // Set the new list of user information
     this.setState({
       sourceList,
       username: this.state.username ? this.state.username : sourceList[0].username
@@ -143,38 +148,72 @@ class Register extends React.Component{
       username
     });
   }
-
-  handleSubmit = () => {
+  // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
+  handleSubmit = async () => {
+    // JWT token
     let token = this.props.token;
-    let values = {
-      sources: JSON.stringify(this.state.sourceList),
-      username: this.state.username,
-      email: this.state.email,
-      password: sha256(this.state.password),
-      "platform_data": JSON.stringify(this.state.sourceList),
-    };
-    this.props.register({
-      variables: { 
-      token,
-      values 
-    }
+
+    // Cache data
+    let cache = {}
+    intel
+    .fill(this.state.sourceList)
+    .then(() => {
+      intel.calendar();
+      intel.stats();
+      intel.repos();
     })
-    .then((result) => {
-        this.notify("warn","All fields have to be filled!");
+    .then(() => {
+      cache = {
+        logged: true,
+        contrib: intel.stats(),
+        contribCalendar: intel.calendar(),
+        contribTypes: intel.contribTypes(),
+        user: intel.user(),
+        orgs: intel.orgs(),
+        languages: intel.languages(),
+        repos: intel.repos(),
+      };
     })
-    .catch((error) => {
-        if (error.message.includes("Authentication Required"))
-        {
-          this.notify("success"," Welcome to SNEK!");
-        }
-        else if (error.message.includes("Duplicate entry"))
-        {
-          this.notify("warn"," Username already taken!");
-        }
-        else
-        {
-          this.notify("error", "Something went wrong!");
-        }
+    .then(() => {
+      let values = {
+        sources: JSON.stringify(this.state.sourceList),
+        username: this.state.username,
+        email: this.state.email,
+        password: sha256(this.state.password),
+        "platform_data": JSON.stringify(cache)
+      };
+      console.log(values);
+      this.props.register({
+        variables: { 
+        token,
+        values
+      }
+      })
+      .then((result) => {
+          if (result.message === "FAIL")
+          {
+            this.notify("warn","All fields have to be filled!");
+          }
+          else 
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+      })
+      .catch((error) => {
+          if (error.message.includes("Authentication Required"))
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+          else if (error.message.includes("Duplicate entry"))
+          {
+            this.notify("warn"," Username already taken!");
+          }
+          else
+          {
+            console.log(error.message)
+            this.notify("error", "Something went wrong!");
+          }
+      });
     });
   }
 
@@ -235,7 +274,7 @@ class Register extends React.Component{
           />
           <div>
             <div>
-            <p className="lead">Connect your work</p>
+              <p className="lead">Connect your work</p>
               <small>
               You can connect multiple accounts - even from the same platform.
               </small>
@@ -305,8 +344,7 @@ class Register extends React.Component{
                     popover
                     tag="span"
                     id="popper1"
-                  >
-                      
+                  >   
                     <span>
                     <MDBIcon
                     icon="check"
@@ -382,7 +420,6 @@ class Register extends React.Component{
           </MDBBtn>
         </MDBCardBody>
         <MDBCardFooter>
-
         </MDBCardFooter>
       </MDBCard>
     );
