@@ -43,7 +43,7 @@ class Navbar extends React.Component {
 
   logout = () => {
       // Remove the JSON Web Token
-      localStorage.removeItem("jwt_token");
+      localStorage.removeItem("jwt_snek");
       // Redirect to login
       window.location.href = "/"; 
   }

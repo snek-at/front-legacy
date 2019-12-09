@@ -39,7 +39,7 @@ class Landing extends React.Component {
   }
 
   logMeIn = (token) => {
-    localStorage.setItem("jwt_token", token);
+    localStorage.setItem("jwt_snek", token);
     this.props.login(token);
   }
 
