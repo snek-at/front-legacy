@@ -31,7 +31,6 @@ class Socialdata extends React.Component {
       gitlab: false,
       bitbucket: false,
     }
-
     platforms.map((platform, i) => {
       switch(platform.platform){
         case "GitHub":
