@@ -24,6 +24,7 @@ import * as intel from "./intel";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
+import { async } from "q";
 
 //> Queries / Mutations
 // Verify the token
@@ -198,25 +199,35 @@ class App extends React.Component {
   }
 
   // Handle login with JWT token
-  handleLogin = (token) => {
+  handleLogin = async (token) => {
     this.props.client.query({
       query: LOGIN_REAL_USER,
       variables: { "token": localStorage.getItem("jwt_snek") }
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
-
-        let platformTemp = registrationData.platform_data.replace(/'/g,'"');
-        let platformData = JSON.parse(platformTemp);
-
+        let plattform_data_Temp = registrationData.platform_data.replace(/'/g,'"');
+        let platform_data = JSON.parse(plattform_data_Temp);
+        let sources_Temp = registrationData.sources.replace(/'/g,'"');
+        let sources = JSON.parse(sources_Temp);
+        this.setState({
+          logged: true,
+          contrib: platform_data.contrib,
+          contribCalendar: platform_data.contribCalendar,
+          contribTypes: platform_data.contribTypes,
+          user: platform_data.user,
+          orgs: platform_data.orgs,
+          languages: platform_data.languages,
+          repos: platform_data.repos,
+        });
         intel
-        .fill(Object.values(platformData))
-        .then(() => {
+        .fill(sources)
+        .then(async () => {
           intel.calendar();
           intel.stats();
           intel.repos();
         })
-        .then(() => {
+        .then( async () => {
           this.setState({
             logged: true,
             contrib: intel.stats(),
@@ -227,7 +238,7 @@ class App extends React.Component {
             languages: intel.languages(),
             repos: intel.repos(),
           });
-        });
+        })
       }
     })
     .catch((error) => {
