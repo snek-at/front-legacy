@@ -17,10 +17,6 @@ import {
 //> Routes
 import Routes from "./Routes";
 
-//> Test
-// A test with the user "torvalds"
-import "./App.test";
-
 //> Intel
 import * as intel from "./intel";
 
@@ -28,6 +24,7 @@ import * as intel from "./intel";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
+import { async } from "q";
 
 //> Queries / Mutations
 // Verify the token
@@ -66,7 +63,7 @@ const LOGIN_USER = gql`
 `;
 
 class App extends React.Component {
-  // Init state
+  // Initialize state
   state = {
     contrib: null,
     contribCalendar: null,
@@ -80,8 +77,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    document.title = "SNEK";
-    // Fill with data
+    // Clear state on reload
     this.setState({
       contrib: null,
       contribCalendar: null,
@@ -92,16 +88,16 @@ class App extends React.Component {
       pageLogin: false,
     });
 
-    if(localStorage.getItem("jwt_token") !== null){
+    if(localStorage.getItem("jwt_snek") !== null){
       try {
-        // Verify Token on first load
+        // Verify JWT Token on first load
         this._verifyToken();
-        // Refresh token every 4 minutes
+        // Refresh JWT token every 4 minutes
         setInterval(async () => {
-          this._refreshToken();
-        }, 120000);
+          this._verifyToken();
+        }, 240000);
       } catch(e) {
-        //console.log(e);
+        //console.log(2, e);
       }
     } else {
       this._loginUser();
@@ -110,7 +106,7 @@ class App extends React.Component {
 
   _verifyToken = () => {
     this.props.verify({
-      variables: { "token": localStorage.getItem("jwt_token") }
+      variables: { "token": localStorage.getItem("jwt_snek") }
     })
     .then(({data}) => {
         if(data !== undefined){
@@ -118,53 +114,60 @@ class App extends React.Component {
             this._isLogged(
               data.verifyToken.payload.exp,
               data.verifyToken.payload.origIat,
-              localStorage.getItem("jwt_token")
+              localStorage.getItem("jwt_snek")
             );
           } else {
-            //console.warn("No token in payload.");
+            //> Troubleshooting Point 2
+            // Missing token payload @ Token verification with snek server (App.js)
+            //console.warn(TSID2, "No token in payload.");
           }
         } else {
-          //console.warn("No token in payload.");
+          //> Troubleshooting Point 2
+          // Missing token payload @ Token verification with snek server (App.js)
+          //console.warn(TSID2, "No token in payload.");
         }
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error);
+      //> Troubleshooting Point 3
+      // GraphQL mutation error @ Verify snek JWT (App.js)
+      //console.warn(TSID3, "Mutation error:",error);
     });
   }
 
+  // Reuqest JWT from engine.snek.at/api/graphiql
   _loginUser = () => {
     this.props.login()
     .then(({data}) => {
       if(data !== undefined){
+        // Set JWT, received from engine.snek.at/api/graphiql
         this._setLogged(data.tokenAuth.token);
       }
     })
     .catch((error) => {
-      //console.error("Mutation error:",error);
+      //> Troubleshooting Point 4
+      // GraphQL mutation error @ Login snek JWT (App.js)
+      //console.error(TSID4, "Mutation error:",error);
     });
   }
 
+  // Set JWT, received from engine.snek.at/api/graphiql
   _setLogged = (token) => {
     this.setState({
       token,
       loaded: true,
-    }, () => localStorage.setItem("jwt_token", token));
-    this.handleLogin();
+    }, () => localStorage.setItem("jwt_snek", token));
   }
 
+  // Login with JWT, received from engine.snek.at/api/graphiql
   _isLogged = (exp, orig, token) => {
-    console.log(exp, orig, token);
     /**
      * Generate current timestamp
      * Ref: https://flaviocopes.com/how-to-get-timestamp-javascript/
      */
     let currentTS = ~~(Date.now() / 1000);
-
-    console.log(currentTS, exp, currentTS > exp);
-
-    // Check if the token is still valid
+    // Check if the JWT token is still valid
     if(currentTS > exp){
-      // Token has expired
+      // JWT has expired
       this._refeshToken(token);
     } else {
       // Only if anything has changed, update the data
@@ -172,17 +175,20 @@ class App extends React.Component {
     }
   }
 
-  _refreshToken = () => {
+  // Refresh JWT, received from engine.snek.at/api/graphiql
+  _refeshToken = (token) => {
     this.props.refresh({
-      variables: { "token": localStorage.getItem("jwt_token") }
+      variables: { token }
     })
     .then(({data}) => {
       if(data !== undefined){
-        localStorage.setItem("jwt_token", data.refreshToken.token);
+        localStorage.setItem("jwt_snek", data.refreshToken.token);
       }
     })
     .catch((error) => {
-      //console.warn("Mutation error:",error);
+      //> Troubleshooting Point 5
+      // GraphQL mutation error @ Refreshing snek JWT every 2min (App.js)
+      //console.warn(TSID5, "Mutation error:",error);
     });
   }
 
@@ -192,26 +198,36 @@ class App extends React.Component {
     });
   }
 
-  handleLogin = (token) => {
+  // Handle login with JWT token
+  handleLogin = async (token) => {
     this.props.client.query({
       query: LOGIN_REAL_USER,
-      variables: { "token": localStorage.getItem("jwt_token") }
+      variables: { "token": localStorage.getItem("jwt_snek") }
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
-
-        // Temp replace (Ugly)
-        let platformTemp = registrationData.platform_data.replace(/'/g,'"');
-        let platformData = JSON.parse(platformTemp);
-
+        let plattform_data_Temp = registrationData.platform_data.replace(/'/g,'"');
+        let platform_data = JSON.parse(plattform_data_Temp);
+        let sources_Temp = registrationData.sources.replace(/'/g,'"');
+        let sources = JSON.parse(sources_Temp);
+        this.setState({
+          logged: true,
+          contrib: platform_data.contrib,
+          contribCalendar: platform_data.contribCalendar,
+          contribTypes: platform_data.contribTypes,
+          user: platform_data.user,
+          orgs: platform_data.orgs,
+          languages: platform_data.languages,
+          repos: platform_data.repos,
+        });
         intel
-        .fill(Object.values(platformData))
-        .then(() => {
+        .fill(sources)
+        .then(async () => {
           intel.calendar();
           intel.stats();
           intel.repos();
         })
-        .then(() => {
+        .then( async () => {
           this.setState({
             logged: true,
             contrib: intel.stats(),
@@ -222,16 +238,17 @@ class App extends React.Component {
             languages: intel.languages(),
             repos: intel.repos(),
           });
-        });
+        })
       }
     })
     .catch((error) => {
-      //console.warn(error.message);
+      //> Troubleshooting Point 6
+      // Database error message @ Saving generated user data (App.js)
+      //console.warn(TSID6, error.message);
     });
   }
 
   render() {
-    console.log(this.props, this.state);
     return (
       <Router>
         <div className="flyout">
@@ -253,6 +270,7 @@ class App extends React.Component {
   }
 }
 
+// Graphql-Server is engine.snek.at/api/graphiql
 export default compose(
   graphql(VERIFY_TOKEN, { name: "verify" }),
   graphql(REFRESH_TOKEN, { name: "refresh" }),
