@@ -206,19 +206,19 @@ class App extends React.Component {
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
-        let plattform_data_Temp = registrationData.platform_data.replace(/'/g,'"');
-        let platform_data = JSON.parse(plattform_data_Temp);
-        let sources_Temp = registrationData.sources.replace(/'/g,'"');
-        let sources = JSON.parse(sources_Temp);
+        let plattformDataTemp = registrationData.platform_data.replace(/'/g,'"');
+        let platformData = JSON.parse(plattformDataTemp);
+        let sourcesTemp = registrationData.sources.replace(/'/g,'"');
+        let sources = JSON.parse(sourcesTemp);
         this.setState({
           logged: true,
-          contrib: platform_data.contrib,
-          contribCalendar: platform_data.contribCalendar,
-          contribTypes: platform_data.contribTypes,
-          user: platform_data.user,
-          orgs: platform_data.orgs,
-          languages: platform_data.languages,
-          repos: platform_data.repos,
+          contrib: platformData.contrib,
+          contribCalendar: platformData.contribCalendar,
+          contribTypes: platformData.contribTypes,
+          user: platformData.user,
+          orgs: platformData.orgs,
+          languages: platformData.languages,
+          repos: platformData.repos,
         });
         intel
         .fill(sources)
@@ -238,7 +238,7 @@ class App extends React.Component {
             languages: intel.languages(),
             repos: intel.repos(),
           });
-        })
+        });
       }
     })
     .catch((error) => {

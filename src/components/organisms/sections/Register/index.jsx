@@ -154,7 +154,7 @@ class Register extends React.Component{
     let token = this.props.token;
 
     // Cache data
-    let cache = {}
+    let cache = {};
     intel
     .fill(this.state.sourceList)
     .then(() => {
@@ -182,7 +182,6 @@ class Register extends React.Component{
         password: sha256(this.state.password),
         "platform_data": JSON.stringify(cache)
       };
-      console.log(values);
       this.props.register({
         variables: { 
         token,
@@ -210,7 +209,6 @@ class Register extends React.Component{
           }
           else
           {
-            console.log(error.message)
             this.notify("error", "Something went wrong!");
           }
       });

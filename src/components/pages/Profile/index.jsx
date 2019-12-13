@@ -50,7 +50,6 @@ class Dashboard extends React.Component {
   setTabItems = () => {
 
     // Get project count
-    console.log(this.props.globalStore.data);
     const projectcount = this.props.globalStore.data.repos.length;
 
     this.setState({

@@ -25,7 +25,7 @@ export function getUser(data) {
   user.location = platform.location;
   user.platforms = [];
 
-  platforms.forEach(p => {
+  platforms.forEach((p) => {
     user.platforms.push({
       platform: p.platformName,
       username: p.username,
