@@ -28,7 +28,7 @@
     "react-apollo": "^3.1.3",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^3.3.0",
     "react-typist": "^2.0.5",
     "react-very-simple-oauth": "^1.0.0",
     "typescript": "^3.7.2"
