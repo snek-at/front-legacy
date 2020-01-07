@@ -24,7 +24,6 @@ import * as intel from "./intel";
 import { graphql, withApollo } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
-import { async } from "q";
 
 //> Queries / Mutations
 // Verify the token
@@ -227,7 +226,7 @@ class App extends React.Component {
           intel.stats();
           intel.repos();
         })
-        .then( async () => {
+        .then(async () => {
           this.setState({
             logged: true,
             contrib: intel.stats(),

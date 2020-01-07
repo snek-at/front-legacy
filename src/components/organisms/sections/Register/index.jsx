@@ -45,7 +45,6 @@ import RSA from "react-very-simple-oauth";
 import { graphql } from "react-apollo";
 import * as compose from "lodash.flowright";
 import { gql } from "apollo-boost";
-import { async } from "q";
 
 //> Queries / Mutations
 // Register mutation
@@ -199,7 +198,7 @@ class Register extends React.Component{
           }
       })
       .catch((error) => {
-          if (error.message.includes("Authentication Required"))
+          if (error.message.includes("Authentication required"))
           {
             this.notify("success"," Welcome to SNEK!");
           }
