@@ -205,7 +205,7 @@ class App extends React.Component {
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
-        let plattformDataTemp = registrationData.platformData.replace(/'/g,'"');
+        let plattformDataTemp = registrationData.platform_data.replace(/'/g,'"');
         let platformData = JSON.parse(plattformDataTemp);
         let sourcesTemp = registrationData.sources.replace(/'/g,'"');
         let sources = JSON.parse(sourcesTemp);
@@ -243,7 +243,7 @@ class App extends React.Component {
     .catch((error) => {
       //> Troubleshooting Point 6
       // Database error message @ Saving generated user data (App.js)
-      //console.warn(TSID6, error.message);
+      console.warn("TSID6", error.message);
     });
   }
 
