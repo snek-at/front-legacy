@@ -142,6 +142,15 @@ class Register extends React.Component{
     });
   }
 
+  logMeIn = (event) => {
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleSubmit();
+    }
+  }
+
   handleUserNamePick = (username) => {
     this.setState({
       username
@@ -405,6 +414,7 @@ class Register extends React.Component{
           name="password2"
           outline
           value={this.state.password2}
+          onKeyDown={this.logMeIn}
           onChange={this.changeHandler}
           size="lg"
           />
