@@ -93,8 +93,8 @@ class App extends React.Component {
         this._verifyToken();
         // Refresh JWT token every 4 minutes
         setInterval(async () => {
-          this._verifyToken();
-        }, 240000);
+          this._refreshToken();
+        }, 120000);
       } catch(e) {
         //console.log(2, e);
       }
@@ -155,6 +155,7 @@ class App extends React.Component {
       token,
       loaded: true,
     }, () => localStorage.setItem("jwt_snek", token));
+    this.handleLogin();
   }
 
   // Login with JWT, received from engine.snek.at/api/graphiql
@@ -175,9 +176,9 @@ class App extends React.Component {
   }
 
   // Refresh JWT, received from engine.snek.at/api/graphiql
-  _refeshToken = (token) => {
+  _refreshToken = () => {
     this.props.refresh({
-      variables: { token }
+      variables: { "token": localStorage.getItem("jwt_token") }
     })
     .then(({data}) => {
       if(data !== undefined){
