@@ -244,7 +244,7 @@ class App extends React.Component {
     .catch((error) => {
       //> Troubleshooting Point 6
       // Database error message @ Saving generated user data (App.js)
-      console.warn("TSID6", error.message);
+      //console.warn("TSID6", error.message);
     });
   }
 

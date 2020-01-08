@@ -20,7 +20,6 @@ import {
 
 class Overview extends React.Component {
   render() {
-    console.log(this.props.languages);
     return (
       <MDBTabPane tabId={this.props.id} role="tabpanel">
         {this.props.languages &&
