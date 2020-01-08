@@ -25,9 +25,7 @@ import {
 } from "mdbreact";
 
 //> Components
-import { 
-  SearchBar
-} from "../../molecules";
+import { SearchBar } from "../../molecules";
 
 //> CSS
 import "./navbar.scss";
@@ -42,11 +40,11 @@ class Navbar extends React.Component {
   };
 
   logout = () => {
-      // Remove the JSON Web Token
-      localStorage.removeItem("jwt_snek");
-      // Redirect to login
-      window.location.href = "/"; 
-  }
+    // Remove the JSON Web Token
+    localStorage.removeItem("jwt_snek");
+    // Redirect to login
+    window.location.href = "/";
+  };
 
   render() {
     const { location } = this.props;
@@ -75,46 +73,45 @@ class Navbar extends React.Component {
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
-            
-              {data.logged ? (
-                <MDBNavbarNav right>
-                  <MDBNavItem>
-                    <span 
+            {data.logged ? (
+              <MDBNavbarNav right>
+                <MDBNavItem>
+                  <span
                     className="nav-link cursor-pointer"
                     onClick={this.logout}
-                    >
+                  >
                     Logout
-                    </span>
-                  </MDBNavItem>
-                </MDBNavbarNav>
-              ) : (
-                <MDBNavbarNav right>
-                  <MDBNavItem active={data.pageLogin}>
+                  </span>
+                </MDBNavItem>
+              </MDBNavbarNav>
+            ) : (
+              <MDBNavbarNav right>
+                <MDBNavItem active={data.pageLogin}>
                   {location.pathname === "/" ? (
-                    <span 
-                    className="nav-link cursor-pointer"
-                    onClick={() => this.props.changeState("pageLogin", true)}
+                    <span
+                      className="nav-link cursor-pointer"
+                      onClick={() => this.props.changeState("pageLogin", true)}
                     >
-                    Sign in
+                      Sign in
                     </span>
                   ) : (
                     <MDBNavLink to="/">Sign in</MDBNavLink>
                   )}
-                  </MDBNavItem>
-                  <MDBNavItem active={!data.pageLogin}>
-                    {location.pathname === "/" ? (
-                    <span 
-                    className="nav-link cursor-pointer"
-                    onClick={() => this.props.changeState("pageLogin", false)}
+                </MDBNavItem>
+                <MDBNavItem active={!data.pageLogin}>
+                  {location.pathname === "/" ? (
+                    <span
+                      className="nav-link cursor-pointer"
+                      onClick={() => this.props.changeState("pageLogin", false)}
                     >
-                    Sign up
+                      Sign up
                     </span>
                   ) : (
                     <MDBNavLink to="/">Sign up</MDBNavLink>
                   )}
-                  </MDBNavItem>
-                </MDBNavbarNav>
-              )}
+                </MDBNavItem>
+              </MDBNavbarNav>
+            )}
           </MDBCollapse>
         </MDBContainer>
       </MDBNavbar>
