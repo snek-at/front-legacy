@@ -19,7 +19,7 @@ export function getUser(data) {
   user.username = platform.username;
   user.email = platform.email;
   user.websiteUrl = platform.websiteUrl;
-  user.status = platform.status;
+  user.status = platform.statusMessage;
   user.statusEmojiHTML = platform.statusEmojiHTML;
   user.isEmployee = false;
   user.isHireable = false;
