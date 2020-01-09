@@ -23,17 +23,30 @@ import {
   MDBIcon,
   toast,
   ToastContainer,
+  MDBSelect,
 } from "mdbreact";
 
 class GitLabPage extends React.Component {
   state = {
     username: "",
     server: "",
+    options: [
+      {
+        text: "HTL Villach",
+        value: "gitlab.htl-villach.at"
+      }
+    ]
   }
 
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value
+    });
+  }
+
+  changeSelection = event => {
+    this.setState({
+      server: event[0]
     });
   }
 
@@ -111,14 +124,17 @@ class GitLabPage extends React.Component {
         value={this.state.username}
         onChange={this.changeHandler}
         />
-        <MDBInput 
-        label="Server"
-        type="text"
-        name="server"
-        outline
-        size="lg"
-        value={this.state.server}
-        onChange={this.changeHandler}
+        <MDBSelect
+          search
+          options={this.state.options}
+          value={this.state.server}
+          getValue={this.changeSelection}
+          className="select-server"
+          selected="Choose your server"
+          label="Your server"
+          labelClass="text-white"
+          outline
+          required
         />
         <MDBBtn
         color="success"
