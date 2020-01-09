@@ -80,6 +80,7 @@ export function getRepositories(data) {
       let repo = {};
       repo.name = repoWithExtras.rName;
       repo.avatarUrl = repoWithExtras.oAvatarUrl;
+      repo.url = repoWithExtras.rUrl;
 
       repo.owner = {};
       repo.owner.name = repoWithExtras.oName;
