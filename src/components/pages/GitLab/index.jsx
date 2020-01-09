@@ -61,7 +61,7 @@ class GitLabPage extends React.Component {
         window.open(`https://snek.at/redirect?server=${this.state.server}&username=${this.state.username}`, "_self");
       }
       else{
-        this.notify("warn","Enter a server!");
+        this.notify("warn","Select a server!");
       }
     }
     else{
