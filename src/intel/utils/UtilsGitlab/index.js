@@ -66,7 +66,6 @@ const fillPlatform = async (user) => {
   ]);
 };
 
-
 const fillOrganizations = async (user) => {
   const url = `https://${user.server}/users/${user.username}/groups.json`;
   const html = await webscrap.parseJsonToDOM(
