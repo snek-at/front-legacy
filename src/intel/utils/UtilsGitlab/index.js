@@ -28,22 +28,19 @@ const fillPlatform = async (user) => {
       return html;
     })
   );
-  const status = html.getElementsByTagName("gl-emoji")[0];
-  const coverDesc = html
-    .getElementsByClassName("cover-desc")[0]
-    .getElementsByTagName("span");
 
-  const coverTitle = html.getElementsByClassName("cover-title")[0];
+  const userInfo = html.getElementsByClassName("user-info")[0];
+  const fullName = html.getElementsByClassName("cover-title")[0].innerText;
+
   let avatarUrl = html
     .getElementsByClassName("avatar-holder")[0]
     .getElementsByTagName("a")[0]
     .getAttribute("href");
 
   const links = html.getElementsByClassName("profile-link-holder")[0];
-  const message = null;
+  const message = html.getElementsByTagName("gl-emoji")[0];
   const emojiHTML = null;
-  const fullName = coverDesc[0].innerHTML.trim().substring(1);
-  const date = coverDesc[1].innerHTML;
+  const date = new Date(userInfo.getElementsByTagName("span")[1].innerText.split(" ").slice(2).join(" "));
 
   if (avatarUrl) {
     if (!avatarUrl.includes("https://") || !avatarUrl.includes("http://")) {
@@ -68,6 +65,7 @@ const fillPlatform = async (user) => {
     emojiHTML
   ]);
 };
+
 
 const fillOrganizations = async (user) => {
   const url = `https://${user.server}/users/${user.username}/groups.json`;
