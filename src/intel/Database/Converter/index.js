@@ -174,6 +174,9 @@ export function getCalendar(data) {
 
   today.setDate(today.getDate() + 1);
 
+  // IMPLEMENT STREAKS
+  getStreaks(calendar)
+
   calendar.forEach((day) => {
     if (day.cYear) {
       calendarGrid[day.cYear].total++;
@@ -391,6 +394,41 @@ export function getStats(data) {
   }
   });
   return statistics;
+}
+
+function getStreaks(days) {
+  
+  let streaks = [];
+  let lastStreak = {
+    startDate: null,
+    endDate: null,
+    total: 0
+  }
+
+  //days.sort((a,b)=>console.log(a,b));
+  const diffDays = (date2, date1) => Math.ceil((date2 - date1) / (1000 * 60 * 60 * 24));   
+  days.forEach(day => {
+    if(lastStreak.startDate === null){
+      lastStreak.startDate = new Date(day.cDate);
+      lastStreak.endDate = new Date(day.cDate);
+    }
+
+    const dayDiff = diffDays(new Date(day.cDate), lastStreak.endDate)
+    if(dayDiff === 1){
+      lastStreak.endDate = new Date(day.cDate)
+    }else if (dayDiff > 0) {
+      lastStreak.total = diffDays(lastStreak.endDate, lastStreak.startDate)
+      if(lastStreak.total > 0){
+        streaks.push(lastStreak)
+      }
+      
+      lastStreak = {
+        startDate: null,
+        endDate: null,
+        total: 0
+      };
+    }
+  })
 }
 
 export function getContribTypes(data) {

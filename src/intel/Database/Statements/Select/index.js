@@ -104,6 +104,8 @@ FROM
 JOIN
   contrib
     ON calendar.id = contrib.calendar_id
+ORDER BY
+  calendar.date
 `;
 
 export const totalContributions = `
