@@ -128,15 +128,28 @@ class Socialdata extends React.Component {
           </div>
           <div className="organisation-list my-3 pb-3">
             {organisations.map((item, i) => {
-              return(
-                <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                <img src={item.avatarUrl} alt={item.name+" logo"}/>
-                </a>
-              );
+              if(item.avatarUrl){
+                return(
+                  <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >
+                  <img src={item.avatarUrl} alt={item.name+" logo"}/>
+                  </a>
+                );
+              }else{
+                return(
+                  <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >
+                  <i class="fas fa-sitemap fa-lg"></i>
+                  </a>
+                );
+              }
+              
             })}
           </div>
           <LanguageChart languages={this.props.languages} />
