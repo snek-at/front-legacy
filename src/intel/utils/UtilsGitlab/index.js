@@ -200,7 +200,9 @@ const fillStreaks = (contribs) => {
         }
       }
       else if(count > 0) {
-        const statisticId = db.exec(`SELECT id FROM statistic WHERE year=${new Date(dateFrom).getFullYear()}`).pop()["id"];
+        const statisticId = db.exec(`SELECT id FROM statistic WHERE year=${new Date(dateFrom)
+          .getFullYear()}`)
+          .pop()["id"];
         db.exec(insert.streak, [
           new Date(dateFrom),
           new Date(uniqueContribs[i-1].datetime.toISOString().split("T")[0]),
