@@ -257,14 +257,14 @@ class App extends React.Component {
             orgs: intel.orgs(),
             languages: intel.languages(),
             repos: intel.repos(),
-          }
-          platformData = JSON.stringify(cache)
+          };
+          platformData = JSON.stringify(cache);
           this.props.caching({
             variables: { 
             token: localStorage.getItem("jwt_snek"),
             platformData
           }
-          })
+          });
         });
       }
     })
