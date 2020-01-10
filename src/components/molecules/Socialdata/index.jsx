@@ -149,7 +149,6 @@ class Socialdata extends React.Component {
                   </a>
                 );
               }
-              
             })}
           </div>
           <LanguageChart languages={this.props.languages} />
