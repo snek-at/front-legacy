@@ -60,7 +60,16 @@ const LOGIN_USER = gql`
         }
     }
 `;
-
+// Update Cache
+const UPDATE_CACHE = gql`
+  mutation cache ($token: String!, $platformData: String!) {
+    cacheUser(token: $token, platformData: $platformData){
+      user{
+        platformData
+      }
+    }
+  }
+`;
 class App extends React.Component {
   // Initialize state
   state = {
