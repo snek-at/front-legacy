@@ -178,16 +178,15 @@ const fillContribution = (user, item) => {
 
 const fillStreaks = (contribs) => {
   contribs.sort((a,b) => (a.datetime > b.datetime) ? 1 : -1);
-  const uniqueContribs = Array.from(new Set(contribs.map(a => a.datetime.toISOString().split("T")[0])))
-  .map(datetime => {
-    return contribs.find(a => a.datetime.toISOString().split("T")[0] === datetime)
+  const uniqueContribs = Array.from(new Set(contribs.map((a) => a.datetime.toISOString().split("T")[0])))
+  .map((datetime) => {
+    return contribs.find((a) => a.datetime.toISOString().split("T")[0] === datetime);
   });
   let streak = false;
   let count;
   let dateFrom;
   for(let i = 0; i < uniqueContribs.length; i++) {
-    console.log(uniqueContribs[i].datetime.toISOString().split("T")[0])
-    const prevDay = new Date(uniqueContribs[i].datetime.getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+    const prevDay = new Date(uniqueContribs[i].datetime.getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0];
     if(i>0) {
       if(prevDay === uniqueContribs[i-1].datetime.toISOString().split("T")[0]) {
         if(!streak){
@@ -215,7 +214,7 @@ const fillStreaks = (contribs) => {
       }
     }
   }
-}
+};
 
 const fillCalendar = async (user) => {
   const limit = "2147483647";
@@ -246,7 +245,7 @@ const fillCalendar = async (user) => {
       const statYears = db.exec("SELECT year FROM statistic");
       let year = datetime.getFullYear();
 
-      const uniqueYears = Array.from(new Set(statYears.map(a => a.year)))
+      const uniqueYears = Array.from(new Set(statYears.map((a) => a.year)));
       
       if(!uniqueYears.includes(year)) {
         db.exec(insert.statistic, [year,platformId]);
