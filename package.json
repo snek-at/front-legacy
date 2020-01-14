@@ -5,12 +5,12 @@
   "homepage": ".",
   "license": "(EUPL-1.2)",
   "dependencies": {
-    "mdbreact": "mdbreact-4.20.0.tgz",
+    "mdbreact": "mdbreact-4.24.0.tgz",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "^3.3.0"
   },
   "repository": {
     "type": "git",
