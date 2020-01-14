@@ -15,39 +15,51 @@ import {
 // Molecules
 import {
   Calendar2D,
-  Calendar3D
+  Calendar3D,
+  AustriaMap,
 } from "../../../molecules";
 
 class Overview extends React.Component {
   render() {
-    return (
-      <MDBTabPane tabId={this.props.id} role="tabpanel">
-        {this.props.languages &&
-        <MDBRow className="text-center text-md-left mb-4">
-        {Object.keys(this.props.languages).map((key, i) => {
-          if(i < 6){
-            return(
-              <MDBCol md="4" key={i}>
-                <span className="mb-2 text-muted">
-                  <MDBIcon icon="square" className="pr-2" style={{color: this.props.languages[key].color}} />
-                  {this.props.languages[key].name} <small>{this.props.languages[key].share}%</small>
-                </span>
-              </MDBCol>
-            );
+    if(true){
+      return (
+        <MDBTabPane tabId={this.props.id} role="tabpanel">
+          <AustriaMap className="mb-4" />
+          {this.props.contrib && (
+            <Calendar2D calendar={this.props.calendar} />
+          )}
+        </MDBTabPane>
+      )
+    } else {
+      return (
+        <MDBTabPane tabId={this.props.id} role="tabpanel">
+          {this.props.languages &&
+          <MDBRow className="text-center text-md-left mb-4">
+          {Object.keys(this.props.languages).map((key, i) => {
+            if(i < 6){
+              return(
+                <MDBCol md="4" key={i}>
+                  <span className="mb-2 text-muted">
+                    <MDBIcon icon="square" className="pr-2" style={{color: this.props.languages[key].color}} />
+                    {this.props.languages[key].name} <small>{this.props.languages[key].share}%</small>
+                  </span>
+                </MDBCol>
+              );
+            }
+          })}
+          </MDBRow>
           }
-        })}
-        </MDBRow>
-        }
-        {(this.props.contrib && this.props.calendar) && (
-          <>
-            <Calendar3D contrib={this.props.contrib} calendar={this.props.calendar} />
-            {this.props.contrib && (
-              <Calendar2D calendar={this.props.calendar} />
-            )}
-          </>
-        )}
-      </MDBTabPane>
-    );
+          {(this.props.contrib && this.props.calendar) && (
+            <>
+              <Calendar3D contrib={this.props.contrib} calendar={this.props.calendar} />
+              {this.props.contrib && (
+                <Calendar2D calendar={this.props.calendar} />
+              )}
+            </>
+          )}
+        </MDBTabPane>
+      );
+    }
   }
 }
 

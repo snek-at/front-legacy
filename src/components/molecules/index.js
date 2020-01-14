@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import TextTypist from "./TextTypist";
 import SearchBar from "./SearchBar";
 import ContribChart from "./ContribChart";
+import AustriaMap from "./AustriaMap";
 
 export {
   TabContainer,
@@ -24,6 +25,7 @@ export {
   TextTypist,
   SearchBar,
   ContribChart,
+  AustriaMap,
 };
 
 /**
