@@ -5,6 +5,29 @@
   justify-content: space-between;
 }
 
+//> SNEK Design
+// Buttons
+.btn{
+  box-shadow: none;
+  &:hover{
+    box-shadow: none;
+  }
+  &:active{
+    box-shadow: none;
+  }
+  &:focus{
+    box-shadow: none;
+  }
+  &:visited{
+    box-shadow: none;
+  }
+}
+//> Cards
+.card{
+  box-shadow: none;
+  border-radius: 0;
+}
+
 // Custom colors
 .snek-dark {
   background-color: $snekDark !important;
@@ -51,6 +74,14 @@
 
 .blue-text {
   color: $snekBlue !important;
+}
+
+.position-relative{
+  position: relative !important;
+}
+
+.align-self-center{
+  align-self: center !important;
 }
 
 /** 
