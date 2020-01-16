@@ -38,20 +38,32 @@ render() {
   return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
-          <MDBNavbarBrand>
-            <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid"/>
+          <MDBNavbarBrand className="flex-center">
+            <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid" className="mr-2" />
+            <span className="font-weight-bold">SNEK</span>
           </MDBNavbarBrand>
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
+            <MDBNavbarNav left>
+              <MDBNavItem>
+                <input type="search" className="form-control" placeholder="Search..."/>
+              </MDBNavItem>
+            </MDBNavbarNav>
             <MDBNavbarNav right>
               <MDBNavItem active>
                 <MDBNavLink to="#!">Home</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to="#!">Features</MDBNavLink>
+                <MDBNavLink to="#!">Ranking</MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to="#!">Pricing</MDBNavLink>
+                <MDBNavLink to="#!">Developer</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to="#!">Jobs</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
             </MDBNavbarNav>
           </MDBCollapse>
