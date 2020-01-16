@@ -99,27 +99,30 @@ class HomePage extends React.Component {
                         'Built for teachers.',
                         'Built for sneks.'
                       ]}
-                      typeSpeed={20}
+                      typeSpeed={30}
                       backSpeed={50}
                       loop >
                     </Typed>
                   </h1>
                 </div>
-                <div className="mt-4">
-                <MDBBtn
-                color="white"
-                className="btn-underlined-red"
-                >
-                Donate
-                <MDBIcon far icon="heart" className="pl-1 red-text" />
-                </MDBBtn>
-                <MDBBtn
-                color="white"
-                className="btn-underlined-blue"
-                >
-                Our mission
-                <MDBIcon icon="angle-right" className="pl-1 blue-text" />
-                </MDBBtn>
+                <div>
+                  <p className="lead">Open Source Social Network</p>
+                  <div className="mt-4">
+                  <MDBBtn
+                  color="white"
+                  className="btn-underlined-red"
+                  >
+                  Donate
+                  <MDBIcon far icon="heart" className="pl-1 red-text" />
+                  </MDBBtn>
+                  <MDBBtn
+                  color="white"
+                  className="btn-underlined-blue"
+                  >
+                  Our mission
+                  <MDBIcon icon="angle-right" className="pl-1 blue-text" />
+                  </MDBBtn>
+                  </div>
                 </div>
               </div>
             </MDBCol>

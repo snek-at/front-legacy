@@ -1,21 +1,22 @@
-.splitter{
-  overflow: hidden;
-}
-.or{
-  position: relative !important;
-  padding-bottom: 16px !important;
-  padding-top: 16px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-  padding-bottom: var(--spacing-rule-text-vertical, 16px) !important;
-  padding-top: var(--spacing-rule-text-vertical, 16px) !important;
-  padding-left: var(--spacing-rule-text-horizontal, 16px) !important;
-  padding-right: var(--spacing-rule-text-horizontal, 16px) !important;
-}
-.or-text{
-  overflow-wrap: break-word !important;
-  margin: 0px !important;
-  &::before{
+#register {
+  .splitter {
+    overflow: hidden;
+  }
+  .or {
+    position: relative !important;
+    padding-bottom: 16px !important;
+    padding-top: 16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-bottom: var(--spacing-rule-text-vertical, 16px) !important;
+    padding-top: var(--spacing-rule-text-vertical, 16px) !important;
+    padding-left: var(--spacing-rule-text-horizontal, 16px) !important;
+    padding-right: var(--spacing-rule-text-horizontal, 16px) !important;
+  }
+  .or-text {
+    overflow-wrap: break-word !important;
+    margin: 0px !important;
+    &::before {
       border-bottom-width: var(--border-rule-border-width, 1px) !important;
       border-bottom-color: #e4e4e4 !important;
       content: "" !important;
@@ -26,8 +27,8 @@
       top: 50% !important;
       right: 100% !important;
       width: 5000px !important;
-  }
-  &::after{
+    }
+    &::after {
       border-bottom-width: var(--border-rule-border-width, 1px) !important;
       border-bottom-color: #e4e4e4 !important;
       content: "" !important;
@@ -38,32 +39,82 @@
       top: 50% !important;
       left: 100% !important;
       width: 5000px !important;
-  }
-}
-// Register selection
-svg {
-  padding-top: 0.5rem;
-  max-width: 60%;
-  height: auto;
-  transition: all 0.2s ease;
-  filter: saturate(0.5);
-  transition: all .2s ease;
-}
-.selectType {
-  transition: all .2s ease;
-  p.lead{
-    border-top: none;
-    transition: all .2s ease;
-  }
-  cursor: pointer;
-  &:hover {
-    transform: scale(1.1);
-    svg {
-      filter: saturate(1);
     }
-    & > p.lead{
-      color: #77bd43;
-      font-weight: bold;
+  }
+  // Register selection
+  svg {
+    padding-top: 0.5rem;
+    max-width: 60%;
+    height: auto;
+    transition: all 0.2s ease;
+    filter: saturate(0.5);
+    transition: all 0.2s ease;
+  }
+  .selectType {
+    transition: all 0.2s ease;
+    p.lead {
+      border-top: none;
+      transition: all 0.2s ease;
+    }
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+      svg {
+        filter: saturate(1);
+      }
+      & > p.lead {
+        color: #77bd43;
+        font-weight: bold;
+      }
+    }
+  }
+  input {
+    &:focus {
+      color: #495057;
+      background-color: #fff;
+      border-color: #77bd43;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(119, 189, 67, 0.25);
+    }
+  }
+  .connect{
+    .btn{
+      padding: 10px 13px 10px 13px;
+      &.disabled{
+        i{
+          &:after{
+            color: lightgrey !important;
+          }
+        }
+      }
+      i{
+        &.fab{
+          &:after{
+            transition: all .1s ease;
+            position: absolute;
+            font-family: "Font Awesome 5 Free";
+            content: "\f055";
+            font-weight: 900;
+            font-size: 10px;
+            color: #77bd43;
+            right: 5px;
+            bottom: 5px;
+          }
+        }
+      }
+      &:hover{
+        i{
+          &:after{
+            color: lighten(#77bd43, 15%);
+            transform: scale(1.5);
+          }
+        }
+      }
+    }
+  }
+  .btn{
+    &.text-muted{
+      color: lighten(#6c757d, 25%) !important;
     }
   }
 }
