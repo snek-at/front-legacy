@@ -4,9 +4,12 @@ import React from "react";
 // This serves as an entry point to the DOM and server renderers for React
 import ReactDOM from "react-dom";
 
-//> Ant Design
-// CSS
-import 'antd/dist/antd.css';
+//> Bootstrap
+import 'bootstrap-css-only/css/bootstrap.min.css';
+
+//> MDB
+// "Material Design for Bootstrap" is a great UI design framework
+import 'mdbreact/dist/css/mdb.css';
 
 //> CSS
 // Root SCSS file
