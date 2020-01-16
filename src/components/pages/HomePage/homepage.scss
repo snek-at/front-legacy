@@ -1,0 +1,43 @@
+#home{
+  background: #f0f0f0;
+  svg{
+    max-width: 60%;
+    height: auto;
+    transition: all .2s ease;
+    filter: saturate(.5);
+  }
+  .selectType{
+    cursor: pointer;
+    &:hover{
+      svg{
+        transform: scale(1.1);
+        filter: saturate(1);
+      }
+    }
+  }
+  .position-relative{
+    height: 200px;
+    .banner-wrapper{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .banner{
+        position: absolute;
+        left: -10%;
+        width: 130%;
+        height: 200px;
+        background: #77bd43;
+        transform-origin: right;
+        transform: rotate(-2deg);
+      }
+    }
+  }
+}
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
