@@ -88,8 +88,12 @@ footer {
   .madeby{
     a{
       color: #212121;
-      border-bottom: solid #77bd43 2px;
-    }
+			border-bottom: solid #77bd43 2px;
+			transition: border-bottom .2s ease;
+			&:hover{
+				border-bottom: solid #0366d6 2px;
+			}
+		}
   }
 }
 
