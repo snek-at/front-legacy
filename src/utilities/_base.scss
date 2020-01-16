@@ -9,6 +9,8 @@
 // Buttons
 .btn{
   box-shadow: none;
+  border-radius: 0;
+  text-transform: initial;
   &:hover{
     box-shadow: none;
   }
@@ -20,6 +22,14 @@
   }
   &:visited{
     box-shadow: none;
+  }
+
+  // Button types
+  &.btn-green{
+    background-color: #77bd43 !important;
+    &:hover{
+      background-color: darken(#77bd43, 5%) !important;
+    }
   }
 }
 //> Cards
