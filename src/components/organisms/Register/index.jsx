@@ -15,6 +15,9 @@ import {
 import { ReactComponent as SvgSoftware } from '../../../assets/header/dev.svg';
 import { ReactComponent as SvgMedia } from '../../../assets/header/media.svg';
 
+//> CSS
+import "./register.scss";
+
 class Register extends React.Component {
   state = {
     step: 0
@@ -25,7 +28,16 @@ class Register extends React.Component {
       <div className="text-center">
         {this.state.step === 0 &&
           <>
-            <h2 className="mb-3">Choose your snek</h2>
+            <MDBBtn
+            color="green"
+            >
+            Login to SNEK
+            </MDBBtn>
+            <div className="w-100">
+                <div className="splitter my-4"><span className="or"><span className="or-text">or</span></span></div>
+            </div>
+            <h2 className="mb-0">Choose your snek</h2>
+            <p className="text-muted mb-3">What is your main profession?</p>
             <MDBRow>
               <MDBCol md="6">
                 <div className="selectType">
