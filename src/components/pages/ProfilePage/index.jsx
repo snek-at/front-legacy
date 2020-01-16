@@ -1,12 +1,11 @@
+//> React
+// Contains all the functionality necessary to define React components
 import React from "react";
-
-import { Button, Radio, Icon } from "antd";
 
 class ProfilePage extends React.Component {
   state = {};
 
   render() {
-    const { size } = this.state;
     return (
       null
     );
