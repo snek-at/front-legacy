@@ -1,14 +1,25 @@
 import React from "react";
 
-import { Button, Radio, Icon } from "antd";
+//> MDB
+// "Material Design for Bootstrap" is a great UI design framework
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBBtn,
+  MDBAlert,
+} from "mdbreact";
 
 class HomePage extends React.Component {
   state = {};
 
   render() {
-    const { size } = this.state;
     return (
-      null
+      <MDBContainer>
+
+      </MDBContainer>
     );
   }
 }
