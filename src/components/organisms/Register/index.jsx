@@ -13,6 +13,10 @@ import {
   MDBPopoverBody,
   MDBPopoverHeader,
   MDBIcon,
+  MDBModal,
+  MDBModalBody,
+  MDBModalHeader,
+  MDBModalFooter,
 } from "mdbreact";
 
 //> Images
@@ -27,6 +31,19 @@ class Register extends React.Component {
     step: 0
   };
 
+  toggle = () => {
+    if(!this.state.modalGitLab){
+      this.setState({
+        modalGitLab: true
+      });
+    } else {
+      this.setState({
+        modalGitLab: false
+      });
+    }
+      
+  }
+
   render() {
     return (
       <div className="text-center" id="register">
@@ -34,6 +51,7 @@ class Register extends React.Component {
           <>
             <MDBBtn
             color="green"
+            onClick={() => this.setState({step: 3})}
             >
             Login to SNEK
             </MDBBtn>
@@ -139,6 +157,7 @@ class Register extends React.Component {
             <div className="connect mb-3">
               <MDBBtn
               color="orange"
+              onClick={() => this.setState({modalGitLab: true})}
               >
               <MDBIcon fab icon="gitlab" size="lg"/>
               </MDBBtn>
@@ -275,6 +294,85 @@ class Register extends React.Component {
             </p>
           </>
         }
+        {this.state.step === 3 &&
+          <>
+            <div className="text-left">
+              <small className="text-muted clickable" onClick={() => this.setState({step: 0})}>
+                <MDBIcon icon="angle-left" className="mr-1" />
+                Back
+              </small>
+            </div>
+            <input 
+            type="email"
+            className="form-control my-2"
+            placeholder="E-Mail or Username"
+            name="email"
+            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+            value={this.state.email}
+            />
+            <input 
+            type="password"
+            className="form-control my-2"
+            placeholder="Password"
+            name="password"
+            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+            value={this.state.password}
+            />
+            <MDBBtn
+            color="green"
+            className="mb-0"
+            >
+            Login
+            <MDBIcon icon="angle-right" className="pl-1" />
+            </MDBBtn>
+          </>
+        }
+        {this.state.modalGitLab &&
+          <MDBModal 
+          modalStyle="orange"
+          className="text-white"
+          size="sm"
+          backdrop={true}
+          isOpen={this.state.modalGitLab}
+          toggle={this.toggle}
+          >
+            <MDBModalHeader
+            className="text-center"
+            titleClass="w-100"
+            tag="p"
+            >
+              <MDBIcon fab icon="gitlab" className="pr-2" />
+              Add GitLab profile
+            </MDBModalHeader>
+            <MDBModalBody className="text-center">
+              <input 
+              type="text"
+              className="form-control mb-2"
+              placeholder="GitLab username"
+              name="gitlab_username"
+              onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+              value={this.state.gitlab_username}
+              />
+              <select className="browser-default custom-select form-control">
+                <option>Choose your GitLab Server</option>
+                <option value="1">gitlab.htl-villach.at</option>
+              </select>
+            </MDBModalBody>
+            <MDBModalFooter className="justify-content-center">
+              <MDBBtn
+              color="green"
+              onClick={() => console.log("Init GitLab fetching")}
+              >
+              <MDBIcon
+              icon="check"
+              className="mr-2"
+              />
+              Add
+              </MDBBtn>
+              <MDBBtn color="elegant" outline onClick={this.toggle}>Cancel</MDBBtn>
+            </MDBModalFooter>
+          </MDBModal>
+          }
       </div>
     );
   }
