@@ -1,9 +1,9 @@
 import HomePage from "./HomePage";
-//import ProfilePage from "./ProfilePage";
+import ProfilePage from "./ProfilePage";
 
 export {
   HomePage,
-  /*ProfilePage,*/
+  ProfilePage,
 }
 
 /**

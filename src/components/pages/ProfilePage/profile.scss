@@ -1,0 +1,96 @@
+#profile{
+  // Left col
+  .social{
+    img{
+      border-bottom: 5px #77bd43 solid;
+      border-top: 2px #f5f5f5 solid;
+      border-left: 2px #f5f5f5 solid;
+      border-right: 2px #f5f5f5 solid;
+    }
+    .bg-elegant{
+      background: #fafafa;
+      border-bottom: 15px white solid;
+    }
+    .bg-light{
+      background: #fafafa !important;
+    }
+    .badges{
+      .badge{
+        box-shadow: none;
+        margin-right: .4rem;
+      }
+    }
+    .connected{
+      i{
+        margin-right: .4rem;
+        position: relative;
+        color: lighten(grey, 20%);
+        &.active{
+          color: darken(lightblue, 5%);
+          &::after{
+            transition: all .1s ease;
+            position: absolute;
+            font-family: "Font Awesome 5 Free";
+            content: "\f058";
+            font-weight: 900;
+            font-size: 12px;
+            color: #77bd43;
+            bottom: -8px;
+            right: -2px;
+          }
+        }
+      }
+    }
+  }
+  // Right col
+  .content{
+    background: #fafafa;
+    .classic-tabs .nav li:first-child{
+      margin-left: 0;
+    }
+
+    // Tabs
+    .tabs-grey{
+      background: #ededed !important;
+      a{
+        color: #3b3b3b !important;
+        font-weight: bolder;
+      }
+    }
+    .tab-content{
+      background: #fafafa;
+      padding: 1rem;
+      padding-top: 2rem;
+    }
+    .classic-tabs .nav.tabs-grey li a{
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      // Not active
+      &.active{
+        color: red;
+        border-bottom: 3px #ededed solid;
+        &:hover{
+          border-bottom: 3px #c9e5b3 solid !important;
+        }
+      }
+      // Active
+      &.seriouslyActive{
+        color: blue;
+        border-bottom: 3px #77bd43 solid;
+        &:hover{
+          border-bottom: 3px #77bd43 solid !important;
+        }
+      }
+      .badge{
+        background: white !important;
+        box-shadow: none;
+      }
+    }
+  }
+  // General things
+}
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © 2019 Werbeagentur Christian Aichner
+ */
