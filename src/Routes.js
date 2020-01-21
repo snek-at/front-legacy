@@ -6,7 +6,8 @@ import { Route, Switch } from "react-router-dom";
 
 //> Components
 import {
-  HomePage
+  HomePage,
+  ProfilePage,
 } from './components/pages';
 
 class Routes extends React.Component {
@@ -14,6 +15,7 @@ class Routes extends React.Component {
     return (
       <Switch>
         <Route exact path='/' component={HomePage} />
+        <Route exact path='/me' component={ProfilePage} />
         <Route
           render={function() {
             return <h1>Not Found</h1>;
