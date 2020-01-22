@@ -5,9 +5,13 @@
   "homepage": ".",
   "license": "(EUPL-1.2)",
   "dependencies": {
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link-http": "^1.5.16",
     "mdbreact": "mdbreact-4.25.0.tgz",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
+    "react-apollo": "^3.1.3",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
