@@ -8,6 +8,7 @@ import { Route, Switch } from "react-router-dom";
 import {
   HomePage,
   ProfilePage,
+  MessagePage,
 } from './components/pages';
 
 class Routes extends React.Component {
@@ -16,6 +17,16 @@ class Routes extends React.Component {
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route exact path='/me' component={ProfilePage} />
+        <Route 
+        exact
+        path='/donate/cancel'
+        component={(props) => <MessagePage {...props}/>}
+        />
+        <Route
+        exact
+        path='/donate/thankyou'
+        component={(props) => <MessagePage {...props} />}
+        />
         <Route
           render={function() {
             return <h1>Not Found</h1>;

@@ -1,9 +1,11 @@
 import HomePage from "./HomePage";
 import ProfilePage from "./ProfilePage";
+import MessagePage from "./MessagePage";
 
 export {
   HomePage,
   ProfilePage,
+  MessagePage,
 }
 
 /**
