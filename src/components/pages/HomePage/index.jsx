@@ -9,6 +9,7 @@ import Typed from "react-typed";
 // "Material Design for Bootstrap" is a great UI design framework
 import {
   MDBContainer,
+  MDBSmoothScroll,
   MDBRow,
   MDBCol,
   MDBCard,
@@ -16,12 +17,16 @@ import {
   MDBBtn,
   MDBAlert,
   MDBIcon,
+  MDBModal,
 } from "mdbreact";
 
 //> Components
 import {
   Register,
 } from "../../organisms";
+import {
+  Donate,
+} from "../../molecules/modals";
 
 //> Images
 import ImageRanking from '../../../assets/body/ranking.png';
@@ -36,6 +41,7 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       rotate: -2,
+      modalDonate: false,
     };
     this.handleScroll = this.handleScroll.bind(this);
   }
@@ -79,6 +85,19 @@ class HomePage extends React.Component {
     }
   };
 
+  toggle = () => {
+    if(!this.state.modalDonate){
+      this.setState({
+        modalDonate: true
+      });
+    } else {
+      this.setState({
+        modalDonate: false
+      });
+    }
+      
+  }
+
   render() {
     console.log(this.state);
     return (
@@ -111,10 +130,15 @@ class HomePage extends React.Component {
                   <MDBBtn
                   color="white"
                   className="btn-underlined-red"
+                  onClick={() => this.setState({modalDonate: true})}
                   >
                   Donate
                   <MDBIcon far icon="heart" className="pl-1 red-text" />
                   </MDBBtn>
+                  <MDBSmoothScroll 
+                  to="features"
+                  className="d-inline"
+                  >
                   <MDBBtn
                   color="white"
                   className="btn-underlined-blue"
@@ -122,6 +146,7 @@ class HomePage extends React.Component {
                   Our mission
                   <MDBIcon icon="angle-right" className="pl-1 blue-text" />
                   </MDBBtn>
+                  </MDBSmoothScroll>
                   </div>
                 </div>
               </div>
@@ -142,7 +167,7 @@ class HomePage extends React.Component {
             </div>
           </div>
         </div>
-        <section className="features pb-5">
+        <section id="features" className="pb-5">
           <MDBContainer>
             <MDBRow className="flex-center text-center white-text">
               <MDBCol md="4">
@@ -160,6 +185,18 @@ class HomePage extends React.Component {
             </MDBRow>
           </MDBContainer>
         </section>
+        {this.state.modalDonate &&
+          <MDBModal 
+          modalStyle="white"
+          className="text-dark"
+          size="sm"
+          backdrop={true}
+          isOpen={this.state.modalDonate}
+          toggle={this.toggle}
+          >
+            <Donate toggle={this.toggle} />
+          </MDBModal>
+          }
       </div>
     );
   }

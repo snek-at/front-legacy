@@ -47,6 +47,7 @@
 		}
 	}
 	.btn-underlined-blue {
+		background: white;
 		transition: border-bottom 0.2s ease;
 		border-bottom: 3px solid rgba(0, 0, 255, 0.1);
 		&:hover {
@@ -55,7 +56,7 @@
 	}
 
 	// Feature section
-	.features {
+	#features {
 		background: #77bd43;
 	}
 }
