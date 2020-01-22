@@ -67,7 +67,6 @@ class HomePage extends React.Component {
   }
 
   handleScroll(event) {
-    console.log(window.pageYOffset);
     if(window.pageYOffset <= 400){
       if(window.pageYOffset / 200 < 402){
         this.setState({
@@ -99,7 +98,6 @@ class HomePage extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div id="home" className="pt-5">
         <MDBContainer className="mb-5 pb-5">
@@ -153,7 +151,7 @@ class HomePage extends React.Component {
             </MDBCol>
             <MDBCol md="6">
               <MDBCard className="px-3 py-4">
-                <Register />
+                <Register logmein={this.props.logmein} />
               </MDBCard>
             </MDBCol>
           </MDBRow>

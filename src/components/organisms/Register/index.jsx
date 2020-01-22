@@ -322,6 +322,7 @@ class Register extends React.Component {
             <MDBBtn
             color="green"
             className="mb-0"
+            onClick={() => this.props.logmein("pinterid", "test")}
             >
             Login
             <MDBIcon icon="angle-right" className="pl-1" />
