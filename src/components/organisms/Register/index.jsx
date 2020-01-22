@@ -302,6 +302,7 @@ class Register extends React.Component {
                 Back
               </small>
             </div>
+            <p className="lead">Login to SNEK</p>
             <input 
             type="email"
             className="form-control my-2"
@@ -353,18 +354,21 @@ class Register extends React.Component {
               onChange={(e) => this.setState({[e.target.name]: e.target.value})}
               value={this.state.gitlab_username}
               />
-              <select className="browser-default custom-select form-control">
-                <option>Choose your GitLab Server</option>
-                <option value="1">gitlab.htl-villach.at</option>
+              <select 
+              className="browser-default custom-select form-control"
+              value={this.state.gitlab_server}
+              onChange={(e) => this.setState({gitlab_server: e.target.value})}
+              >
+                <option value="gitlab.htl-villach.at">gitlab.htl-villach.at</option>
               </select>
             </MDBModalBody>
             <MDBModalFooter className="justify-content-center">
               <MDBBtn
-              color="green"
+              color="orange"
               onClick={() => console.log("Init GitLab fetching")}
               >
               <MDBIcon
-              icon="check"
+              icon="plus-circle"
               className="mr-2"
               />
               Add
