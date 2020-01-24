@@ -77,7 +77,7 @@ class ProfileContent extends React.Component {
                       <MDBNavLink
                         to="#"
                         onClick={this.toggleHorizontal(key)}
-                        className={this.state.activeHorizontalItem === key && "seriouslyActive"}
+                        className={this.state.activeHorizontalItem === key ? "seriouslyActive" : ""}
                         role="tab"
                       >
                         {item.title}
