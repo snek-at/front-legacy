@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+// Router
+import { Redirect } from "react-router-dom";
 
 //> Additional
 import Typed from "react-typed";
@@ -54,6 +56,12 @@ class HomePage extends React.Component {
         rotate: 0,
       });
     }
+
+    console.log(this.props.globalState);
+    if(this.props.globalState.gitlab_servers === undefined){
+      this.props.fetchGitLabServers();
+    }
+    
   };
 
   componentWillUnmount() {
@@ -98,6 +106,11 @@ class HomePage extends React.Component {
   }
 
   render() {
+    const { globalState } = this.props;
+
+    console.log(globalState);
+    if(globalState.logged === true) return <Redirect to="/me"/>;
+
     return (
       <div id="home" className="pt-5">
         <MDBContainer className="mb-5 pb-5">
@@ -151,7 +164,10 @@ class HomePage extends React.Component {
             </MDBCol>
             <MDBCol md="6">
               <MDBCard className="px-3 py-4">
-                <Register logmein={this.props.logmein} />
+                <Register 
+                logmein={this.props.logmein}
+                gitlabServers={globalState.gitlab_servers}
+                />
               </MDBCard>
             </MDBCol>
           </MDBRow>
@@ -171,14 +187,38 @@ class HomePage extends React.Component {
               <MDBCol md="4">
                 <img src={ImageProfiles} alt="You get profiles" className="img-fluid"/>
                 <h2>Profiles</h2>
+                <p className="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </p>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
+                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                </p>
               </MDBCol>
               <MDBCol md="4">
                 <img src={ImageRanking} alt="You get profiles" className="img-fluid"/>
                 <h2>Visualization</h2>
+                <p className="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </p>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
+                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                </p>
               </MDBCol>
               <MDBCol md="4">
                 <img src={ImageTrophy} alt="You get profiles" className="img-fluid"/>
                 <h2>Achievements</h2>
+                <p className="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                </p>
+                <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
+                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                </p>
               </MDBCol>
             </MDBRow>
           </MDBContainer>
