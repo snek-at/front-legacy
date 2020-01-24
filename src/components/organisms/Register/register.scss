@@ -80,6 +80,29 @@
   .modal-dialog.modal-notify.modal-orange .modal-header{
     background-color: #ff8910 !important;
   }
+  .modal-orange{
+    .mdb-select{
+      &:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #77bd43;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(119, 189, 67, 0.25);
+      }
+      input{
+        color: lighten(#495057, 20%);
+        margin-bottom: 0;
+      }
+      li:not(.disabled){
+        span{
+          color: #495057;
+        }
+      }
+      li{
+        margin-bottom: 0 !important;
+      }
+    }
+  }
 }
 
 /** 

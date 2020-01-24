@@ -17,6 +17,10 @@ import {
   MDBModalBody,
   MDBModalHeader,
   MDBModalFooter,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOptions,
+  MDBSelectOption,
 } from "mdbreact";
 
 //> Images
@@ -29,6 +33,8 @@ import "./register.scss";
 class Register extends React.Component {
   state = {
     step: 0,
+    gitlab_username: "",
+    gitlab_server: "Choose your organisation",
   };
 
   toggle = () => {
@@ -41,10 +47,28 @@ class Register extends React.Component {
         modalGitLab: false
       });
     }
-      
+  }
+
+  handleSelectChange = (e) => {
+    this.setState({
+      gitlab_server: e[0]
+    });
+  }
+
+  addGitLab = () => {
+    let username = this.state.gitlab_username;
+    let server = this.state.gitlab_server;
+
+    if(username.trim() && server.trim()){
+      if(server !== "Choose your organisation"){
+        console.log(username, server);
+      }
+    }
   }
 
   render() {
+    const { gitlabServers } = this.props;
+
     return (
       <div className="text-center" id="register">
         {this.state.step === 0 &&
@@ -379,18 +403,26 @@ class Register extends React.Component {
               onChange={(e) => this.setState({[e.target.name]: e.target.value})}
               value={this.state.gitlab_username}
               />
-              <select 
-              className="browser-default custom-select form-control"
-              value={this.state.gitlab_server}
-              onChange={(e) => this.setState({gitlab_server: e.target.value})}
+              <MDBSelect 
+              outline
+              getValue={this.handleSelectChange}
+              className="mb-0"
               >
-                <option value="gitlab.htl-villach.at">gitlab.htl-villach.at</option>
-              </select>
+                <MDBSelectInput selected={this.state.gitlab_server} />
+                <MDBSelectOptions>
+                  <MDBSelectOption disabled>Choose your organisation</MDBSelectOption>
+                  {gitlabServers && gitlabServers.map((source, i) => {
+                    return(
+                      <MDBSelectOption key={i} value={source.domain}>{source.organisation}</MDBSelectOption>
+                    );
+                  })}
+                  </MDBSelectOptions>
+                </MDBSelect>
             </MDBModalBody>
             <MDBModalFooter className="justify-content-center">
               <MDBBtn
               color="orange"
-              onClick={() => console.log("Init GitLab fetching")}
+              onClick={this.addGitLab}
               >
               <MDBIcon
               icon="plus-circle"
