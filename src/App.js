@@ -2,7 +2,7 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 // DOM bindings for React Router
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Redirect } from "react-router-dom";
 
 //> Additional
 // Crypto
@@ -54,11 +54,27 @@ const REFRESH_TOKEN = gql`
 `;
 // Get user data
 const GET_USER_DATA = gql`
-  query profile($url: String!){
-    profile: page(url: $url){
+  query profile($url: String!, $token: String!){
+    profile: page(url: $url, token: $token){
       ...on ProfileProfilePage{
         platformData
         sources
+      }
+    }
+  }
+`;
+// Get GitLab servers
+const GET_GITLAB_SERVERS = gql`
+  query gitLabServers($token: String!) {
+    page(url: "/registration", token: $token) {
+      ... on RegistrationRegistrationFormPage {
+        supportedGitlabs {
+          ... on RegistrationGitlab_Server {
+            organisation
+            domain
+            field
+          }
+        }
       }
     }
   }
@@ -69,6 +85,7 @@ class App extends React.Component {
   state = {
     logged: false,
     user: undefined,
+    gitlab_servers: undefined,
   }
 
   componentDidMount = () => {
@@ -92,7 +109,13 @@ class App extends React.Component {
           let username = data.verifyToken.payload.username;
           // Check if it's not the anonymous user
           if(username !== process.env.REACT_APP_ANONYMOUS_USER){
-            this._getData(data.verifyToken.payload.username);
+            this._getData(data.verifyToken.payload.username, localStorage.getItem('jwt_snek'));
+          } else {
+            this.setState({
+              loading: false,
+              logged: false,
+              user: false,
+            });
           }
         } else {
           console.log("Not verified 1");
@@ -130,15 +153,52 @@ class App extends React.Component {
     })
   }
 
-  _getData = async (username) => {
+  _getData = async (username, token) => {
     console.log(username);
     await this.props.client.query({
       query: GET_USER_DATA,
-      variables: { "url": "/registration/"+username }
+      variables: { 
+        "url": "/registration/"+username,
+        "token": token
+      }
     }).then(({data}) => {
       console.log(data);
+      this.setState({
+        loading: false,
+        logged: true,
+        user: {
+          platformData: JSON.parse(data.profile.platformData),
+          sources: JSON.parse(data.profile.sources)
+        },
+      });
     }).catch(error => {
-      console.error(error);
+      //console.error(error);
+      console.error("Can not get user data.")
+      this.setState({
+        loading: false,
+        logged: false,
+        user: false,
+      });
+    })
+  }
+
+  fetchGitLabServers = async () => {
+    await this.props.client.query({
+      query: GET_GITLAB_SERVERS,
+      variables: { 
+        "token": localStorage.getItem('jwt_snek')
+      }
+    }).then(({data}) => {
+      console.log(data);
+      this.setState({
+        gitlab_servers: data,
+      });
+    }).catch(error => {
+      //console.error(error);
+      console.error("Can not get gitlab severs.",error)
+      this.setState({
+        gitlab_servers: false
+      });
     })
   }
 
@@ -153,7 +213,14 @@ class App extends React.Component {
       if(data){
         if(data.tokenAuth){
           if(data.tokenAuth.token){
-            localStorage.setItem('jwt_snek', data.tokenAuth.token);
+            this.setState({
+              logged: false,
+              loading: false,
+              user: false,
+            }, () => {
+              localStorage.setItem('jwt_snek', data.tokenAuth.token);
+              localStorage.setItem("is_logged", false);
+            });
           }
         }
       }
@@ -175,24 +242,38 @@ class App extends React.Component {
       if(data){
         if(data.tokenAuth){
           if(data.tokenAuth.token){
+            this._getData(username, data.tokenAuth.token);
             localStorage.setItem('jwt_snek', data.tokenAuth.token);
+            localStorage.setItem("is_logged", true);
           }
         }
       }
     }).catch((loading, error) => {
       // Username or password is wrong
       console.error(error);
+      this.setState({
+        loading: false,
+        logged: false,
+        user: false,
+      }, () => localStorage.setItem("is_logged", false));
     });
   }
 
   render() {
+    console.log(this.state);
+
     return (
       <Router>
+      {localStorage.getItem("is_logged") === true && <Redirect to="/me" />}
         <ScrollToTop>
           <div className="flyout">
             <Navbar />
             <main>
-              <Routes logmein={this._login}/>
+              <Routes 
+              logmein={this._login}
+              fetchGitLabServers={this.fetchGitLabServers}
+              globalState={this.state}
+              />
             </main>
             <Footer />
           </div>
