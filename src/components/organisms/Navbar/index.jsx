@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+// Router
+import { withRouter } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -13,6 +15,7 @@ import {
   MDBNavbarToggler,
   MDBCollapse,
   MDBContainer,
+  MDBSmoothScroll,
 } from "mdbreact";
 
 //> Additional
@@ -38,10 +41,24 @@ render() {
   return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
-          <MDBNavbarBrand className="flex-center">
-            <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid" className="mr-2" />
-            <span className="font-weight-bold">SNEK</span>
-          </MDBNavbarBrand>
+            {this.props.location.pathname === "/" ? (
+              <MDBSmoothScroll 
+              to="home"
+              className="d-inline"
+              >
+                <MDBNavbarBrand className="flex-center">
+                  <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                  <span className="font-weight-bold">SNEK</span>
+                </MDBNavbarBrand>
+              </MDBSmoothScroll>
+            ) : (
+              <Link to="/">
+                <MDBNavbarBrand className="flex-center">
+                  <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                  <span className="font-weight-bold">SNEK</span>
+                </MDBNavbarBrand>
+              </Link>
+            )}          
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
             <MDBNavbarNav left>
@@ -73,7 +90,7 @@ render() {
   }
 }
 
-export default NavbarPage;
+export default withRouter(NavbarPage);
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
