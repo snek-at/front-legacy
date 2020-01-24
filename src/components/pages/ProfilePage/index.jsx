@@ -89,6 +89,7 @@ class ProfilePage extends React.Component {
 
   render() {
     const { globalState } = this.props;
+    console.log(globalState);
 
     if(globalState.loading && !globalState.logged) return <Redirect to="/"/>;
     return (
@@ -154,6 +155,7 @@ class ProfilePage extends React.Component {
             <ProfileContent>
               <Overview
               id={0}
+              platformData={globalState.user && globalState.user.platformData}
               />
               <Projects
               id={1}
