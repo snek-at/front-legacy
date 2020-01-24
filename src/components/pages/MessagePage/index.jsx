@@ -22,6 +22,7 @@ import "./messagepage.scss";
 
 //> Images
 import snakeAnimation from "../../../assets/content/snake.gif";
+import donorBadge from "../../../assets/content/donor.jpg";
 
 class MessagePage extends React.Component {
   state = {
@@ -82,26 +83,30 @@ class MessagePage extends React.Component {
           Thank you for your donation!
           <MDBIcon icon="heart" className="pink-text ml-2"/>
           </h2>
-          <p className="lead mt-3 mb-0">
+          <p className="lead mb-0">
+          You have unlocked your <strong>donor badge</strong>!
+          </p>
+          <div>
+            <img src={donorBadge} alt="Door badge" className="donor-badge"/>
+          </div>
+          <p className="lead mt-1 mb-0">
           We are a <strong>non-profit</strong>, <strong>open source</strong> Social Network.
           </p>
           <p>
           We therefore require donations to stay up-and-running.
           </p>
           <p className="mb-0">
-          Your donation, therefore, means a lot to us!
-          <MDBIcon icon="heart" className="pink-text ml-1"/>
+            Your donation, therefore, means a lot to us!
+            <MDBIcon icon="heart" className="pink-text ml-1"/>
           </p>
           <MDBBtn
           color="green"
-          size="md"
           >
           Login
           <MDBIcon icon="angle-right" className="pl-1" />
           </MDBBtn>
           <MDBBtn
           color="green"
-          size="md"
           >
           My profile
           <MDBIcon icon="angle-right" className="pl-1" />
