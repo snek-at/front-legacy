@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+// Router
+import { Redirect } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -86,6 +88,9 @@ class ProfilePage extends React.Component {
   }
 
   render() {
+    const { globalState } = this.props;
+
+    if(globalState.loading && !globalState.logged) return <Redirect to="/"/>;
     return (
       <MDBContainer id="profile" className="py-3">
         <MDBRow>
@@ -118,6 +123,7 @@ class ProfilePage extends React.Component {
               <MDBBtn
               color="green"
               className="mx-0 float-left px-4"
+              size="md"
               >
               <MDBIcon icon="check" className="mr-2" />
               Following
@@ -125,6 +131,7 @@ class ProfilePage extends React.Component {
               <MDBBtn
               color="elegant"
               className="mx-0 float-right px-4"
+              size="md"
               >
               <MDBIcon icon="cogs" />
               </MDBBtn>
