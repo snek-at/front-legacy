@@ -28,7 +28,7 @@ import "./register.scss";
 
 class Register extends React.Component {
   state = {
-    step: 0
+    step: 0,
   };
 
   toggle = () => {
@@ -90,6 +90,29 @@ class Register extends React.Component {
             </div>
             <p className="lead">So you're a Software Engineer...</p>
             <p className="text-muted mb-4">We just need a bit more information to get you started.</p>
+            <form>
+            <MDBRow>
+              <MDBCol md="6">
+                <input 
+                type="text"
+                className="form-control"
+                placeholder="Firstname"
+                name="firstname"
+                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                value={this.state.firstname}
+                />
+              </MDBCol>
+              <MDBCol md="6">
+                <input 
+                type="text"
+                className="form-control"
+                placeholder="Lastname"
+                name="lastname"
+                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                value={this.state.lastname}
+                />
+              </MDBCol>
+            </MDBRow>
             <input 
             type="email"
             className="form-control my-2"
@@ -120,6 +143,7 @@ class Register extends React.Component {
                 />
               </MDBCol>
             </MDBRow>
+            </form>
             <p className="text-muted mt-4">Connect your work</p>
             <small className="text-muted">You need to connect at least one account to continue.</small>
             <div>
