@@ -15,10 +15,16 @@ import {
   MDBBtn,
   MDBAlert,
   MDBBadge,
+  MDBView,
+  MDBMask,
+  MDBPopover,
+  MDBPopoverBody,
+  MDBPopoverHeader,
+  MDBProgress,
   MDBIcon,
 } from "mdbreact";
 // Chart.js
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 //> Components
 import {
@@ -34,75 +40,116 @@ import "./profile.scss";
 
 class ProfilePage extends React.Component {
   state = {
-    dataBar: {
-      labels: ["JavaScript", "HTML", "CSS", "PHP"],
-      datasets: [
-        {
-          label: "% of code",
-          data: [70, 20, 7, 3],
-          backgroundColor: [
-            "rgba(119, 189, 67,0.4)",
-            "rgba(119, 189, 67,0.3)",
-            "rgba(119, 189, 67,0.1)",
-            "rgba(119, 189, 67,0.1)",
-          ],
-          borderWidth: 2,
-          borderColor: [
-            "rgba(119, 189, 67, 1)",
-            "rgba(119, 189, 67, .8)",
-            "rgba(119, 189, 67, .5)",
-            "rgba(119, 189, 67, .4)",
-          ]
-        }
-      ]
-    },
-    barChartOptions: {
-      responsive: true,
-      maintainAspectRatio: true,
-      legend: {
-        display: false,
-      },
-      scales: {
-        xAxes: [
-          {
-            barPercentage: 1,
-            gridLines: {
-              display: true,
-              color: "rgba(0, 0, 0, 0.1)"
-            }
+    
+  }
+
+  componentDidMount = () => {
+    console.log(this.props.match);
+    if(this.props.match){
+      if(this.props.match.params){
+        if(this.props.match.params.username){
+          const username = this.props.match.params.username;
+          if(this.props.globalState.fetchedUser === undefined){
+            this.props.fetchProfileData(username);
           }
-        ],
-        yAxes: [
+        }
+      }
+    }
+  }
+
+  displaySources = (sources) => {
+    let res = sources.map((source, i) => {
+      switch(source.source){
+        case "github":
+          return "github";
+        case "gitlab":
+          return "gitlab";
+        case "bitbucket":
+          return "bitbucket";
+        default:
+          return false;
+      }
+    });
+    this.setState({
+      sources: res
+    });
+  }
+
+  _increaseBrightness = (hex, percent) => {
+    // strip the leading # if it's there
+    hex = hex.replace(/^\s*#|\s*$/g, '');
+
+    // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
+    if(hex.length == 3){
+        hex = hex.replace(/(.)/g, '$1$1');
+    }
+
+    var r = parseInt(hex.substr(0, 2), 16),
+        g = parseInt(hex.substr(2, 2), 16),
+        b = parseInt(hex.substr(4, 2), 16);
+
+    return '#' +
+       ((0|(1<<8) + r + (256 - r) * percent / 100).toString(16)).substr(1) +
+       ((0|(1<<8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
+       ((0|(1<<8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
+  }
+
+  displayDoughnut = (languages) => {
+
+    let dataLabels = [];
+    let dataBackground = [];
+    let dataBackgroundHover = [];
+    let dataData = [];
+
+    languages.map((language, i) => {
+      console.log(language);
+      dataLabels.push(language.name);
+      dataBackground.push(language.color);
+      dataBackgroundHover.push(this._increaseBrightness(language.color, 10));
+      dataData.push(language.share);
+    });
+
+    this.setState({
+      dataDoughnut: {
+        labels: dataLabels,
+        datasets: [
           {
-            gridLines: {
-              display: true,
-              color: "rgba(0, 0, 0, 0.1)"
-            },
-            ticks: {
-              beginAtZero: true
-            }
+            data: dataData,
+            backgroundColor: dataBackground,
+            hoverBackgroundColor: dataBackgroundHover
           }
         ]
       }
-    }
+    });
   }
 
   render() {
     const { globalState } = this.props;
     console.log(globalState);
 
-    if(globalState.loading && !globalState.logged) return <Redirect to="/"/>;
+    if(globalState.loading && !globalState.fetchedUser) return <Redirect to="/"/>;
+
+    if(globalState.fetchedUser && !this.state.sources){
+      this.displaySources(globalState.fetchedUser.sources);
+      this.displayDoughnut(globalState.fetchedUser.platformData.languages.slices);
+    }
+
     return (
       <MDBContainer id="profile" className="py-3">
         <MDBRow>
           <MDBCol md="3" className="social">
-            <img 
-            className="img-fluid"
-            src="https://scontent.fvie2-1.fna.fbcdn.net/v/t1.0-9/p960x960/74911486_2591301250955765_554055196410380288_o.jpg?_nc_cat=103&_nc_ohc=1-5GKWHw314AX8-YdG1&_nc_ht=scontent.fvie2-1.fna&_nc_tp=1002&oh=cd2a8858e5ddfe026686d23966948bdf&oe=5ED6BCFE"
-            />
+            <MDBView>
+              <img 
+              className="img-fluid main-avatar"
+              src={globalState.fetchedUser && globalState.fetchedUser.platformData.user.avatarUrl}
+              />
+              <MDBMask />
+            </MDBView>
             <div className="bg-elegant py-3 px-3">
-              <h4 className="mb-0">Christian Aichner</h4>
-              <small className="text-muted py-3">Werbeagentur Christian Aichner</small>
+              <h4 className="mb-0">{globalState.fetchedUser && globalState.fetchedUser.platformData.user.name}</h4>
+              {globalState.fetchedUser && globalState.fetchedUser.platformData.user.company &&
+              <small className="text-muted py-3">{globalState.fetchedUser.platformData.user.company}</small>
+              }
               <div className="badges">
                 <MDBBadge color="elegant-color">
                   Founder
@@ -115,50 +162,138 @@ class ProfilePage extends React.Component {
                 </MDBBadge>
               </div>
               <div className="connected mt-2 text-muted">
-                <MDBIcon fab icon="github" size="lg" className="active" />
-                <MDBIcon fab icon="gitlab" size="lg" className="active" />
-                <MDBIcon fab icon="bitbucket" size="lg" />
+                <MDBIcon 
+                fab
+                icon="github"
+                size="lg"
+                className={this.state.sources && this.state.sources.includes("github") ? "active" : ""}
+                />
+                <MDBIcon 
+                fab
+                icon="gitlab"
+                size="lg"
+                className={this.state.sources && this.state.sources.includes("gitlab") ? "active" : ""}
+                />
+                <MDBIcon 
+                fab
+                icon="bitbucket"
+                size="lg"
+                className={this.state.sources && this.state.sources.includes("bitbucket") ? "active" : ""}
+                />
               </div>
               <p className="mb-1 mt-1"><a href="#!">#3</a> in your region</p>
-              <div className="mt-2">
-              <MDBBtn
-              color="green"
-              className="mx-0 float-left px-4"
-              size="md"
-              >
-              <MDBIcon icon="check" className="mr-2" />
-              Following
-              </MDBBtn>
-              <MDBBtn
-              color="elegant"
-              className="mx-0 float-right px-4"
-              size="md"
-              >
-              <MDBIcon icon="cogs" />
-              </MDBBtn>
-              <div className="clearfix" />
-              </div>
+              {globalState.fetchedUser && (globalState.fetchedUser.username !== globalState.user) ? (
+                <div className="mt-2">
+                  <MDBBtn
+                  color="green"
+                  className="mx-0 px-4"
+                  size="md"
+                  >
+                  <MDBIcon icon="check" className="mr-2" />
+                  Follow
+                  </MDBBtn>
+                </div>
+              ) : (
+                <div className="mt-2">
+                  <MDBBtn
+                  color="grey"
+                  className="mx-0 px-4 w-100"
+                  size="md"
+                  >
+                  <MDBIcon icon="cogs" className="mr-1" />
+                  Settings
+                  </MDBBtn>
+                </div>
+              )}
             </div>
             <div className="bg-light py-3 px-2">
-              <small className="px-1">
-              I'm a SNEK, follow me. Hissss.
-              </small>
+            {globalState.fetchedUser && globalState.fetchedUser.platformData.user.status &&
+              <>
+              {globalState.fetchedUser.platformData.user.statusEmojiHTML &&
+                <div dangerouslySetInnerHTML={{__html: globalState.fetchedUser.platformData.user.statusEmojiHTML}} />
+              }
+                <small className="px-1">
+                {globalState.fetchedUser.platformData.user.status}
+                </small>
+              </>
+            }
               <hr />
               <p>My organisations</p>
-              
+              {globalState.fetchedUser &&
+                <div className={globalState.fetchedUser.platformData.orgs.length >= 5 ? "orgs text-center" : "orgs"}>
+                  {globalState.fetchedUser.platformData.orgs.length > 0 ? (
+                    <>
+                      {globalState.fetchedUser.platformData.orgs.map((org, i) => {
+                        return(
+                          <MDBPopover
+                            placement="top"
+                            popover
+                            clickable
+                            key={i}
+                          >
+                            <MDBBtn color="link">
+                              <div className="org">
+                                <img src={org.avatarUrl} alt={org.name} />
+                                <div className="tag">{org.members.length}</div>
+                              </div>
+                            </MDBBtn>
+                          <div>
+                            <MDBPopoverHeader>
+                            {org.name}
+                            <br/>
+                            <small>
+                            {org.members.length} members
+                            </small>
+                            </MDBPopoverHeader>
+                            <MDBPopoverBody>
+                              <p className="my-2">
+                                Sed posuere consectetur est at lobortis. Aenean eu leo quam.
+                                Pellentesque ornare sem lacinia quam venenatis vestibulum.
+                              </p>
+                              <a
+                              href={org.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              >
+                              Show more
+                              <MDBIcon icon="external-link-alt" className="ml-1" />
+                              </a>
+                            </MDBPopoverBody>
+                          </div>
+                          </MDBPopover>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <small>
+                    {globalState.fetchedUser.platformData.user.username} hasn't joined an organisation yet.
+                    </small>
+                  )}
+                </div>
+              }
               <hr />
               <p>My top languages</p>
-              <Bar data={this.state.dataBar} options={this.state.barChartOptions} />
+              <div className="px-4">
+                <Doughnut data={this.state.dataDoughnut} options={{ 
+                  responsive: true, 
+                  legend: {
+                    display: false,
+                  },
+                }} height="300" />
+              </div>
             </div>
           </MDBCol>
           <MDBCol md="9" className="content p-0">
-            <ProfileContent>
+            <ProfileContent
+            projectCount={globalState.fetchedUser && globalState.fetchedUser.platformData.repos.length}
+            >
               <Overview
               id={0}
-              platformData={globalState.user && globalState.user.platformData}
+              platformData={globalState.fetchedUser && globalState.fetchedUser.platformData}
               />
               <Projects
               id={1}
+              repoList={globalState.fetchedUser && globalState.fetchedUser.platformData.repos}
               />
             </ProfileContent>
           </MDBCol>

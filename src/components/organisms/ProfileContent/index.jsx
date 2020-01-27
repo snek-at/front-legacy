@@ -28,7 +28,7 @@ class ProfileContent extends React.Component {
       {
         title: "Projects",
         visible: true,
-        pill: false,
+        pill: this.props.projectCount ? this.props.projectCount : false,
         notification: false
       },
       {

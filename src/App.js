@@ -54,16 +54,28 @@ const REFRESH_TOKEN = gql`
 `;
 // Get user data
 const GET_USER_DATA = gql`
-  query profile($url: String!, $token: String!){
-    profile: page(url: $url, token: $token){
-      ...on ProfileProfilePage{
+  query getProfile($url: String!, $token: String!) {
+    profile: page(url: $url, token: $token) {
+      ... on ProfileProfilePage {
+        username
+        verified
         platformData
         sources
       }
     }
   }
 `;
-// Get GitLab servers
+// Get user login data
+const GET_USER_LOGINDATA = gql`
+  query getProfile($url: String!, $token: String!) {
+    profile: page(url: $url, token: $token) {
+      ... on ProfileProfilePage {
+        username
+        verified
+      }
+    }
+  }
+`;// Get GitLab servers
 const GET_GITLAB_SERVERS = gql`
   query gitLabServers($token: String!) {
     page(url: "/registration", token: $token) {
@@ -109,7 +121,7 @@ class App extends React.Component {
           let username = data.verifyToken.payload.username;
           // Check if it's not the anonymous user
           if(username !== process.env.REACT_APP_ANONYMOUS_USER){
-            this._getData(data.verifyToken.payload.username, localStorage.getItem('jwt_snek'));
+            this._getLoginData(data.verifyToken.payload.username, localStorage.getItem('jwt_snek'));
           } else {
             this.setState({
               loading: false,
@@ -153,27 +165,75 @@ class App extends React.Component {
     })
   }
 
-  _getData = async (username, token) => {
+  getData = async (username) => {
     console.log(username);
     await this.props.client.query({
       query: GET_USER_DATA,
+      variables: { 
+        "url": "/registration/"+username,
+        "token": localStorage.getItem('jwt_snek')
+      }
+    }).then(({data}) => {
+      console.log(data);
+      if(data.profile.verified){
+        // Redirect and login
+        this.setState({
+          fetchedUser: {
+            platformData: JSON.parse(data.profile.platformData),
+            sources: JSON.parse(data.profile.sources),
+            username: data.profile.username,
+            verified: data.profile.verified,
+          },
+        });
+      } else {
+        this.setState({
+          fetchedUser: false,
+        });
+      }
+      /*this.setState({
+        loading: false,
+        logged: true,
+      });*/
+    }).catch(error => {
+      //console.error(error);
+      console.error("Can not get user data.")
+      this.setState({
+        fetchedUser: false,
+      });
+    })
+  }
+
+  _getLoginData = async (username, token) => {
+    console.log(username);
+    await this.props.client.query({
+      query: GET_USER_LOGINDATA,
       variables: { 
         "url": "/registration/"+username,
         "token": token
       }
     }).then(({data}) => {
       console.log(data);
-      this.setState({
+      if(data.profile.verified){
+        // Redirect and login
+        this.setState({
+          loading: false,
+          logged: true,
+          user: data.profile.username
+        });
+      } else {
+        this.setState({
+          loading: false,
+          logged: false,
+          user: false,
+        });
+      }
+      /*this.setState({
         loading: false,
         logged: true,
-        user: {
-          platformData: JSON.parse(data.profile.platformData),
-          sources: JSON.parse(data.profile.sources)
-        },
-      });
+      });*/
     }).catch(error => {
       //console.error(error);
-      console.error("Can not get user data.")
+      console.error("Can not get login data.")
       this.setState({
         loading: false,
         logged: false,
@@ -242,7 +302,7 @@ class App extends React.Component {
       if(data){
         if(data.tokenAuth){
           if(data.tokenAuth.token){
-            this._getData(username, data.tokenAuth.token);
+            this._getLoginData(username, data.tokenAuth.token);
             localStorage.setItem('jwt_snek', data.tokenAuth.token);
             localStorage.setItem("is_logged", true);
           }
@@ -264,14 +324,16 @@ class App extends React.Component {
 
     return (
       <Router>
-      {localStorage.getItem("is_logged") === true && <Redirect to="/me" />}
         <ScrollToTop>
           <div className="flyout">
-            <Navbar />
+            <Navbar 
+            username={this.state.user}
+            />
             <main>
               <Routes 
               logmein={this._login}
               fetchGitLabServers={this.fetchGitLabServers}
+              fetchProfileData={this.getData}
               globalState={this.state}
               />
             </main>

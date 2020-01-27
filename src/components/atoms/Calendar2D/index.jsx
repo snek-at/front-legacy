@@ -2,6 +2,13 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 
+//> Additional
+// Used to display popovers
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+// Used to display the time in a readable format
+import moment from "moment";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBRow, MDBCol } from "mdbreact";
@@ -109,6 +116,23 @@ class Calender2D extends React.Component {
     return month[current + pos];
   };
 
+  displayDailyInfo = (day, wkey, dkey) => {
+    let cname = "item-"+wkey+"-"+dkey;
+    if(day.total > 0 && day.total !== 1) {
+      tippy(`.${cname}`, {
+        content: `${day.total} contributions on ${moment(day.date).format("MMM DD, YYYY")}`
+      });
+    } else if(day.total === 1){
+      tippy(`.${cname}`, {
+        content: `${day.total} contribution on ${moment(day.date).format("MMM DD, YYYY")}`
+      });
+    } else {
+      tippy(`.${cname}`, {
+        content: `No contributions on ${moment(day.date).format("MMM DD, YYYY")}`
+      });
+    }
+  }
+
   render() {
     if(this.props.platformData){
       return (
@@ -145,8 +169,8 @@ class Calender2D extends React.Component {
                           x={0}
                           width={this.state.width / this.state.items}
                           height={this.state.width / this.state.items}
-                          data-data={day.date}
-                          data-count={day.total}
+                          className={"item-"+wkey+"-"+dkey}
+                          onMouseOver={() => this.displayDailyInfo(day, wkey, dkey)}
                           fill={changeHue(day.color, this.state.hue)}
                         ></rect>
                       );
@@ -158,8 +182,8 @@ class Calender2D extends React.Component {
                           x={(this.state.width / this.state.items) * wkey}
                           width={this.state.width / this.state.items}
                           height={this.state.width / this.state.items}
-                          data-data={day.date}
-                          data-count={day.total}
+                          className={"item-"+wkey+"-"+dkey}
+                          onMouseOver={() => this.displayDailyInfo(day, wkey, dkey)}
                           fill={changeHue(day.color, this.state.hue)}
                         ></rect>
                       );

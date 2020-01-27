@@ -29,16 +29,23 @@ import SNEKLogo from "../../../assets/navigation/logo.png";
 import "./navbar.scss";
 
 class NavbarPage extends React.Component {
-state = {
-  isOpen: false
-};
+  state = {
+    isOpen: false
+  };
 
-toggleCollapse = () => {
-  this.setState({ isOpen: !this.state.isOpen });
-}
+  toggleCollapse = () => {
+    this.setState({ isOpen: !this.state.isOpen });
+  }
 
-render() {
-  return (
+  logout = () => {
+    if(localStorage.getItem("is_logged") && localStorage.getItem("jwt_snek")){
+      localStorage.removeItem("is_logged");
+      localStorage.removeItem("jwt_snek");
+    }
+  }
+
+  render() {
+    return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
             {this.props.location.pathname === "/" ? (
@@ -52,12 +59,23 @@ render() {
                 </MDBNavbarBrand>
               </MDBSmoothScroll>
             ) : (
-              <Link to="/">
-                <MDBNavbarBrand className="flex-center">
-                  <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
-                  <span className="font-weight-bold">SNEK</span>
-                </MDBNavbarBrand>
-              </Link>
+              <>
+              {localStorage.getItem("is_logged") ? (
+                <Link to={"/u/"+this.props.username}>
+                  <MDBNavbarBrand className="flex-center">
+                    <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                    <span className="font-weight-bold">SNEK</span>
+                  </MDBNavbarBrand>
+                </Link>
+              ) : (
+                <Link to="/">
+                  <MDBNavbarBrand className="flex-center">
+                    <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                    <span className="font-weight-bold">SNEK</span>
+                  </MDBNavbarBrand>
+                </Link>
+              )}
+              </>
             )}          
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
@@ -82,6 +100,14 @@ render() {
               <MDBNavItem>
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
+              {localStorage.getItem("is_logged") && localStorage.getItem("jwt_snek") &&
+              <>
+              <div className="spacer" />
+              <MDBNavItem>
+                <MDBNavLink to="/" onClick={this.logout}>Logout</MDBNavLink>
+              </MDBNavItem>
+              </>
+              }
             </MDBNavbarNav>
           </MDBCollapse>
         </MDBContainer>

@@ -109,7 +109,6 @@ class HomePage extends React.Component {
     const { globalState } = this.props;
 
     console.log(globalState);
-    if(globalState.logged === true) return <Redirect to="/me"/>;
 
     return (
       <div id="home" className="pt-5">

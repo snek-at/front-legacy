@@ -28,6 +28,11 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance:none;
   }
+  .spacer{
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: solid #77bd43 2px;
+  }
 }
 
 /**

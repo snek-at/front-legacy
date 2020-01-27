@@ -9,6 +9,11 @@
     rect {
       stroke-width: 3;
       stroke: #fafafa;
+      transition: all .2s ease;
+      cursor: pointer;
+      &:hover{
+        stroke-width: 1;
+      }
     }
   }
 }

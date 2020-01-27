@@ -29,10 +29,11 @@ class Routes extends React.Component {
         />
         <Route 
         exact
-        path='/me'
+        path='/u/:username'
         component={
           (props) => <ProfilePage
           globalState={this.props.globalState}
+          fetchProfileData={this.props.fetchProfileData}
           {...props}
           />
         } />
