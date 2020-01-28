@@ -110,6 +110,12 @@ class HomePage extends React.Component {
 
     console.log(globalState);
 
+    if(!globalState.loading && globalState.logged){
+      return(
+        <Redirect to={"/u/"+globalState.user} />
+      )
+    }
+
     return (
       <div id="home" className="pt-5">
         <MDBContainer className="mb-5 pb-5">
