@@ -5,6 +5,7 @@
   "homepage": ".",
   "license": "(EUPL-1.2)",
   "dependencies": {
+    "alasql": "^0.5.4",
     "apollo-boost": "^0.4.7",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
@@ -23,7 +24,9 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
     "react-typed": "^1.2.0",
-    "tippy.js": "^5.1.4"
+    "react-very-simple-oauth": "^1.1.0",
+    "tippy.js": "^5.1.4",
+    "typescript": "^3.7.5"
   },
   "repository": {
     "type": "git",

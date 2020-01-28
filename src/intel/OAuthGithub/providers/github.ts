@@ -8,7 +8,7 @@ import { IProvider } from "react-very-simple-oauth";
 const client_id = "2148629809594d57c113";
 const client_secret = "64a37e4846387cfcaea35d83afca3c9c8689628c";
 const state = guid();
-const redirect_uri = encodeURIComponent("https://snek.at/redirect");
+const redirect_uri = encodeURIComponent("http://localhost:3000/redirect");
 const proxyUrl = "https://cors.snek.at/";
 
 export const githubProvider: IProvider<boolean> = {
@@ -24,6 +24,8 @@ export const githubProvider: IProvider<boolean> = {
   // Catch any error that appears during the OAuth process
   extractError(redirectUrl: string): Error | undefined {
     const errorMatch = redirectUrl.match(/error=([^&]+)/);
+    console.log(errorMatch);
+    console.log(redirectUrl);
     if (!errorMatch) {
       return undefined;
     }
@@ -45,6 +47,7 @@ export const githubProvider: IProvider<boolean> = {
     let data = null;
     let code = null;
     const codeMatch = redirectUrl.match(/code=([^&]+)/);
+    console.log(redirectUrl);
     if (codeMatch) {
       code = codeMatch[1];
     }
@@ -57,6 +60,7 @@ export const githubProvider: IProvider<boolean> = {
 
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
         &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
+    console.log(AuthorizeUrl);
 
     // POST request to get the access token from GitHub
     await fetch(AuthorizeUrl, {

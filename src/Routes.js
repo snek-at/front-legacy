@@ -9,6 +9,7 @@ import {
   HomePage,
   ProfilePage,
   MessagePage,
+  RedirectPage,
 } from './components/pages';
 
 class Routes extends React.Component {
@@ -26,6 +27,11 @@ class Routes extends React.Component {
           {...props}
           />
         }
+        />
+        <Route 
+        exact
+        path="/redirect"
+        component={(props) => <RedirectPage {...props} />}
         />
         <Route 
         exact

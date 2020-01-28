@@ -102,7 +102,6 @@ class ProfilePage extends React.Component {
     let dataData = [];
 
     languages.map((language, i) => {
-      console.log(language);
       dataLabels.push(language.name);
       dataBackground.push(language.color);
       dataBackgroundHover.push(this._increaseBrightness(language.color, 10));

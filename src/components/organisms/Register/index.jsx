@@ -17,10 +17,13 @@ import {
   MDBModalBody,
   MDBModalHeader,
   MDBModalFooter,
+  MDBInput,
   MDBSelect,
   MDBSelectInput,
   MDBSelectOptions,
   MDBSelectOption,
+  MDBListGroup,
+  MDBListGroupItem,
 } from "mdbreact";
 
 //> Images
@@ -30,11 +33,20 @@ import { ReactComponent as SvgMedia } from '../../../assets/header/media.svg';
 //> CSS
 import "./register.scss";
 
+//> Intel
+import * as intel from "../../../intel";
+
+//> Auth
+import { githubProvider } from "../../../intel/OAuthGithub/providers/github";
+import RSA from "react-very-simple-oauth";
+
 class Register extends React.Component {
   state = {
     step: 0,
     gitlab_username: "",
     gitlab_server: "Choose your organisation",
+    sourceList: [],
+    usernames: [],
   };
 
   toggle = () => {
@@ -61,13 +73,87 @@ class Register extends React.Component {
 
     if(username.trim() && server.trim()){
       if(server !== "Choose your organisation"){
-        console.log(username, server);
+        this._connectGitLab(username, server);
       }
     }
   }
 
+  _connectGitLab = async (username, server) => {
+    this.setState({
+      modalGitLab: false,
+      gitlab_username: "",
+      gitlab_server: "Choose your organisation",
+    }, () => this.pushToSourceList("gitlab", username, server));
+  }
+
+  connectGitHub = async () => {
+    const data = await RSA.acquireTokenAsync(githubProvider);
+    console.log(data);
+    this.pushToSourceList("github", data.username, "github.com", data.access_token);
+  }
+
+  pushToSourceList = (source, username, server, token) => {
+    let sourceList = this.state.sourceList;
+
+    this.addToUsernames(username, source);
+
+    sourceList.push({
+      id: Math.random() * username.length + source.length,
+      source,
+      username,
+      server,
+      token,
+    });
+    
+    // Set the new list of user information
+    this.setState({
+      sourceList
+    });
+  }
+
+  addToUsernames = (username, source) => {
+    let usernames = this.state.usernames;
+    
+    let found = false;
+    for(let i = 0; i < usernames.length; i++) {
+      if (usernames[i].username === username && usernames[i].source === source) {
+        found = true;
+        break;
+      }
+    }
+
+    if(!found){
+      // Make sure that only GitHub usernames are available for selection
+      // This aims to prevent name abuse in the first versions of this application
+      usernames.push({
+        username,
+        source,
+        verified: source === "github" ? true : false,
+      });
+      this.setState({
+        usernames
+      });
+    }
+  }
+
+  removeSource = (id) => {
+    let sourceList = this.state.sourceList.filter(function( obj ) {
+        return obj.id !== id;
+    });
+    this.setState({
+      sourceList
+    });
+  }
+
+  handleUserNamePick = (username) => {
+    this.setState({
+      username
+    });
+  }
+
   render() {
     const { gitlabServers } = this.props;
+    console.log(this.state);
 
     return (
       <div className="text-center" id="register">
@@ -211,6 +297,7 @@ class Register extends React.Component {
               </MDBBtn>
               <MDBBtn
               color="elegant"
+              onClick={this.connectGitHub}
               >
               <MDBIcon fab icon="github" size="lg"/>
               </MDBBtn>
@@ -221,6 +308,110 @@ class Register extends React.Component {
               <MDBIcon fab icon="bitbucket" size="lg"/>
               </MDBBtn>
             </div>
+            <div>
+              <MDBListGroup>
+              {this.state.usernames.map((source, i) => {
+                return(
+                  <MDBListGroupItem 
+                  className={"list-item-"+source.source}
+                  key={i}
+                  >
+                    <div>
+                    <MDBIcon 
+                    fab
+                    icon={source.source}
+                    className="company-icon"
+                    />
+                    {source.username}
+                    {source.verified ? (
+                      <MDBPopover
+                      placement="right"
+                      domElement
+                      clickable
+                      popover
+                      tag="span"
+                      id="popper1"
+                      >   
+                        <span>
+                        <MDBIcon
+                        icon="award"
+                        className="text-success ml-2 clickable"
+                        />
+                        </span>
+                        <div>
+                          <MDBPopoverHeader>Verified</MDBPopoverHeader>
+                          <MDBPopoverBody>
+                            <MDBRow className="justify-content-center align-items-center m-0">
+                              <MDBCol size="auto" className="p-0 text-success">
+                                <MDBIcon icon="award" size="3x" />
+                              </MDBCol>
+                              <MDBCol className="p-0 pl-3">
+                              This source has been <strong className="text-success">verified</strong> by 
+                              logging into it.
+                              </MDBCol>
+                            </MDBRow>
+                          </MDBPopoverBody>
+                        </div>
+                      </MDBPopover>
+                    ) : (
+                      <MDBPopover
+                      placement="right"
+                      domElement
+                      clickable
+                      popover
+                      tag="span"
+                      id="popper1"
+                      >   
+                        <span>
+                        <MDBIcon
+                        icon="award"
+                        className="grey-text ml-2 clickable"
+                        />
+                        </span>
+                        <div>
+                          <MDBPopoverHeader>Not verified</MDBPopoverHeader>
+                          <MDBPopoverBody>
+                            <MDBRow className="justify-content-center align-items-center m-0">
+                              <MDBCol size="auto" className="p-0 grey-text">
+                                <MDBIcon icon="award" size="3x" />
+                              </MDBCol>
+                              <MDBCol className="p-0 pl-3">
+                              We can not verify your identity with GitLab. Your data is still being 
+                              included.
+                              </MDBCol>
+                            </MDBRow>
+                          </MDBPopoverBody>
+                        </div>
+                      </MDBPopover>
+                    )}
+                    </div>
+                    <MDBIcon 
+                    icon="times"
+                    className="close-icon"
+                    onClick={() => this.removeSource(source.id)}
+                    />
+                  </MDBListGroupItem>
+                );
+              })}
+              </MDBListGroup>
+            </div>
+            {/*this.state.usernames && this.state.usernames.length > 0 &&
+            <div className="pt-4">
+              <p className="lead">Choose your username</p>
+              {this.state.usernames.map((username, i) => {
+                return(
+                  <MDBInput 
+                  key={i}
+                  onClick={(e) => this.handleUserNamePick(username)}
+                  checked={this.state.username === username ? true : false}
+                  label={username}
+                  type="radio"
+                  id={"radio"+i}
+                  />
+                );
+              })}
+            </div>*/
+            }
             <MDBBtn
             color="green"
             className="mb-0"

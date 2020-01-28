@@ -44,7 +44,6 @@ class NavbarPage extends React.Component {
 
   render() {
     const { globalState } = this.props;
-    console.log("nav", globalState);
 
     return (
       <MDBNavbar color="light" light expand="md">

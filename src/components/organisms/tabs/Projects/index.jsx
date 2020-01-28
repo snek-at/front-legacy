@@ -27,7 +27,7 @@ class Projects extends React.Component {
         <MDBRow className="project-list">
         {repoList && repoList.map((repo, i) => {
           return(
-            <MDBCol md="6">
+            <MDBCol md="6" key={i}>
               <a
                 href={repo.url}
                 target="_blank"
