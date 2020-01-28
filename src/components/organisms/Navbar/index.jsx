@@ -15,7 +15,12 @@ import {
   MDBNavbarToggler,
   MDBCollapse,
   MDBContainer,
+  MDBDropdown,
+  MDBDropdownItem,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
   MDBSmoothScroll,
+  MDBIcon,
 } from "mdbreact";
 
 //> Additional
@@ -37,14 +42,10 @@ class NavbarPage extends React.Component {
     this.setState({ isOpen: !this.state.isOpen });
   }
 
-  logout = () => {
-    if(localStorage.getItem("is_logged") && localStorage.getItem("jwt_snek")){
-      localStorage.removeItem("is_logged");
-      localStorage.removeItem("jwt_snek");
-    }
-  }
-
   render() {
+    const { globalState } = this.props;
+    console.log("nav", globalState);
+
     return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
@@ -60,13 +61,13 @@ class NavbarPage extends React.Component {
               </MDBSmoothScroll>
             ) : (
               <>
-              {localStorage.getItem("is_logged") ? (
-                <Link to={"/u/"+this.props.username}>
+              {(!globalState.loading && globalState.logged && globalState.user) ? (
+                <a href={"/u/"+this.props.username}>
                   <MDBNavbarBrand className="flex-center">
                     <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
                     <span className="font-weight-bold">SNEK</span>
                   </MDBNavbarBrand>
-                </Link>
+                </a>
               ) : (
                 <Link to="/">
                   <MDBNavbarBrand className="flex-center">
@@ -100,11 +101,25 @@ class NavbarPage extends React.Component {
               <MDBNavItem>
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
-              {localStorage.getItem("is_logged") && localStorage.getItem("jwt_snek") &&
+              {(globalState.logged && !globalState.loading && globalState.fetchedUser) &&
               <>
               <div className="spacer" />
               <MDBNavItem>
-                <MDBNavLink to="/" onClick={this.logout}>Logout</MDBNavLink>
+                <MDBDropdown>
+                  <MDBDropdownToggle nav caret>
+                    <img
+                    src={globalState.fetchedUser.platformData.user.avatarUrl}
+                    className="z-depth-0"
+                    alt={globalState.fetchedUser.platformData.user.name} 
+                    />
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu className="dropdown-default">
+                    <MDBDropdownItem href="#!">My profile</MDBDropdownItem>
+                    <Link to="/" onClick={this.props.logmeout} className="dropdown-item">
+                    Sign Out
+                    </Link>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
               </MDBNavItem>
               </>
               }
