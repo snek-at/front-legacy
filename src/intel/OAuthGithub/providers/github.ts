@@ -59,33 +59,44 @@ export const githubProvider: IProvider<boolean> = {
     }
 
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
-        &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
+&client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
     console.log(AuthorizeUrl);
 
     // POST request to get the access token from GitHub
-    await fetch(AuthorizeUrl, {
+    /*let response = await fetch(AuthorizeUrl, {
       headers: {
-        Accept: "application/json",
+        "Accept": "application/json",
         "Access-Allow-Credentials": "True",
         "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
-        Vary: "Origin",
+        "Vary": "Origin",
       },
       method: "POST",
-    })
-    .then(async res => await res.json())
+    });
+
+    console.log(response);
+
+    if (response.status === 200) {
+      let res = await response.json();
+      console.log(res);
+    }*/
+
+    /*
     .then(async res => {
-      const access_token = res.access_token
+      const access_token = res.access_token;
+      console.log(res);
       // GET request to get the user used for OAuth 
-      await fetch(`https://api.github.com/user?access_token=${access_token}`)
+      fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
       .then(res => {
         data = {'username':res.login, 'access_token': access_token};
         return data;
       });
+    },(error) => {
+      console.error(error);
     });
-    return data;
+    return data;*/
   },
 };
 
