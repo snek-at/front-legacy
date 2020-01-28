@@ -371,6 +371,7 @@ class App extends React.Component {
         localStorage.removeItem("is_logged");
         localStorage.removeItem("jwt_snek");
       }
+      this._loginAnonymous();
     })
   }
 
