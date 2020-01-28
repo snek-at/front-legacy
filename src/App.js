@@ -26,6 +26,9 @@ import * as compose from 'lodash.flowright';
 //> Routes
 import Routes from "./Routes";
 
+//> Intel
+import * as intel from "./intel";
+
 //> Queries and Mutations
 // Login
 const LOGIN_USER = gql`
@@ -214,12 +217,51 @@ class App extends React.Component {
     }).then(({data}) => {
       console.log(data);
       if(data.profile.verified){
-        // Redirect and login
+        // Fill data
         this.setState({
           loading: false,
           logged: true,
-          user: data.profile.username
+          user: username,
         });
+        /*intel.fill(sources)
+        .then(async () => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
+        })
+        .then(async () => {
+          this.setState({
+            loading: false,
+            logged: true,
+            user: data.profile.username,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          });
+          let cache = {
+            loading: false,
+            logged: true,
+            user: data.profile.username,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          };
+          let platformData = JSON.stringify(cache);
+          this.props.caching({
+            variables: { 
+            token: localStorage.getItem("jwt_snek"),
+            platformData
+          }});
+        });*/
+        // Redirect
       } else {
         this.setState({
           loading: false,
@@ -233,7 +275,7 @@ class App extends React.Component {
       });*/
     }).catch(error => {
       //console.error(error);
-      console.error("Can not get login data.")
+      console.error("Can not get login data.", error)
       this.setState({
         loading: false,
         logged: false,
@@ -319,6 +361,19 @@ class App extends React.Component {
     });
   }
 
+  _logout = () => {
+    this.setState({
+      loading: false,
+      logged: false,
+      user: undefined,
+    }, () => {
+      if(localStorage.getItem("is_logged") && localStorage.getItem("jwt_snek")){
+        localStorage.removeItem("is_logged");
+        localStorage.removeItem("jwt_snek");
+      }
+    })
+  }
+
   render() {
     console.log(this.state);
 
@@ -328,6 +383,8 @@ class App extends React.Component {
           <div className="flyout">
             <Navbar 
             username={this.state.user}
+            logmeout={this._logout}
+            globalState={this.state}
             />
             <main>
               <Routes 
