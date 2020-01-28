@@ -184,14 +184,26 @@ class ProfilePage extends React.Component {
               <p className="mb-1 mt-1"><a href="#!">#3</a> in your region</p>
               {globalState.fetchedUser && (globalState.fetchedUser.username !== globalState.user) ? (
                 <div className="mt-2">
+                {true ? (
+                  <MDBBtn
+                  color="green"
+                  className="mx-0 px-4"
+                  size="md"
+                  >
+                  <MDBIcon icon="plus-circle" className="mr-2" />
+                  Follow
+                  </MDBBtn>
+                ) : (
                   <MDBBtn
                   color="green"
                   className="mx-0 px-4"
                   size="md"
                   >
                   <MDBIcon icon="check" className="mr-2" />
-                  Follow
+                  Following
                   </MDBBtn>
+                )}
+                  
                 </div>
               ) : (
                 <div className="mt-2">
