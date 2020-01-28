@@ -8,7 +8,7 @@ import { IProvider } from "react-very-simple-oauth";
 const client_id = "2148629809594d57c113";
 const client_secret = "64a37e4846387cfcaea35d83afca3c9c8689628c";
 const state = guid();
-const redirect_uri = encodeURIComponent("http://localhost:3000/redirect");
+const redirect_uri = encodeURIComponent("https://snek.at/redirect");
 const proxyUrl = "https://cors.snek.at/";
 
 export const githubProvider: IProvider<boolean> = {
@@ -24,8 +24,6 @@ export const githubProvider: IProvider<boolean> = {
   // Catch any error that appears during the OAuth process
   extractError(redirectUrl: string): Error | undefined {
     const errorMatch = redirectUrl.match(/error=([^&]+)/);
-    console.log(errorMatch);
-    console.log(redirectUrl);
     if (!errorMatch) {
       return undefined;
     }
@@ -42,12 +40,11 @@ export const githubProvider: IProvider<boolean> = {
     );
   },
 
-  // This function catches the returned value
+  // This function catches the the returned value
   async extractSession(redirectUrl: string) {
     let data = null;
     let code = null;
     const codeMatch = redirectUrl.match(/code=([^&]+)/);
-    console.log(redirectUrl);
     if (codeMatch) {
       code = codeMatch[1];
     }
@@ -59,44 +56,33 @@ export const githubProvider: IProvider<boolean> = {
     }
 
     const AuthorizeUrl = `${proxyUrl}https://github.com/login/oauth/access_token?code=${code}
-&client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
-    console.log(AuthorizeUrl);
+        &client_secret=${client_secret}&client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
     // POST request to get the access token from GitHub
-    /*let response = await fetch(AuthorizeUrl, {
+    await fetch(AuthorizeUrl, {
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Access-Allow-Credentials": "True",
         "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
-        "Vary": "Origin",
+        Vary: "Origin",
       },
       method: "POST",
-    });
-
-    console.log(response);
-
-    if (response.status === 200) {
-      let res = await response.json();
-      console.log(res);
-    }*/
-
-    /*
+    })
+    .then(async res => await res.json())
     .then(async res => {
-      const access_token = res.access_token;
-      console.log(res);
+      const access_token = res.access_token
+      console.log("xxxxxx", access_token);
       // GET request to get the user used for OAuth 
-      fetch(`https://api.github.com/user?access_token=${access_token}`)
+      await fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
       .then(res => {
         data = {'username':res.login, 'access_token': access_token};
         return data;
       });
-    },(error) => {
-      console.error(error);
     });
-    return data;*/
+    return data;
   },
 };
 
