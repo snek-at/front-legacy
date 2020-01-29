@@ -29,7 +29,6 @@
 	input {
 		&:focus {
 			color: #495057;
-			background-color: #fff;
 			border-color: #77bd43;
 			outline: 0;
 			box-shadow: 0 0 0 0.2rem rgba(119, 189, 67, 0.25);
@@ -84,7 +83,6 @@
 		.mdb-select {
 			&:focus {
 				color: #495057;
-				background-color: #fff;
 				border-color: #77bd43;
 				outline: 0;
 				box-shadow: 0 0 0 0.2rem rgba(119, 189, 67, 0.25);
