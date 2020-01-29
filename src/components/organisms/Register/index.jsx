@@ -47,6 +47,7 @@ class Register extends React.Component {
     gitlab_server: "Choose your organisation",
     sourceList: [],
     usernames: [],
+    hasGitHub: false,
   };
 
   toggle = () => {
@@ -93,12 +94,17 @@ class Register extends React.Component {
   }
 
   pushToSourceList = (source, username, server, token) => {
+    let hasGitHub = false;
     let sourceList = this.state.sourceList;
 
     this.addToUsernames(username, source);
 
+    if(source === "github"){
+      hasGitHub = true;
+    }
+
     sourceList.push({
-      id: Math.random() * username.length + source.length,
+      id: username.length + source.length + username + source,
       source,
       username,
       server,
@@ -107,7 +113,8 @@ class Register extends React.Component {
     
     // Set the new list of user information
     this.setState({
-      sourceList
+      sourceList,
+      hasGitHub,
     });
   }
 
@@ -126,6 +133,7 @@ class Register extends React.Component {
       // Make sure that only GitHub usernames are available for selection
       // This aims to prevent name abuse in the first versions of this application
       usernames.push({
+        id: username.length + source.length + username + source,
         username,
         source,
         verified: source === "github" ? true : false,
@@ -140,8 +148,12 @@ class Register extends React.Component {
     let sourceList = this.state.sourceList.filter(function( obj ) {
         return obj.id !== id;
     });
+    let usernames = this.state.usernames.filter(function( obj ) {
+        return obj.id !== id;
+    });
     this.setState({
-      sourceList
+      sourceList,
+      usernames,
     });
   }
 
@@ -335,18 +347,18 @@ class Register extends React.Component {
                         <span>
                         <MDBIcon
                         icon="award"
-                        className="text-success ml-2 clickable"
+                        className="green-text ml-2 clickable"
                         />
                         </span>
                         <div>
                           <MDBPopoverHeader>Verified</MDBPopoverHeader>
                           <MDBPopoverBody>
                             <MDBRow className="justify-content-center align-items-center m-0">
-                              <MDBCol size="auto" className="p-0 text-success">
+                              <MDBCol size="auto" className="p-0 green-text">
                                 <MDBIcon icon="award" size="3x" />
                               </MDBCol>
                               <MDBCol className="p-0 pl-3">
-                              This source has been <strong className="text-success">verified</strong> by 
+                              This source has been <strong className="green-text">verified</strong> by 
                               logging into it.
                               </MDBCol>
                             </MDBRow>
@@ -415,6 +427,7 @@ class Register extends React.Component {
             <MDBBtn
             color="green"
             className="mb-0"
+            disabled={!this.state.hasGitHub}
             >
             Join now
             </MDBBtn>
