@@ -118,7 +118,7 @@ class HomePage extends React.Component {
 
     return (
       <div id="home" className="pt-5">
-        <MDBContainer className="mb-5 pb-5">
+        <MDBContainer className="mb-5">
           <MDBRow className="flex-center">
             <MDBCol md="6" className="whois d-flex align-items-center">
               <div className="d-block">
