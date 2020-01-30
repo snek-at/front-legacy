@@ -257,10 +257,15 @@ class ProfilePage extends React.Component {
                             </small>
                             </MDBPopoverHeader>
                             <MDBPopoverBody>
+                              {!org.description ? (
+                                <p className="my-2">
+                                  No description provided.
+                                </p>
+                              ) : (
                               <p className="my-2">
-                                Sed posuere consectetur est at lobortis. Aenean eu leo quam.
-                                Pellentesque ornare sem lacinia quam venenatis vestibulum.
+                                {org.description}
                               </p>
+                              )}
                               <a
                               href={org.url}
                               target="_blank"

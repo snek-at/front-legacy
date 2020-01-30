@@ -12,7 +12,8 @@ SELECT
   organization.id as oId,
   organization.avatarUrl as oAvatarUrl,
   organization.name as oName,
-  organization.url as oUrl
+  organization.url as oUrl,
+  organization.description as oDescription
 FROM
   organization
 LEFT OUTER JOIN

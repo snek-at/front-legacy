@@ -50,6 +50,7 @@ export function getOrganizations(data) {
       org.name = orgWithMember.oName;
       org.url = orgWithMember.oUrl;
       org.avatarUrl = orgWithMember.oAvatarUrl;
+      org.description = orgWithMember.oDescription;
       org.memberCount = 0;
       org.members = [];
       orgs[orgWithMember.oId] = org;

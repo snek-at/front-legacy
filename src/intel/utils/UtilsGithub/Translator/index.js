@@ -154,7 +154,8 @@ const fillOrganization = (objUser) => {
     const avatarUrl = _org.node.avatarUrl;
     const name = _org.node.name;
     const url = _org.node.url;
-    db.exec(insert.organization, [avatarUrl, name, url]);
+    const description = _org.node.description;
+    db.exec(insert.organization, [avatarUrl, name, url, description]);
 
     const organizationId = db.exec("SELECT id FROM organization").pop()["id"];
     const platformId = db.exec("SELECT id FROM platform").pop()["id"];

@@ -37,7 +37,7 @@ export const GET_PROFILE = gql`
             name
             url
             avatarUrl
-            name
+            description
             membersWithRole(first: 100) {
               totalCount
               nodes {

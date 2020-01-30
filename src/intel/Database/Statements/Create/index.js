@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS organization (
     avatarUrl VARCHAR(2048) NOT NULL,
     name VARCHAR(80) NOT NULL,
     url VARCHAR(2048) NOT NULL,
+    description VARCHAR(5012) NOT NULL,
     PRIMARY KEY (id)
 );
 `;

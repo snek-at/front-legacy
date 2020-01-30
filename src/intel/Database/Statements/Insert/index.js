@@ -20,9 +20,10 @@ export const organization = `
 INSERT INTO organization(
     avatarUrl,
     name,
-    url
+    url,
+    description
 )
-VALUES (?,?,?);
+VALUES (?,?,?,?);
 `;
 
 export const member = `
