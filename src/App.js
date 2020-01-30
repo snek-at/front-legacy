@@ -78,7 +78,8 @@ const GET_USER_LOGINDATA = gql`
       }
     }
   }
-`;// Get GitLab servers
+`;
+// Get GitLab servers
 const GET_GITLAB_SERVERS = gql`
   query gitLabServers($token: String!) {
     page(url: "/registration", token: $token) {
@@ -90,6 +91,16 @@ const GET_GITLAB_SERVERS = gql`
             field
           }
         }
+      }
+    }
+  }
+`;
+// Update Cache
+const UPDATE_CACHE = gql`
+  mutation cache ($token: String!, $platformData: String!) {
+    cacheUser(token: $token, platformData: $platformData){
+      user{
+        platformData
       }
     }
   }
@@ -180,13 +191,52 @@ class App extends React.Component {
       console.log(data);
       if(data.profile.verified){
         // Redirect and login
+        let platformData = JSON.parse(data.profile.platformData);
+        let sources = JSON.parse(data.profile.sources);
+        let cache = {};
         this.setState({
           fetchedUser: {
-            platformData: JSON.parse(data.profile.platformData),
-            sources: JSON.parse(data.profile.sources),
+            platformData: platformData,
+            sources: sources,
             username: data.profile.username,
             verified: data.profile.verified,
           },
+        });
+        intel
+        .fill(sources)
+        .then(async () => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
+        })
+        .then(async () => {
+          this.setState({
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          });
+          cache = {
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          };
+          platformData = JSON.stringify(cache);
+          this.props.caching({
+            variables: { 
+            token: localStorage.getItem("jwt_snek"),
+            platformData
+          }
+          }); 
         });
       } else {
         this.setState({
@@ -407,6 +457,7 @@ export default compose(
   graphql(VERIFY_TOKEN, { name: 'verify' }),
   graphql(REFRESH_TOKEN, { name: 'refresh' }),
   graphql(LOGIN_USER, {name: 'login'}),
+  graphql(UPDATE_CACHE, { name: "caching" })
 )(withApollo(App));
 
 /**
