@@ -216,21 +216,23 @@ class Register extends React.Component {
     // Preset errors to local variable
     let errors = this.state.errors;
 
-    if(!Array.isArray(id)){
-      errors = errors.filter(function( obj ) {
-        return obj.code !== id;
-      });
-    } else {
-      id.map((item) => {
+    if(errors){
+      if(!Array.isArray(id)){
         errors = errors.filter(function( obj ) {
-          return obj.code !== item;
+          return obj.code !== id;
         });
+      } else {
+        id.map((item) => {
+          errors = errors.filter(function( obj ) {
+            return obj.code !== item;
+          });
+        });
+      }
+
+      this.setState({
+        errors,
       });
     }
-
-    this.setState({
-      errors,
-    });
   }
 
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
@@ -510,7 +512,7 @@ class Register extends React.Component {
               <MDBListGroup>
               {this.state.usernames.map((source, i) => {
                 return(
-                  <MDBListGroupItem 
+                  <MDBListGroupItem
                   className={"list-item-"+source.source}
                   key={i}
                   >
@@ -582,6 +584,7 @@ class Register extends React.Component {
                         </div>
                       </MDBPopover>
                     )}
+                    User as username
                     </div>
                     <MDBIcon 
                     icon="times"
