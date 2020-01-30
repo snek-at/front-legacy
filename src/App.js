@@ -396,7 +396,7 @@ class App extends React.Component {
   _registerUser = (values) => {
     this.props.register({
         variables: { 
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem("jwt_snek"),
         values
       }
       })
