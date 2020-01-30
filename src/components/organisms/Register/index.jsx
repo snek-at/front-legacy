@@ -215,6 +215,12 @@ class Register extends React.Component {
     }, () => this.removeError(id));
   }
 
+  handleChangeManual = (name, value, id) => {
+    this.setState({
+      [name]: value
+    }, () => this.removeError(id));
+  }
+
   removeError = (id) => {
     // Preset errors to local variable
     let errors = this.state.errors;
@@ -359,7 +365,34 @@ class Register extends React.Component {
     if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      this.props.logmein(this.state.login_username, this.state.login_password);
+      this.login();
+    }
+  }
+
+  login = () => {
+    let errors = [];
+
+    if(this.state.login_username === ""){
+      errors.push({
+        code: 9,
+        weight: 10,
+      });
+    }
+    if(this.state.login_password === ""){
+      errors.push({
+        code: 10,
+        weight: 10,
+      });
+    }
+
+    console.log(errors);
+    
+    if(errors.length > 0){
+      this.setState({
+        errors
+      });
+    } else {
+      this.props.logmein(this.state.login_username, this.state.login_password)
     }
   }
 
@@ -607,23 +640,6 @@ class Register extends React.Component {
               })}
               </MDBListGroup>
             </div>
-            {/*this.state.usernames && this.state.usernames.length > 0 &&
-            <div className="pt-4">
-              <p className="lead">Choose your username</p>
-              {this.state.usernames.map((username, i) => {
-                return(
-                  <MDBInput 
-                  key={i}
-                  onClick={(e) => this.handleUserNamePick(username)}
-                  checked={this.state.username === username ? true : false}
-                  label={username}
-                  type="radio"
-                  id={"radio"+i}
-                  />
-                );
-              })}
-            </div>*/
-            }
             <MDBBtn
             color="green"
             className="mb-0"
@@ -758,25 +774,25 @@ class Register extends React.Component {
             <p className="lead">Login to SNEK</p>
             <input 
             type="text"
-            className="form-control my-2"
+            className={this.testForError(9) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Username"
             name="username"
-            onChange={(e) => this.setState({login_username: e.target.value})}
+            onChange={(e) => this.handleChangeManual("login_username",e.target.value, 9)}
             value={this.state.login_username}
             />
             <input 
             type="password"
-            className="form-control my-2"
+            className={this.testForError(10) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Password"
             name="password"
-            onChange={(e) => this.setState({login_password: e.target.value})}
+            onChange={(e) => this.handleChangeManual("login_password",e.target.value, 10)}
             onKeyDown={this.logMeIn}
             value={this.state.login_password}
             />
             <MDBBtn
             color="green"
             className="mb-0"
-            onClick={() => this.props.logmein(this.state.login_username, this.state.login_password)}
+            onClick={this.login}
             >
             Login
             <MDBIcon icon="angle-right" className="pl-1" />
