@@ -54,6 +54,8 @@ class Register extends React.Component {
     username: "",
     gitlab_username: "",
     gitlab_server: "Choose your organisation",
+    login_username: "",
+    login_password: "",
     sourceList: [],
     usernames: [],
     hasGitHub: false,
@@ -746,25 +748,25 @@ class Register extends React.Component {
             </div>
             <p className="lead">Login to SNEK</p>
             <input 
-            type="email"
+            type="text"
             className="form-control my-2"
-            placeholder="E-Mail or Username"
-            name="email"
-            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
-            value={this.state.email}
+            placeholder="Username"
+            name="username"
+            onChange={(e) => this.setState({login_username: e.target.value})}
+            value={this.state.login_username}
             />
             <input 
             type="password"
             className="form-control my-2"
             placeholder="Password"
             name="password"
-            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
-            value={this.state.password}
+            onChange={(e) => this.setState({login_password: e.target.value})}
+            value={this.state.login_password}
             />
             <MDBBtn
             color="green"
             className="mb-0"
-            onClick={() => this.props.logmein("kleberbaum", "ciscocisco")}
+            onClick={() => this.props.logmein(this.state.login_username, this.state.login_password)}
             >
             Login
             <MDBIcon icon="angle-right" className="pl-1" />
