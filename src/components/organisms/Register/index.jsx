@@ -354,6 +354,15 @@ class Register extends React.Component {
     });
   }
 
+  logMeIn = (event) => {
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.logmein(this.state.login_username, this.state.login_password);
+    }
+  }
+
   render() {
     const { gitlabServers } = this.props;
     console.log(this.state);
@@ -761,6 +770,7 @@ class Register extends React.Component {
             placeholder="Password"
             name="password"
             onChange={(e) => this.setState({login_password: e.target.value})}
+            onKeyDown={this.logMeIn}
             value={this.state.login_password}
             />
             <MDBBtn
