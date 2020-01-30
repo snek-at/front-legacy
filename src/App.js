@@ -82,7 +82,7 @@ const GET_USER_LOGINDATA = gql`
 const GET_GITLAB_SERVERS = gql`
   query gitLabServers($token: String!) {
     page(url: "/registration", token: $token) {
-      ... on registrationRegistrationFormPage {
+      ... on RegistrationRegistrationFormPage {
         supportedGitlabs {
           ... on RegistrationGitlab_Server {
             organisation
