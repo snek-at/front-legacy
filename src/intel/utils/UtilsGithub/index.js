@@ -12,6 +12,7 @@ export async function fill(db, user) {
     const authorization = `Bearer ${user.token}`;
     const client = apollo.init(apiLink, authorization);
     const resProfile = await client.query({
+      errorPolicy: "ignore",
       query: gqlData.GET_PROFILE,
       variables: {
         username
@@ -24,6 +25,7 @@ export async function fill(db, user) {
     const createdAtDate = new Date(data.user.createdAt);
 
     const resCalendar = await client.query({
+      errorPolicy: "ignore",
       query: gqlData.getCalendar(username, createdAtDate)
     });
 
