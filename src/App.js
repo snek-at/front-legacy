@@ -401,16 +401,18 @@ class App extends React.Component {
       }
       })
       .then((result) => {
-          if (result.message === "FAIL")
-          {
-            console.log("warn","All fields have to be filled!");
-          }
-          else
-          {
-            console.log("success"," Welcome to SNEK!");
-          }
+        console.log(result);
+        if (result.message === "FAIL")
+        {
+          console.log("warn","All fields have to be filled!");
+        }
+        else
+        {
+          console.log("success"," Welcome to SNEK!");
+        }
       })
       .catch((error) => {
+        console.log(error);
           if (error.message.includes("Authentication required"))
           {
             console.log("success"," Welcome to SNEK!");
@@ -421,7 +423,7 @@ class App extends React.Component {
           }
           else
           {
-            console.log("error", "Something went wrong!");
+            console.error("error", error);
           }
       });
   }
