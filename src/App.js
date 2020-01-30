@@ -94,6 +94,18 @@ const GET_GITLAB_SERVERS = gql`
     }
   }
 `;
+// Register mutation
+const CREATE_USER_MUTATION = gql`
+  mutation register($token: String!, $values: GenericScalar!) {
+    registrationFormPage(token: $token, url: "/registration", values: $values) {
+      result
+      errors {
+        name
+        errors
+      }
+    }
+  }
+`;
 
 class App extends React.Component {
 
@@ -375,6 +387,39 @@ class App extends React.Component {
     })
   }
 
+  _registerUser = (values) => {
+    this.props.register({
+        variables: { 
+        token: localStorage.getItem("token"),
+        values
+      }
+      })
+      .then((result) => {
+          if (result.message === "FAIL")
+          {
+            this.notify("warn","All fields have to be filled!");
+          }
+          else
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+      })
+      .catch((error) => {
+          if (error.message.includes("Authentication required"))
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+          else if (error.message.includes("Duplicate entry"))
+          {
+            this.notify("warn"," Username already taken!");
+          }
+          else
+          {
+            this.notify("error", "Something went wrong!");
+          }
+      });
+  }
+
   render() {
     console.log(this.state);
 
@@ -393,6 +438,7 @@ class App extends React.Component {
               fetchGitLabServers={this.fetchGitLabServers}
               fetchProfileData={this.getData}
               globalState={this.state}
+              registerUser={this._registerUser}
               />
             </main>
             <Footer />
@@ -404,9 +450,10 @@ class App extends React.Component {
 }
 
 export default compose(
-  graphql(VERIFY_TOKEN, { name: 'verify' }),
-  graphql(REFRESH_TOKEN, { name: 'refresh' }),
-  graphql(LOGIN_USER, {name: 'login'}),
+  graphql(VERIFY_TOKEN, { name: "verify" }),
+  graphql(REFRESH_TOKEN, { name: "refresh" }),
+  graphql(LOGIN_USER, { name: "login" }),
+  graphql(CREATE_USER_MUTATION, { name: "register" })
 )(withApollo(App));
 
 /**

@@ -2,6 +2,9 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 
+//> Additional
+import sha256 from "js-sha256";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -189,41 +192,14 @@ class Register extends React.Component {
     .then(() => {
       let values = {
         sources: JSON.stringify(this.state.sourceList),
-        username: this.state.username,
-        email: this.state.email,
+        username: "Aichnerc",
+        email: "contact@aichner-christian.com",
+        first_name: this.state.firstname,
+        last_name: this.state.lastname,
         password: sha256(this.state.password),
         "platform_data": JSON.stringify(cache)
       };
-      this.props.register({
-        variables: { 
-        token,
-        values
-      }
-      })
-      .then((result) => {
-          if (result.message === "FAIL")
-          {
-            this.notify("warn","All fields have to be filled!");
-          }
-          else 
-          {
-            this.notify("success"," Welcome to SNEK!");
-          }
-      })
-      .catch((error) => {
-          if (error.message.includes("Authentication required"))
-          {
-            this.notify("success"," Welcome to SNEK!");
-          }
-          else if (error.message.includes("Duplicate entry"))
-          {
-            this.notify("warn"," Username already taken!");
-          }
-          else
-          {
-            this.notify("error", "Something went wrong!");
-          }
-      });
+      this.props.register(values);
     });
   }
 
