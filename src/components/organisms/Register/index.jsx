@@ -635,6 +635,13 @@ class Register extends React.Component {
                     className="close-icon"
                     onClick={() => this.removeSource(source.id)}
                     />
+                    {source.verified ?(
+                      <MDBIcon
+                      icon="check"
+                      className="username-icon"
+                      onClick={() => this.handleUserNamePick(source.username)}
+                      />
+                    ):(null)}
                   </MDBListGroupItem>
                 );
               })}

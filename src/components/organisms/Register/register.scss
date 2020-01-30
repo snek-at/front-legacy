@@ -151,6 +151,22 @@
 			border-bottom-left-radius: $borderRadius;
 			border-bottom-right-radius: $borderRadius;
 		}
+		.username-icon {
+			color: lightgray;
+			cursor: pointer;
+			transition: color 0.2s ease;
+			&:hover {
+				color: #77bd43;
+			}
+		}
+		&:first-of-type {
+			border-top-left-radius: $borderRadius;
+			border-top-right-radius: $borderRadius;
+		}
+		&:last-of-type {
+			border-bottom-left-radius: $borderRadius;
+			border-bottom-right-radius: $borderRadius;
+		}
 	}
 }
 
