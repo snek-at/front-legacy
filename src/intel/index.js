@@ -9,9 +9,10 @@ import * as converter from "./Database/Converter";
 export async function fill(userList) {
 
   async function retry(maxRetries, fn, params) {
-      return await fn(...params).catch(() => {
+      return await fn(...params).catch((err) => {
         if (maxRetries <= 0) {
-          console.error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
+          console.error(err);
+          //console.error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
           return false;
         }
         return retry(maxRetries - 1, fn, params);
