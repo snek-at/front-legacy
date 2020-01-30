@@ -97,7 +97,7 @@ const GET_GITLAB_SERVERS = gql`
 // Register mutation
 const CREATE_USER_MUTATION = gql`
   mutation register($token: String!, $values: GenericScalar!) {
-    registrationFormPage(token: $token, url: "/registration", values: $values) {
+    registrationRegistrationFormPage(token: $token, url: "/registration", values: $values) {
       result
       errors {
         name
@@ -106,7 +106,16 @@ const CREATE_USER_MUTATION = gql`
     }
   }
 `;
-
+// Update Cache
+const UPDATE_CACHE = gql`
+  mutation cache ($token: String!, $platformData: String!) {
+    cacheUser(token: $token, platformData: $platformData){
+      user{
+        platformData
+      }
+    }
+  }
+`;
 class App extends React.Component {
 
   state = {
@@ -116,6 +125,7 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log("Loading app");
     // Check if there is a token
     if(localStorage.getItem('jwt_snek')){
       this._verifyToken();
@@ -137,12 +147,13 @@ class App extends React.Component {
           let username = data.verifyToken.payload.username;
           // Check if it's not the anonymous user
           if(username !== process.env.REACT_APP_ANONYMOUS_USER){
+            console.log("Get login data from verifyToken");
             this._getLoginData(data.verifyToken.payload.username, localStorage.getItem('jwt_snek'));
           } else {
             this.setState({
               loading: false,
               logged: false,
-              user: false,
+              user: undefined,
             });
           }
         } else {
@@ -158,27 +169,29 @@ class App extends React.Component {
     }).catch(error => {
       console.error(error);
       // Try to revive token
-      this._loginAnonymous();
+      this._refeshToken();
     })
   }
 
   _refeshToken = () => {
     console.log("Refresh token");
     this.props.refresh({
-      variables: { "token": localStorage.getItem('jwt_snek') }
+      variables: {
+        "token": localStorage.getItem('jwt_snek')
+      }
     }).then(({data}) => {
       console.log(data);
-        if(data !== undefined){
-          this.fetchGitLabServers(data.tokenAuth.token);
-          localStorage.setItem('jwt_snek', data.refreshToken.token);
-
-        }
+      console.log("Refresh token success.");
+      if(data !== undefined){
+        this.fetchGitLabServers(data.refreshToken.token);
+        localStorage.setItem('jwt_snek', data.refreshToken.token);
+      }
     }).catch(error => {
-      console.error(error);
+      console.error("Could not get refresh token",error);
       // Login anonymous user - Member is signed out
       this.setState({
         logged: false,
-        user: false,
+        user: undefined,
       }, () => this._loginAnonymous());
     })
   }
@@ -195,13 +208,52 @@ class App extends React.Component {
       console.log(data);
       if(data.profile.verified){
         // Redirect and login
+        let platformData = JSON.parse(data.profile.platformData);
+        let sources = JSON.parse(data.profile.sources);
+        let cache = {};
         this.setState({
           fetchedUser: {
-            platformData: JSON.parse(data.profile.platformData),
-            sources: JSON.parse(data.profile.sources),
+            platformData: platformData,
+            sources: sources,
             username: data.profile.username,
             verified: data.profile.verified,
           },
+        });
+        intel
+        .fill(sources)
+        .then(async () => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
+        })
+        .then(async () => {
+          this.setState({
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          });
+          cache = {
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          };
+          platformData = JSON.stringify(cache);
+          this.props.caching({
+            variables: { 
+            token: localStorage.getItem("jwt_snek"),
+            platformData
+          }
+          });
         });
       } else {
         this.setState({
@@ -284,10 +336,6 @@ class App extends React.Component {
           user: false,
         });
       }
-      /*this.setState({
-        loading: false,
-        logged: true,
-      });*/
     }).catch(error => {
       //console.error(error);
       console.error("Can not get login data.", error)
@@ -334,7 +382,7 @@ class App extends React.Component {
             this.setState({
               logged: false,
               loading: false,
-              user: false,
+              user: undefined,
             }, () => {
               localStorage.setItem('jwt_snek', data.tokenAuth.token);
               localStorage.setItem("is_logged", false);
@@ -349,6 +397,7 @@ class App extends React.Component {
   }
 
   _login = async (username, password) => {
+    console.log("Login");
     console.log(username, password);
 
     await this.props.login({ 
@@ -364,7 +413,6 @@ class App extends React.Component {
             this._getLoginData(username, data.tokenAuth.token);
             localStorage.setItem('jwt_snek', data.tokenAuth.token);
             localStorage.setItem("is_logged", true);
-            this.fetchGitLabServers(data.tokenAuth.token);
           }
         }
       }
@@ -372,8 +420,6 @@ class App extends React.Component {
       // Username or password is wrong
       console.error("Can not login.", error);
       this.setState({
-        loading: false,
-        logged: false,
         user: false,
       }, () => localStorage.setItem("is_logged", false));
     });
@@ -396,21 +442,23 @@ class App extends React.Component {
   _registerUser = (values) => {
     this.props.register({
         variables: { 
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem("jwt_snek"),
         values
       }
       })
       .then((result) => {
-          if (result.message === "FAIL")
-          {
-            console.log("warn","All fields have to be filled!");
-          }
-          else
-          {
-            console.log("success"," Welcome to SNEK!");
-          }
+        console.log(result);
+        if (result.message === "FAIL")
+        {
+          console.log("warn","All fields have to be filled!");
+        }
+        else
+        {
+          console.log("success"," Welcome to SNEK!");
+        }
       })
       .catch((error) => {
+        console.log(error);
           if (error.message.includes("Authentication required"))
           {
             console.log("success"," Welcome to SNEK!");
@@ -421,7 +469,7 @@ class App extends React.Component {
           }
           else
           {
-            console.log("error", "Something went wrong!");
+            console.error("error", error);
           }
       });
   }
@@ -458,7 +506,8 @@ export default compose(
   graphql(VERIFY_TOKEN, { name: "verify" }),
   graphql(REFRESH_TOKEN, { name: "refresh" }),
   graphql(LOGIN_USER, { name: "login" }),
-  graphql(CREATE_USER_MUTATION, { name: "register" })
+  graphql(CREATE_USER_MUTATION, { name: "register" }),
+  graphql(UPDATE_CACHE, { name: "caching" })
 )(withApollo(App));
 
 /**

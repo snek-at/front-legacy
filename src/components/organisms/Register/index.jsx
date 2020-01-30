@@ -54,6 +54,8 @@ class Register extends React.Component {
     username: "",
     gitlab_username: "",
     gitlab_server: "Choose your organisation",
+    login_username: "",
+    login_password: "",
     sourceList: [],
     usernames: [],
     hasGitHub: false,
@@ -213,6 +215,12 @@ class Register extends React.Component {
     }, () => this.removeError(id));
   }
 
+  handleChangeManual = (name, value, id) => {
+    this.setState({
+      [name]: value
+    }, () => this.removeError(id));
+  }
+
   removeError = (id) => {
     // Preset errors to local variable
     let errors = this.state.errors;
@@ -352,9 +360,45 @@ class Register extends React.Component {
     });
   }
 
+  logMeIn = (event) => {
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.login();
+    }
+  }
+
+  login = () => {
+    let errors = [];
+
+    if(this.state.login_username === ""){
+      errors.push({
+        code: 9,
+        weight: 10,
+      });
+    }
+    if(this.state.login_password === ""){
+      errors.push({
+        code: 10,
+        weight: 10,
+      });
+    }
+
+    console.log(errors);
+    
+    if(errors.length > 0){
+      this.setState({
+        errors
+      });
+    } else {
+      this.props.logmein(this.state.login_username, this.state.login_password)
+    }
+  }
+
   render() {
-    const { gitlabServers } = this.props;
-    console.log(this.state);
+    const { gitlabServers, globalState } = this.props;
+    console.log(this.state, globalState);
 
     return (
       <div className="text-center" id="register">
@@ -596,23 +640,6 @@ class Register extends React.Component {
               })}
               </MDBListGroup>
             </div>
-            {/*this.state.usernames && this.state.usernames.length > 0 &&
-            <div className="pt-4">
-              <p className="lead">Choose your username</p>
-              {this.state.usernames.map((username, i) => {
-                return(
-                  <MDBInput 
-                  key={i}
-                  onClick={(e) => this.handleUserNamePick(username)}
-                  checked={this.state.username === username ? true : false}
-                  label={username}
-                  type="radio"
-                  id={"radio"+i}
-                  />
-                );
-              })}
-            </div>*/
-            }
             <MDBBtn
             color="green"
             className="mb-0"
@@ -746,25 +773,31 @@ class Register extends React.Component {
             </div>
             <p className="lead">Login to SNEK</p>
             <input 
-            type="email"
-            className="form-control my-2"
-            placeholder="E-Mail or Username"
-            name="email"
-            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
-            value={this.state.email}
+            type="text"
+            className={this.testForError(9) ? "form-control my-2 error" : "form-control my-2"}
+            placeholder="Username"
+            name="username"
+            onChange={(e) => this.handleChangeManual("login_username",e.target.value, 9)}
+            value={this.state.login_username}
             />
             <input 
             type="password"
-            className="form-control my-2"
+            className={this.testForError(10) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Password"
             name="password"
-            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
-            value={this.state.password}
+            onChange={(e) => this.handleChangeManual("login_password",e.target.value, 10)}
+            onKeyDown={this.logMeIn}
+            value={this.state.login_password}
             />
+            {globalState.user === false &&
+              <p>
+              Login fehlerhaft
+              </p>
+            }
             <MDBBtn
             color="green"
             className="mb-0"
-            onClick={() => this.props.logmein("kleberbaum", "ciscocisco")}
+            onClick={this.login}
             >
             Login
             <MDBIcon icon="angle-right" className="pl-1" />
