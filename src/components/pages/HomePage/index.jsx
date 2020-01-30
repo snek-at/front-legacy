@@ -167,6 +167,7 @@ class HomePage extends React.Component {
                 logmein={this.props.logmein}
                 gitlabServers={globalState.gitlab_servers}
                 registerUser={this.props.registerUser}
+                globalState={globalState}
                 />
               </MDBCard>
             </MDBCol>
@@ -183,7 +184,7 @@ class HomePage extends React.Component {
         </div>
         <section id="features" className="pb-5">
           <MDBContainer>
-            <MDBRow className="flex-center text-center white-text">
+            <MDBRow className="flex-center text-center white-text mb-5">
               <MDBCol md="4">
                 <img src={ImageProfiles} alt="You get profiles" className="img-fluid"/>
                 <h2>Profiles</h2>

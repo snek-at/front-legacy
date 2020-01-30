@@ -397,8 +397,8 @@ class Register extends React.Component {
   }
 
   render() {
-    const { gitlabServers } = this.props;
-    console.log(this.state);
+    const { gitlabServers, globalState } = this.props;
+    console.log(this.state, globalState);
 
     return (
       <div className="text-center" id="register">
@@ -789,6 +789,11 @@ class Register extends React.Component {
             onKeyDown={this.logMeIn}
             value={this.state.login_password}
             />
+            {globalState.user === false &&
+              <p>
+              Login fehlerhaft
+              </p>
+            }
             <MDBBtn
             color="green"
             className="mb-0"
