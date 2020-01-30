@@ -124,6 +124,7 @@ class Register extends React.Component {
     this.setState({
       sourceList,
       hasGitHub,
+      username: hasGitHub ? username : ""
     });
   }
 
@@ -584,7 +585,6 @@ class Register extends React.Component {
                         </div>
                       </MDBPopover>
                     )}
-                    User as username
                     </div>
                     <MDBIcon 
                     icon="times"
