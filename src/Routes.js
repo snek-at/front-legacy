@@ -23,7 +23,6 @@ class Routes extends React.Component {
           (props) => <HomePage 
           logmein={this.props.logmein} 
           globalState={this.props.globalState} 
-          fetchGitLabServers={this.props.fetchGitLabServers}
           registerUser={this.props.registerUser}
           {...props}
           />

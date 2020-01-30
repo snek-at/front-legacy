@@ -393,7 +393,7 @@ class Register extends React.Component {
         {this.state.step === 1 &&
           <>
             <div className="text-left">
-              <small className="text-muted clickable" onClick={() => this.setState({step: 0})}>
+              <small className="text-muted clickable" onClick={() => this.setState({step: 0, errors: []})}>
                 <MDBIcon icon="angle-left" className="mr-1" />
                 Back
               </small>
@@ -764,7 +764,7 @@ class Register extends React.Component {
             <MDBBtn
             color="green"
             className="mb-0"
-            onClick={() => this.props.logmein("pinterid", "test")}
+            onClick={() => this.props.logmein("kleberbaum", "ciscocisco")}
             >
             Login
             <MDBIcon icon="angle-right" className="pl-1" />

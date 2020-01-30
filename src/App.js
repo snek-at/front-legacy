@@ -132,6 +132,7 @@ class App extends React.Component {
       console.log(data);
       if(data){
         if(data.verifyToken){
+          this.fetchGitLabServers(localStorage.getItem('jwt_snek'));
           console.log("Verified");
           let username = data.verifyToken.payload.username;
           // Check if it's not the anonymous user
@@ -157,7 +158,7 @@ class App extends React.Component {
     }).catch(error => {
       console.error(error);
       // Try to revive token
-      this._refeshToken();
+      this._loginAnonymous();
     })
   }
 
@@ -168,7 +169,9 @@ class App extends React.Component {
     }).then(({data}) => {
       console.log(data);
         if(data !== undefined){
+          this.fetchGitLabServers(data.tokenAuth.token);
           localStorage.setItem('jwt_snek', data.refreshToken.token);
+
         }
     }).catch(error => {
       console.error(error);
@@ -296,13 +299,14 @@ class App extends React.Component {
     })
   }
 
-  fetchGitLabServers = async () => {
+  fetchGitLabServers = async (token) => {
     await this.props.client.query({
       query: GET_GITLAB_SERVERS,
       variables: { 
         "token": localStorage.getItem('jwt_snek')
       }
     }).then(({data}) => {
+      console.log(data);
       console.log(data);
       this.setState({
         gitlab_servers: data.page.supportedGitlabs,
@@ -334,6 +338,7 @@ class App extends React.Component {
             }, () => {
               localStorage.setItem('jwt_snek', data.tokenAuth.token);
               localStorage.setItem("is_logged", false);
+              this.fetchGitLabServers(data.tokenAuth.token);
             });
           }
         }
@@ -359,12 +364,13 @@ class App extends React.Component {
             this._getLoginData(username, data.tokenAuth.token);
             localStorage.setItem('jwt_snek', data.tokenAuth.token);
             localStorage.setItem("is_logged", true);
+            this.fetchGitLabServers(data.tokenAuth.token);
           }
         }
       }
     }).catch((loading, error) => {
       // Username or password is wrong
-      console.error(error);
+      console.error("Can not login.", error);
       this.setState({
         loading: false,
         logged: false,
@@ -435,7 +441,6 @@ class App extends React.Component {
             <main>
               <Routes 
               logmein={this._login}
-              fetchGitLabServers={this.fetchGitLabServers}
               fetchProfileData={this.getData}
               globalState={this.state}
               registerUser={this._registerUser}

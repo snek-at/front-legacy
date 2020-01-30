@@ -55,13 +55,7 @@ class HomePage extends React.Component {
       this.setState({
         rotate: 0,
       });
-    }
-
-    console.log(this.props.globalState);
-    if(this.props.globalState.gitlab_servers === undefined){
-      this.props.fetchGitLabServers();
-    }
-    
+    }  
   };
 
   componentWillUnmount() {
