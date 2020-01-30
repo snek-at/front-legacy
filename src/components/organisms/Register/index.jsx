@@ -163,6 +163,70 @@ class Register extends React.Component {
     });
   }
 
+  // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
+  handleSubmit = async () => {
+    // Cache data
+    let cache = {};
+    intel
+    .fill(this.state.sourceList)
+    .then(() => {
+      intel.calendar();
+      intel.stats();
+      intel.repos();
+    })
+    .then(() => {
+      cache = {
+        logged: true,
+        contrib: intel.stats(),
+        contribCalendar: intel.calendar(),
+        contribTypes: intel.contribTypes(),
+        user: intel.user(),
+        orgs: intel.orgs(),
+        languages: intel.languages(),
+        repos: intel.repos(),
+      };
+    })
+    .then(() => {
+      let values = {
+        sources: JSON.stringify(this.state.sourceList),
+        username: this.state.username,
+        email: this.state.email,
+        password: sha256(this.state.password),
+        "platform_data": JSON.stringify(cache)
+      };
+      this.props.register({
+        variables: { 
+        token,
+        values
+      }
+      })
+      .then((result) => {
+          if (result.message === "FAIL")
+          {
+            this.notify("warn","All fields have to be filled!");
+          }
+          else 
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+      })
+      .catch((error) => {
+          if (error.message.includes("Authentication required"))
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+          else if (error.message.includes("Duplicate entry"))
+          {
+            this.notify("warn"," Username already taken!");
+          }
+          else
+          {
+            this.notify("error", "Something went wrong!");
+          }
+      });
+    });
+  }
+
   render() {
     const { gitlabServers } = this.props;
     console.log(this.state);
