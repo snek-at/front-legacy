@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS organization (
     name VARCHAR(80) NOT NULL,
     url VARCHAR(2048) NOT NULL,
     description VARCHAR(5012) NOT NULL,
+    location VARCHAR(2048) NOT NULL,
     PRIMARY KEY (id)
 );
 `;

@@ -21,9 +21,10 @@ INSERT INTO organization(
     avatarUrl,
     name,
     url,
-    description
+    description,
+    location
 )
-VALUES (?,?,?,?);
+VALUES (?,?,?,?,?);
 `;
 
 export const member = `

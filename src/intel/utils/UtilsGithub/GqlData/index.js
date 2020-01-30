@@ -38,6 +38,7 @@ export const GET_PROFILE = gql`
             url
             avatarUrl
             description
+            location
             membersWithRole(first: 100) {
               totalCount
               nodes {
