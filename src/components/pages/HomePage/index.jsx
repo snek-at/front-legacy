@@ -193,36 +193,38 @@ class HomePage extends React.Component {
                 <img src={ImageProfiles} alt="You get profiles" className="img-fluid"/>
                 <h2>Profiles</h2>
                 <p className="lead">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Time to spotlight yourself.
                 </p>
                 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
-                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                SNEK provides all the tools to represent yourself,
+                in the way you want to be perceived by others. Everything is customizable, 
+                from your profile picture up to your profile color theme. We do not intent to
+                limit you in any shape or form, so give it a try and create your 21st century portfolio.
                 </p>
               </MDBCol>
               <MDBCol md="4">
                 <img src={ImageRanking} alt="You get profiles" className="img-fluid"/>
-                <h2>Visualization</h2>
+                <h2>Visualizations</h2>
                 <p className="lead">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Visualize your numbers.
                 </p>
                 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
-                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                SNEK evaluates your statistics and builds fancy graphs out of it.
+                This makes it possible that everyone can see your passion and skills right away.
+                Our visualizations even makes Excel users a little bit envious, so give it a try and create your 21st century portfolio.
                 </p>
               </MDBCol>
               <MDBCol md="4">
                 <img src={ImageTrophy} alt="You get profiles" className="img-fluid"/>
                 <h2>Achievements</h2>
                 <p className="lead">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Climb the ladder.
                 </p>
                 <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Duis elementum tortor eu nunc aliquet, id fermentum erat accumsan. 
-                Quisque porta eget ligula sit amet maximus. Etiam at sodales quam.
+                SNEK achievements are based on everyday work, so you will gain achievements
+                without any extra effort and climb the ladder while you do the things you love.
+                You can also invite your friends and challenge them over achievements, 
+                so give it a try and create your 21st century portfolio.
                 </p>
               </MDBCol>
             </MDBRow>
