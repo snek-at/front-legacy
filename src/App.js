@@ -397,25 +397,25 @@ class App extends React.Component {
       .then((result) => {
           if (result.message === "FAIL")
           {
-            this.notify("warn","All fields have to be filled!");
+            console.log("warn","All fields have to be filled!");
           }
           else
           {
-            this.notify("success"," Welcome to SNEK!");
+            console.log("success"," Welcome to SNEK!");
           }
       })
       .catch((error) => {
           if (error.message.includes("Authentication required"))
           {
-            this.notify("success"," Welcome to SNEK!");
+            console.log("success"," Welcome to SNEK!");
           }
           else if (error.message.includes("Duplicate entry"))
           {
-            this.notify("warn"," Username already taken!");
+            console.log("warn"," Username already taken!");
           }
           else
           {
-            this.notify("error", "Something went wrong!");
+            console.log("error", "Something went wrong!");
           }
       });
   }

@@ -11,7 +11,8 @@ export async function fill(userList) {
   async function retry(maxRetries, fn, params) {
       return await fn(...params).catch(() => {
         if (maxRetries <= 0) {
-          throw new Error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
+          console.error(`Could not fetch data after ${maxRetries} retries... Please try again later!`);
+          return false;
         }
         return retry(maxRetries - 1, fn, params);
       });

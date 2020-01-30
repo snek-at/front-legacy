@@ -46,6 +46,12 @@ import RSA from "react-very-simple-oauth";
 class Register extends React.Component {
   state = {
     step: 0,
+    firstname: "",
+    lastname: "",
+    email: "",
+    password1: "",
+    password2: "",
+    username: "",
     gitlab_username: "",
     gitlab_server: "Choose your organisation",
     sourceList: [],
@@ -166,6 +172,67 @@ class Register extends React.Component {
     });
   }
 
+  testForError = (id) => {
+    if(this.state.errors){
+      let rtn = this.state.errors.map((error, i) => {
+        if(!Array.isArray(id)){
+          if(error.code === id){
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          let innerRtn = id.map((item, ikey) => {
+            if(error.code === item){
+              return true;
+            } else {
+              return false;
+            }
+          });
+          if(innerRtn.includes(true)){
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+      if(rtn.includes(true)){
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  handleChange = (e, id) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    }, () => this.removeError(id));
+  }
+
+  removeError = (id) => {
+    // Preset errors to local variable
+    let errors = this.state.errors;
+
+    if(!Array.isArray(id)){
+      errors = errors.filter(function( obj ) {
+        return obj.code !== id;
+      });
+    } else {
+      id.map((item) => {
+        errors = errors.filter(function( obj ) {
+          return obj.code !== item;
+        });
+      });
+    }
+
+    this.setState({
+      errors,
+    });
+  }
+
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = async () => {
     // Cache data
@@ -190,16 +257,95 @@ class Register extends React.Component {
       };
     })
     .then(() => {
-      let values = {
-        sources: JSON.stringify(this.state.sourceList),
-        username: "Aichnerc",
-        email: "contact@aichner-christian.com",
-        first_name: this.state.firstname,
-        last_name: this.state.lastname,
-        password: sha256(this.state.password),
-        "platform_data": JSON.stringify(cache)
-      };
-      this.props.register(values);
+      // Get all required values from the state
+      const { 
+        password1,
+        password2,
+        firstname,
+        lastname,
+        email,
+        sourceList,
+        username,
+      } = this.state;
+
+      // Error
+      let errors = [];
+
+      // Check if passwords match
+      if(password1 !== "" && password2 !== "" && password1 !== password2){
+        errors.push({
+          code: 1,
+          msg: "Your passwords do not match.",
+          weight: 10,
+        });
+      }
+      if(sourceList.length === 0){
+        errors.push({
+          code: 2,
+          msg: "No platforms are connected.",
+          weight: 10,
+        });
+      }
+      if(firstname === ""){
+        errors.push({
+          code: 3,
+          msg: "Please enter your first name.",
+          weight: 8,
+        });
+      }
+      if(lastname === ""){
+        errors.push({
+          code: 4,
+          msg: "Please enter your last name.",
+          weight: 8,
+        });
+      }
+      if(email === ""){
+        errors.push({
+          code: 5,
+          msg: "Please enter your email.",
+          weight: 9,
+        });
+      }
+      if(username === ""){
+        errors.push({
+          code: 6,
+          msg: "Please select a username from the list above.",
+          weight: 10,
+        });
+      }
+      if(password1 === ""){
+        errors.push({
+          code: 7,
+          msg: "Please enter a password.",
+          weight: 10,
+        });
+      }
+      if(password2 === ""){
+        errors.push({
+          code: 8,
+          msg: "Please repeat your password.",
+          weight: 10,
+        });
+      }
+
+      // Check if there are no errors
+      if(errors.length === 0){
+        let values = {
+          sources: JSON.stringify(sourceList),
+          username,
+          email,
+          first_name: firstname,
+          last_name: lastname,
+          password: sha256(password1),
+          "platform_data": JSON.stringify(cache)
+        };
+        this.props.registerUser(values);
+      } else {
+        this.setState({
+          errors,
+        })
+      }
     });
   }
 
@@ -257,50 +403,50 @@ class Register extends React.Component {
               <MDBCol md="6">
                 <input 
                 type="text"
-                className="form-control"
+                className={this.testForError(3) ? "form-control error" : "form-control"}
                 placeholder="Firstname"
                 name="firstname"
-                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                onChange={(e) => this.handleChange(e, 3)}
                 value={this.state.firstname}
                 />
               </MDBCol>
               <MDBCol md="6">
                 <input 
                 type="text"
-                className="form-control"
+                className={this.testForError(4) ? "form-control error" : "form-control"}
                 placeholder="Lastname"
                 name="lastname"
-                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                onChange={(e) => this.handleChange(e, 4)}
                 value={this.state.lastname}
                 />
               </MDBCol>
             </MDBRow>
             <input 
             type="email"
-            className="form-control my-2"
+            className={this.testForError(5) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="E-Mail"
             name="email"
-            onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+            onChange={(e) => this.handleChange(e, 5)}
             value={this.state.email}
             />
             <MDBRow>
               <MDBCol md="6">
                 <input 
                 type="password"
-                className="form-control"
+                className={this.testForError([7, 1]) ? "form-control error" : "form-control"}
                 placeholder="Password"
                 name="password1"
-                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                onChange={(e) => this.handleChange(e, [7, 1])}
                 value={this.state.password1}
                 />
               </MDBCol>
               <MDBCol md="6">
                 <input 
                 type="password"
-                className="form-control"
+                className={this.testForError([8, 1]) ? "form-control error" : "form-control"}
                 placeholder="Repeat password"
                 name="password2"
-                onChange={(e) => this.setState({[e.target.name]: e.target.value})}
+                onChange={(e) => this.handleChange(e, [8, 1])}
                 value={this.state.password2}
                 />
               </MDBCol>
@@ -467,7 +613,8 @@ class Register extends React.Component {
             <MDBBtn
             color="green"
             className="mb-0"
-            disabled={!this.state.hasGitHub}
+            disabled={false}
+            onClick={this.handleSubmit}
             >
             Join now
             </MDBBtn>

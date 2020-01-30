@@ -172,6 +172,7 @@ class HomePage extends React.Component {
                 <Register 
                 logmein={this.props.logmein}
                 gitlabServers={globalState.gitlab_servers}
+                registerUser={this.props.registerUser}
                 />
               </MDBCard>
             </MDBCol>
