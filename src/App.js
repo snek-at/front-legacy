@@ -220,8 +220,8 @@ class App extends React.Component {
             username: data.profile.username,
             verified: data.profile.verified,
             accessories: {
-              badges: data.profile.bids,
-              themes: data.profile.tids
+              badges: data.profile.bids ? JSON.parse(data.profile.bids) : null,
+              themes: data.profile.tids ? JSON.parse(data.profile.tids) : null
             }
           },
         });
