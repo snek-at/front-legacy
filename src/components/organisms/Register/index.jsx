@@ -368,6 +368,7 @@ class Register extends React.Component {
       } else {
         this.setState({
           errors,
+          loading: false,
         })
       }
     });
