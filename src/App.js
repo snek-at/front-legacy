@@ -64,6 +64,8 @@ const GET_USER_DATA = gql`
         verified
         platformData
         sources
+        bids
+        tids
       }
     }
   }
@@ -205,7 +207,7 @@ class App extends React.Component {
         "token": localStorage.getItem('jwt_snek')
       }
     }).then(({data}) => {
-      console.log(data);
+      console.log("Get data from "+username,data);
       if(data.profile.verified){
         // Redirect and login
         let platformData = JSON.parse(data.profile.platformData);
@@ -217,6 +219,10 @@ class App extends React.Component {
             sources: sources,
             username: data.profile.username,
             verified: data.profile.verified,
+            accessories: {
+              badges: data.profile.bids,
+              themes: data.profile.tids
+            }
           },
         });
         intel
@@ -290,46 +296,9 @@ class App extends React.Component {
           logged: true,
           user: username,
         });
-        /*intel.fill(sources)
-        .then(async () => {
-          intel.calendar();
-          intel.stats();
-          intel.repos();
-        })
-        .then(async () => {
-          this.setState({
-            loading: false,
-            logged: true,
-            user: data.profile.username,
-            contrib: intel.stats(),
-            contribCalendar: intel.calendar(),
-            contribTypes: intel.contribTypes(),
-            user: intel.user(),
-            orgs: intel.orgs(),
-            languages: intel.languages(),
-            repos: intel.repos(),
-          });
-          let cache = {
-            loading: false,
-            logged: true,
-            user: data.profile.username,
-            contrib: intel.stats(),
-            contribCalendar: intel.calendar(),
-            contribTypes: intel.contribTypes(),
-            user: intel.user(),
-            orgs: intel.orgs(),
-            languages: intel.languages(),
-            repos: intel.repos(),
-          };
-          let platformData = JSON.stringify(cache);
-          this.props.caching({
-            variables: { 
-            token: localStorage.getItem("jwt_snek"),
-            platformData
-          }});
-        });*/
         // Redirect
       } else {
+        console.log("User not verified");
         this.setState({
           loading: false,
           logged: false,
@@ -403,7 +372,7 @@ class App extends React.Component {
     await this.props.login({ 
       variables: { 
         "username": username,
-        "password": sha256(password)
+        "password": password
       }
     }).then(({ loading, data }) => {
       console.log(data);
@@ -448,13 +417,10 @@ class App extends React.Component {
       })
       .then((result) => {
         console.log(result);
-        if (result.message === "FAIL")
-        {
+        if (result.message === "FAIL"){
           console.log("warn","All fields have to be filled!");
-        }
-        else
-        {
-          console.log("success"," Welcome to SNEK!");
+        } else {
+          this._login(values.username, values.password)
         }
       })
       .catch((error) => {

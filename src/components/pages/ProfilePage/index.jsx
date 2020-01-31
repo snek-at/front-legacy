@@ -145,20 +145,29 @@ class ProfilePage extends React.Component {
               <MDBMask />
             </MDBView>
             <div className="bg-elegant py-3 px-3">
-              <h4 className="mb-0">{globalState.fetchedUser && globalState.fetchedUser.platformData.user.name}</h4>
+              <h4 className="mb-0">
+              {globalState.fetchedUser && globalState.fetchedUser.platformData.user.name}
+              </h4>
               {globalState.fetchedUser && globalState.fetchedUser.platformData.user.company &&
-              <small className="text-muted py-3">{globalState.fetchedUser.platformData.user.company}</small>
+              <small className="text-muted py-3">
+              {globalState.fetchedUser.platformData.user.company}
+              </small>
               }
               <div className="badges">
-                <MDBBadge color="elegant-color">
-                  Founder
-                </MDBBadge>
-                <MDBBadge color="purple">
-                  Pro
-                </MDBBadge>
-                <MDBBadge color="orange">
-                  Sponsor
-                </MDBBadge>
+              {globalState.fetchedUser && globalState.fetchedUser.accessories.badges &&
+                <>
+                {globalState.fetchedUser.accessories.badges.bids.map((bid, i) => {
+                  switch(bid){
+                    case "6403bf4d17b8472735a93b71a37e0bd0":
+                      return(
+                        <MDBBadge color="elegant-color">
+                          Founder
+                        </MDBBadge>
+                      )
+                  }
+                })}
+                </>
+              }
               </div>
               <div className="connected mt-2 text-muted">
                 <MDBIcon 
