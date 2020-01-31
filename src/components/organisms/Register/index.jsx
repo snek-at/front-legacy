@@ -253,125 +253,138 @@ class Register extends React.Component {
 
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = async () => {
-    this.setState({
-      loading: true,
-    });
-    // Cache data
-    let cache = {};
-    intel
-    .fill(this.state.sourceList)
-    .then(() => {
-      intel.calendar();
-      intel.stats();
-      intel.repos();
-    })
-    .then(() => {
-      cache = {
-        logged: true,
-        contrib: intel.stats(),
-        contribCalendar: intel.calendar(),
-        contribTypes: intel.contribTypes(),
-        user: intel.user(),
-        orgs: intel.orgs(),
-        languages: intel.languages(),
-        repos: intel.repos(),
-      };
-    })
-    .then(() => {
-      // Get all required values from the state
-      const { 
-        password1,
-        password2,
-        firstname,
-        lastname,
-        email,
-        sourceList,
-        username,
-        promoCode,
-        code,
-      } = this.state;
 
-      // Error
-      let errors = [];
+    const { 
+      password1,
+      password2,
+      firstname,
+      lastname,
+      email,
+      sourceList,
+      username,
+      promoCode,
+      code,
+    } = this.state;
 
-      // Check if passwords match
-      if(password1 !== "" && password2 !== "" && password1 !== password2){
-        errors.push({
-          code: 1,
-          msg: "Your passwords do not match.",
-          weight: 10,
-        });
-      }
-      if(sourceList.length === 0){
-        errors.push({
-          code: 2,
-          msg: "No platforms are connected.",
-          weight: 10,
-        });
-      }
-      if(firstname === ""){
-        errors.push({
-          code: 3,
-          msg: "Please enter your first name.",
-          weight: 8,
-        });
-      }
-      if(lastname === ""){
-        errors.push({
-          code: 4,
-          msg: "Please enter your last name.",
-          weight: 8,
-        });
-      }
-      if(email === ""){
-        errors.push({
-          code: 5,
-          msg: "Please enter your email.",
-          weight: 9,
-        });
-      }
-      if(username === ""){
-        errors.push({
-          code: 6,
-          msg: "Please select a username from the list above.",
-          weight: 10,
-        });
-      }
-      if(password1 === ""){
-        errors.push({
-          code: 7,
-          msg: "Please enter a password.",
-          weight: 10,
-        });
-      }
-      if(password2 === ""){
-        errors.push({
-          code: 8,
-          msg: "Please repeat your password.",
-          weight: 10,
-        });
-      }
+    // Error
+    let errors = [];
 
-      // Check if there are no errors
-      if(errors.length === 0){
-        let values = {
-          sources: JSON.stringify(sourceList),
-          username,
-          email,
-          first_name: firstname,
-          last_name: lastname,
-          gift_code: (promoCode && code !== "") ? code : null,
-          password: sha256(password1),
-          "platform_data": JSON.stringify(cache)
-        };
-        this.props.registerUser(values);
-      } else {
-        this.setState({
-          errors,
-          loading: false,
+    // Check if passwords match
+    if(password1 !== "" && password2 !== "" && password1 !== password2){
+      errors.push({
+        code: 1,
+        msg: "Your passwords do not match.",
+        weight: 10,
+      });
+    }
+    if(sourceList.length === 0){
+      errors.push({
+        code: 2,
+        msg: "No platforms are connected.",
+        weight: 10,
+      });
+    }
+    if(firstname === ""){
+      errors.push({
+        code: 3,
+        msg: "Please enter your first name.",
+        weight: 8,
+      });
+    }
+    if(lastname === ""){
+      errors.push({
+        code: 4,
+        msg: "Please enter your last name.",
+        weight: 8,
+      });
+    }
+    if(email === ""){
+      errors.push({
+        code: 5,
+        msg: "Please enter your email.",
+        weight: 9,
+      });
+    }
+    if(username === ""){
+      errors.push({
+        code: 6,
+        msg: "Please select a username from the list above.",
+        weight: 10,
+      });
+    }
+    if(password1 === ""){
+      errors.push({
+        code: 7,
+        msg: "Please enter a password.",
+        weight: 10,
+      });
+    }
+    if(password2 === ""){
+      errors.push({
+        code: 8,
+        msg: "Please repeat your password.",
+        weight: 10,
+      });
+    }
+
+    if(error.length === 0){
+      this.setState({
+        loading: true,
+      }, () => {
+        // Cache data
+        let cache = {};
+        intel
+        .fill(this.state.sourceList)
+        .then(() => {
+          intel.calendar();
+          intel.stats();
+          intel.repos();
         })
-      }
-    });
+        .then(() => {
+          cache = {
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          };
+        })
+        .then(() => {
+          // Get all required values from the state
+          const { 
+            password1,
+            password2,
+            firstname,
+            lastname,
+            email,
+            sourceList,
+            username,
+            promoCode,
+            code,
+          } = this.state;
+
+          // Check if there are no errors
+            let values = {
+              sources: JSON.stringify(sourceList),
+              username,
+              email,
+              first_name: firstname,
+              last_name: lastname,
+              gift_code: (promoCode && code !== "") ? code : null,
+              password: sha256(password1),
+              "platform_data": JSON.stringify(cache)
+            };
+            this.props.registerUser(values);
+        });
+      });
+    } else {
+      this.setState({
+        errors,
+      })
+    }
   }
 
   handleCodeChange = (e) => {
