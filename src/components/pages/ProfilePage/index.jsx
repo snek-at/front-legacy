@@ -244,7 +244,11 @@ class ProfilePage extends React.Component {
                           >
                             <MDBBtn color="link">
                               <div className="org">
-                                <img src={org.avatarUrl} alt={org.name} />
+                                {org.avatarUrl ? (
+                                  <img src={org.avatarUrl} alt={org.name} />
+                                ) : (
+                                  <i class="fas fa-sitemap fa-lg"></i>
+                                )}
                                 <div className="tag">{org.members.length}</div>
                               </div>
                             </MDBBtn>
