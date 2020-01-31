@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "./static/css/main.6a952317.chunk.css",
-    "main.js": "./static/js/main.1a39429c.chunk.js",
-    "main.js.map": "./static/js/main.1a39429c.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.5f214c8d.js",
-    "runtime-main.js.map": "./static/js/runtime-main.5f214c8d.js.map",
-    "static/css/2.9472c03c.chunk.css": "./static/css/2.9472c03c.chunk.css",
-    "static/js/2.38a3e447.chunk.js": "./static/js/2.38a3e447.chunk.js",
-    "static/js/2.38a3e447.chunk.js.map": "./static/js/2.38a3e447.chunk.js.map",
+    "main.css": "./static/css/main.896e3719.chunk.css",
+    "main.js": "./static/js/main.ccf328a5.chunk.js",
+    "main.js.map": "./static/js/main.ccf328a5.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.3582d32c.js",
+    "runtime-main.js.map": "./static/js/runtime-main.3582d32c.js.map",
+    "static/css/2.ab4709b8.chunk.css": "./static/css/2.ab4709b8.chunk.css",
+    "static/js/2.c9656c50.chunk.js": "./static/js/2.c9656c50.chunk.js",
+    "static/js/2.c9656c50.chunk.js.map": "./static/js/2.c9656c50.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.509a2b71953ef13358e566a959ada25e.js": "./precache-manifest.509a2b71953ef13358e566a959ada25e.js",
+    "precache-manifest.8c3b48fc7a360806febb460cdb4f2973.js": "./precache-manifest.8c3b48fc7a360806febb460cdb4f2973.js",
     "service-worker.js": "./service-worker.js",
-    "static/css/2.9472c03c.chunk.css.map": "./static/css/2.9472c03c.chunk.css.map",
-    "static/css/main.6a952317.chunk.css.map": "./static/css/main.6a952317.chunk.css.map",
-    "static/js/2.38a3e447.chunk.js.LICENSE": "./static/js/2.38a3e447.chunk.js.LICENSE",
+    "static/css/2.ab4709b8.chunk.css.map": "./static/css/2.ab4709b8.chunk.css.map",
+    "static/css/main.896e3719.chunk.css.map": "./static/css/main.896e3719.chunk.css.map",
+    "static/js/2.c9656c50.chunk.js.LICENSE": "./static/js/2.c9656c50.chunk.js.LICENSE",
     "static/media/mdb.css": "./static/media/default-skin.b257fa9c.svg",
     "static/media/dev.c067674a.svg": "./static/media/dev.c067674a.svg",
     "static/media/donor.jpg": "./static/media/donor.86b7dfa1.jpg",
@@ -26,10 +26,10 @@
     "static/media/trophy.png": "./static/media/trophy.5c08a90e.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.5f214c8d.js",
-    "static/css/2.9472c03c.chunk.css",
-    "static/js/2.38a3e447.chunk.js",
-    "static/css/main.6a952317.chunk.css",
-    "static/js/main.1a39429c.chunk.js"
+    "static/js/runtime-main.3582d32c.js",
+    "static/css/2.ab4709b8.chunk.css",
+    "static/js/2.c9656c50.chunk.js",
+    "static/css/main.896e3719.chunk.css",
+    "static/js/main.ccf328a5.chunk.js"
   ]
 }
