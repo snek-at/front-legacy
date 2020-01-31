@@ -59,6 +59,8 @@ class Register extends React.Component {
     sourceList: [],
     usernames: [],
     hasGitHub: false,
+    promoCode: false,
+    code: "",
   };
 
   toggle = () => {
@@ -277,6 +279,8 @@ class Register extends React.Component {
         email,
         sourceList,
         username,
+        promoCode,
+        code,
       } = this.state;
 
       // Error
@@ -348,6 +352,7 @@ class Register extends React.Component {
           email,
           first_name: firstname,
           last_name: lastname,
+          gift_code: (promoCode && code !== "") ? code : null,
           password: sha256(password1),
           "platform_data": JSON.stringify(cache)
         };
@@ -358,6 +363,21 @@ class Register extends React.Component {
         })
       }
     });
+  }
+
+  handleCodeChange = (e) => {
+    let code = e.target.value;
+
+    if(code.length <= 14){
+      if(code.length === 4 || code.length === 9){
+        code = code + "-";
+      }
+      this.setState({
+        code: code.toUpperCase()
+      });
+    } else {
+      return false;
+    }
   }
 
   logMeIn = (event) => {
@@ -499,6 +519,32 @@ class Register extends React.Component {
               </MDBCol>
             </MDBRow>
             </form>
+            <div className="text-left mt-2">
+              <small
+              className="blue-text clickable text-md"
+              onClick={() => this.setState({promoCode: !this.state.promoCode})}
+              >
+              {!this.state.promoCode ? (
+                "I have a promo code"
+              ) : (
+                "I don't have a promo code"
+              )}
+              </small>
+            </div>
+            {this.state.promoCode &&
+            <input
+            value={this.state.code}
+            className="form-control mb-3"
+            spellcheck="false"
+            autoComplete="autocomplete_off_874548537585743884357"
+            onChange={this.handleCodeChange}
+            type="text"
+            id="materialFormRegisterConfirmEx40"
+            name="code"
+            placeholder="Promo code"
+            label="Promotional code"
+            />
+            }
             <p className="text-muted mt-4">Connect your work</p>
             <small className="text-muted">You need to connect at least one account to continue.</small>
             <div>
