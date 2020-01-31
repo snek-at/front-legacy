@@ -71,7 +71,7 @@ class Footer extends React.PureComponent{
             tag="a"
             floating
             social="ins"
-            href="https://www.instagram.com/snek-at/"
+            href="https://www.instagram.com/snek_at/"
             rel="noopener noreferrer"
             target="_blank"
             >
@@ -81,7 +81,7 @@ class Footer extends React.PureComponent{
             tag="a"
             floating
             social="fb"
-            href="https://www.facebook.com/snek-at"
+            href="https://www.facebook.com/SNEK-107139834155546/"
             rel="noopener noreferrer"
             target="_blank"
             >
@@ -96,6 +96,16 @@ class Footer extends React.PureComponent{
             target="_blank"
             >
               <MDBIcon fab icon="twitter" />
+            </MDBBtn>
+            <MDBBtn
+            tag="a"
+            floating
+            social="yt"
+            href="https://www.youtube.com/channel/UCbzwB5x8XBTjnGZMydUr5LA"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+              <MDBIcon fab icon="youtube" />
             </MDBBtn>
             <MDBBtn
             tag="a"
