@@ -253,7 +253,6 @@ class Register extends React.Component {
 
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = async () => {
-
     const { 
       password1,
       password2,
@@ -327,7 +326,7 @@ class Register extends React.Component {
       });
     }
 
-    if(error.length === 0){
+    if(errors.length === 0){
       this.setState({
         loading: true,
       }, () => {
