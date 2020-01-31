@@ -3,7 +3,10 @@
 import React from "react";
 
 //> Additional
+// Encrypting
 import sha256 from "js-sha256";
+// Text animations
+import TextLoop from "react-text-loop";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -248,6 +251,9 @@ class Register extends React.Component {
 
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = async () => {
+    this.setState({
+      loading: true,
+    });
     // Cache data
     let cache = {};
     intel
@@ -412,7 +418,7 @@ class Register extends React.Component {
         errors
       });
     } else {
-      this.props.logmein(this.state.login_username, this.state.login_password)
+      this.props.logmein(this.state.login_username, sha256(this.state.login_password));
     }
   }
 
@@ -457,253 +463,281 @@ class Register extends React.Component {
         }
         {this.state.step === 1 &&
           <>
-            <div className="text-left">
-              <small className="text-muted clickable" onClick={() => this.setState({step: 0, errors: []})}>
-                <MDBIcon icon="angle-left" className="mr-1" />
-                Back
-              </small>
-            </div>
-            <p className="lead">So you're a Software Engineer...</p>
-            <p className="text-muted mb-4">We just need a bit more information to get you started.</p>
-            <form>
-            <MDBRow>
-              <MDBCol md="6">
-                <input 
-                type="text"
-                className={this.testForError(3) ? "form-control error" : "form-control"}
-                placeholder="Firstname"
-                name="firstname"
-                onChange={(e) => this.handleChange(e, 3)}
-                value={this.state.firstname}
-                />
-              </MDBCol>
-              <MDBCol md="6">
-                <input 
-                type="text"
-                className={this.testForError(4) ? "form-control error" : "form-control"}
-                placeholder="Lastname"
-                name="lastname"
-                onChange={(e) => this.handleChange(e, 4)}
-                value={this.state.lastname}
-                />
-              </MDBCol>
-            </MDBRow>
-            <input 
-            type="email"
-            className={this.testForError(5) ? "form-control my-2 error" : "form-control my-2"}
-            placeholder="E-Mail"
-            name="email"
-            onChange={(e) => this.handleChange(e, 5)}
-            value={this.state.email}
-            />
-            <MDBRow>
-              <MDBCol md="6">
-                <input 
-                type="password"
-                className={this.testForError([7, 1]) ? "form-control error" : "form-control"}
-                placeholder="Password"
-                name="password1"
-                onChange={(e) => this.handleChange(e, [7, 1])}
-                value={this.state.password1}
-                />
-              </MDBCol>
-              <MDBCol md="6">
-                <input 
-                type="password"
-                className={this.testForError([8, 1]) ? "form-control error" : "form-control"}
-                placeholder="Repeat password"
-                name="password2"
-                onChange={(e) => this.handleChange(e, [8, 1])}
-                value={this.state.password2}
-                />
-              </MDBCol>
-            </MDBRow>
-            </form>
-            <div className="text-left mt-2">
-              <small
-              className="blue-text clickable text-md"
-              onClick={() => this.setState({promoCode: !this.state.promoCode})}
-              >
-              {!this.state.promoCode ? (
-                "I have a promo code"
-              ) : (
-                "I don't have a promo code"
-              )}
-              </small>
-            </div>
-            {this.state.promoCode &&
-            <input
-            value={this.state.code}
-            className="form-control mb-3"
-            spellcheck="false"
-            autoComplete="autocomplete_off_874548537585743884357"
-            onChange={this.handleCodeChange}
-            type="text"
-            id="materialFormRegisterConfirmEx40"
-            name="code"
-            placeholder="Promo code"
-            label="Promotional code"
-            />
-            }
-            <p className="text-muted mt-4">Connect your work</p>
-            <small className="text-muted">You need to connect at least one account to continue.</small>
-            <div>
-              <MDBPopover
-                placement="top"
-                popover
-                clickable
-                id="popper1"
-              >
-                <MDBBtn color="link" className="text-muted py-1">
-                <MDBIcon far icon="question-circle" className="pr-1" />
-                Why do I need to connect my accounts?
+            {!this.state.loading ? (
+            <>
+              <div className="text-left">
+                <small className="text-muted clickable" onClick={() => this.setState({step: 0, errors: []})}>
+                  <MDBIcon icon="angle-left" className="mr-1" />
+                  Back
+                </small>
+              </div>
+              <p className="lead">So you're a Software Engineer...</p>
+              <p className="text-muted mb-4">We just need a bit more information to get you started.</p>
+              <form>
+              <MDBRow>
+                <MDBCol md="6">
+                  <input 
+                  type="text"
+                  className={this.testForError(3) ? "form-control error" : "form-control"}
+                  placeholder="Firstname"
+                  name="firstname"
+                  onChange={(e) => this.handleChange(e, 3)}
+                  value={this.state.firstname}
+                  />
+                </MDBCol>
+                <MDBCol md="6">
+                  <input 
+                  type="text"
+                  className={this.testForError(4) ? "form-control error" : "form-control"}
+                  placeholder="Lastname"
+                  name="lastname"
+                  onChange={(e) => this.handleChange(e, 4)}
+                  value={this.state.lastname}
+                  />
+                </MDBCol>
+              </MDBRow>
+              <input 
+              type="email"
+              className={this.testForError(5) ? "form-control my-2 error" : "form-control my-2"}
+              placeholder="E-Mail"
+              name="email"
+              onChange={(e) => this.handleChange(e, 5)}
+              value={this.state.email}
+              />
+              <MDBRow>
+                <MDBCol md="6">
+                  <input 
+                  type="password"
+                  className={this.testForError([7, 1]) ? "form-control error" : "form-control"}
+                  placeholder="Password"
+                  name="password1"
+                  onChange={(e) => this.handleChange(e, [7, 1])}
+                  value={this.state.password1}
+                  />
+                </MDBCol>
+                <MDBCol md="6">
+                  <input 
+                  type="password"
+                  className={this.testForError([8, 1]) ? "form-control error" : "form-control"}
+                  placeholder="Repeat password"
+                  name="password2"
+                  onChange={(e) => this.handleChange(e, [8, 1])}
+                  value={this.state.password2}
+                  />
+                </MDBCol>
+              </MDBRow>
+              </form>
+              <div className="text-left mt-2">
+                <small
+                className="blue-text clickable text-md"
+                onClick={() => this.setState({promoCode: !this.state.promoCode})}
+                >
+                {!this.state.promoCode ? (
+                  "I have a promo code"
+                ) : (
+                  "I don't have a promo code"
+                )}
+                </small>
+              </div>
+              {this.state.promoCode &&
+              <input
+              value={this.state.code}
+              className="form-control mb-3"
+              spellCheck="false"
+              autoComplete="autocomplete_off_874548537585743884357"
+              onChange={this.handleCodeChange}
+              type="text"
+              id="materialFormRegisterConfirmEx40"
+              name="code"
+              placeholder="Promo code"
+              label="Promotional code"
+              />
+              }
+              <p className="text-muted mt-4">Connect your work</p>
+              <small className="text-muted">You need to connect at least one account to continue.</small>
+              <div>
+                <MDBPopover
+                  placement="top"
+                  popover
+                  clickable
+                  id="popper1"
+                >
+                  <MDBBtn color="link" className="text-muted py-1">
+                  <MDBIcon far icon="question-circle" className="pr-1" />
+                  Why do I need to connect my accounts?
+                  </MDBBtn>
+                  <div>
+                    <MDBPopoverHeader>
+                    <MDBIcon far icon="question-circle" className="pr-2" />
+                    Connecting accounts
+                    </MDBPopoverHeader>
+                    <MDBPopoverBody>
+                      To generate your expressive and meaningful profile, we require data about your work, 
+                      which we acquire by fetching it from platforms like GitHub, GitLab and BitBucket. It 
+                      also helps us verify your data.<br/>
+                      <a 
+                      className="blue-text"
+                      href="https://github.com/snek-at"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      >
+                      Learn more
+                      </a>
+                    </MDBPopoverBody>
+                  </div>
+                </MDBPopover>
+              </div>
+              <div className="connect mb-3">
+                <MDBBtn
+                color="orange"
+                onClick={() => this.setState({modalGitLab: true})}
+                >
+                <MDBIcon fab icon="gitlab" size="lg"/>
                 </MDBBtn>
-                <div>
-                  <MDBPopoverHeader>
-                  <MDBIcon far icon="question-circle" className="pr-2" />
-                  Connecting accounts
-                  </MDBPopoverHeader>
-                  <MDBPopoverBody>
-                    To generate your expressive and meaningful profile, we require data about your work, 
-                    which we acquire by fetching it from platforms like GitHub, GitLab and BitBucket. It 
-                    also helps us verify your data.<br/>
-                    <a 
-                    className="blue-text"
-                    href="https://github.com/snek-at"
-                    rel="noopener noreferrer"
-                    target="_blank"
+                <MDBBtn
+                color="elegant"
+                onClick={this.connectGitHub}
+                >
+                <MDBIcon fab icon="github" size="lg"/>
+                </MDBBtn>
+                <MDBBtn
+                color="primary"
+                disabled
+                >
+                <MDBIcon fab icon="bitbucket" size="lg"/>
+                </MDBBtn>
+              </div>
+              <div>
+                <MDBListGroup>
+                {this.state.usernames.map((source, i) => {
+                  return(
+                    <MDBListGroupItem
+                    className={"list-item-"+source.source}
+                    key={i}
                     >
-                    Learn more
-                    </a>
-                  </MDBPopoverBody>
-                </div>
-              </MDBPopover>
-            </div>
-            <div className="connect mb-3">
-              <MDBBtn
-              color="orange"
-              onClick={() => this.setState({modalGitLab: true})}
-              >
-              <MDBIcon fab icon="gitlab" size="lg"/>
-              </MDBBtn>
-              <MDBBtn
-              color="elegant"
-              onClick={this.connectGitHub}
-              >
-              <MDBIcon fab icon="github" size="lg"/>
-              </MDBBtn>
-              <MDBBtn
-              color="primary"
-              disabled
-              >
-              <MDBIcon fab icon="bitbucket" size="lg"/>
-              </MDBBtn>
-            </div>
-            <div>
-              <MDBListGroup>
-              {this.state.usernames.map((source, i) => {
-                return(
-                  <MDBListGroupItem
-                  className={"list-item-"+source.source}
-                  key={i}
-                  >
-                    <div>
-                    <MDBIcon 
-                    fab
-                    icon={source.source}
-                    className="company-icon"
-                    />
-                    {source.username}
-                    {source.verified ? (
-                      <MDBPopover
-                      placement="right"
-                      domElement
-                      clickable
-                      popover
-                      tag="span"
-                      id="popper1"
-                      >   
-                        <span>
-                        <MDBIcon
-                        icon="award"
-                        className="green-text ml-2 clickable"
-                        />
-                        </span>
-                        <div>
-                          <MDBPopoverHeader>Verified</MDBPopoverHeader>
-                          <MDBPopoverBody>
-                            <MDBRow className="justify-content-center align-items-center m-0">
-                              <MDBCol size="auto" className="p-0 green-text">
-                                <MDBIcon icon="award" size="3x" />
-                              </MDBCol>
-                              <MDBCol className="p-0 pl-3">
-                              This source has been <strong className="green-text">verified</strong> by 
-                              logging into it.
-                              </MDBCol>
-                            </MDBRow>
-                          </MDBPopoverBody>
-                        </div>
-                      </MDBPopover>
-                    ) : (
-                      <MDBPopover
-                      placement="right"
-                      domElement
-                      clickable
-                      popover
-                      tag="span"
-                      id="popper1"
-                      >   
-                        <span>
-                        <MDBIcon
-                        icon="award"
-                        className="grey-text ml-2 clickable"
-                        />
-                        </span>
-                        <div>
-                          <MDBPopoverHeader>Not verified</MDBPopoverHeader>
-                          <MDBPopoverBody>
-                            <MDBRow className="justify-content-center align-items-center m-0">
-                              <MDBCol size="auto" className="p-0 grey-text">
-                                <MDBIcon icon="award" size="3x" />
-                              </MDBCol>
-                              <MDBCol className="p-0 pl-3">
-                              We can not verify your identity with GitLab. Your data is still being 
-                              included.
-                              </MDBCol>
-                            </MDBRow>
-                          </MDBPopoverBody>
-                        </div>
-                      </MDBPopover>
-                    )}
-                    </div>
-                    <MDBIcon 
-                    icon="times"
-                    className="close-icon"
-                    onClick={() => this.removeSource(source.id)}
-                    />
-                    {source.verified ?(
-                      <MDBIcon
-                      icon="check"
-                      className="username-icon"
-                      onClick={() => this.handleUserNamePick(source.username)}
+                      <div>
+                      <MDBIcon 
+                      fab
+                      icon={source.source}
+                      className="company-icon"
                       />
-                    ):(null)}
-                  </MDBListGroupItem>
-                );
-              })}
-              </MDBListGroup>
+                      {source.username}
+                      {source.verified ? (
+                        <MDBPopover
+                        placement="right"
+                        domElement
+                        clickable
+                        popover
+                        tag="span"
+                        id="popper1"
+                        >   
+                          <span>
+                          <MDBIcon
+                          icon="award"
+                          className="green-text ml-2 clickable"
+                          />
+                          </span>
+                          <div>
+                            <MDBPopoverHeader>Verified</MDBPopoverHeader>
+                            <MDBPopoverBody>
+                              <MDBRow className="justify-content-center align-items-center m-0">
+                                <MDBCol size="auto" className="p-0 green-text">
+                                  <MDBIcon icon="award" size="3x" />
+                                </MDBCol>
+                                <MDBCol className="p-0 pl-3">
+                                This source has been <strong className="green-text">verified</strong> by 
+                                logging into it.
+                                </MDBCol>
+                              </MDBRow>
+                            </MDBPopoverBody>
+                          </div>
+                        </MDBPopover>
+                      ) : (
+                        <MDBPopover
+                        placement="right"
+                        domElement
+                        clickable
+                        popover
+                        tag="span"
+                        id="popper1"
+                        >   
+                          <span>
+                          <MDBIcon
+                          icon="award"
+                          className="grey-text ml-2 clickable"
+                          />
+                          </span>
+                          <div>
+                            <MDBPopoverHeader>Not verified</MDBPopoverHeader>
+                            <MDBPopoverBody>
+                              <MDBRow className="justify-content-center align-items-center m-0">
+                                <MDBCol size="auto" className="p-0 grey-text">
+                                  <MDBIcon icon="award" size="3x" />
+                                </MDBCol>
+                                <MDBCol className="p-0 pl-3">
+                                We can not verify your identity with GitLab. Your data is still being 
+                                included.
+                                </MDBCol>
+                              </MDBRow>
+                            </MDBPopoverBody>
+                          </div>
+                        </MDBPopover>
+                      )}
+                      </div>
+                      <MDBIcon 
+                      icon="times"
+                      className="close-icon"
+                      onClick={() => this.removeSource(source.id)}
+                      />
+                      {source.verified ?(
+                        <MDBIcon
+                        icon="check"
+                        className="username-icon"
+                        onClick={() => this.handleUserNamePick(source.username)}
+                        />
+                      ):(null)}
+                    </MDBListGroupItem>
+                  );
+                })}
+                </MDBListGroup>
+              </div>
+              <MDBBtn
+              color="green"
+              className="mb-0"
+              disabled={!this.state.hasGitHub}
+              onClick={this.handleSubmit}
+              >
+              Join now
+              </MDBBtn>
+              <p>
+              <small className="text-muted">Don't worry, you can easily connect further accounts in the future.</small>
+              </p>
+            </>
+          ) : (
+            <div className="my-5 py-5">
+              <h2 className="font-weight-bolder mb-0">Hey, {this.state.firstname}!</h2>
+              <p className="lead mb-3">
+              Your profile is being generated.
+              </p>
+              <div className="progress md-progress primary-color mb-1">
+                <div className="indeterminate"></div>
+              </div>
+              <TextLoop 
+              className="text-muted"
+              children={[
+                "Connecting profiles...",
+                "Fetching data...",
+                "Creating profile...",
+                "Analyzing profile...",
+                "Creating statistics...",
+                "Warming up the coffee...",
+                "Finishing your profile..."
+                ]}
+              springConfig={{ stiffness: 180, damping: 8 }}
+              interval={4000}
+              />
             </div>
-            <MDBBtn
-            color="green"
-            className="mb-0"
-            disabled={false}
-            onClick={this.handleSubmit}
-            >
-            Join now
-            </MDBBtn>
-            <p>
-            <small className="text-muted">Don't worry, you can easily connect further accounts in the future.</small>
-            </p>
+          )}
           </>
         }
         {this.state.step === 2 &&

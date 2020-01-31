@@ -24,6 +24,7 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
+    "react-text-loop": "^2.3.0",
     "react-typed": "^1.2.0",
     "react-very-simple-oauth": "^1.1.0",
     "tippy.js": "^5.1.4",
