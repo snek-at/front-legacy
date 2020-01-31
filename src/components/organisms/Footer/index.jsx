@@ -199,7 +199,9 @@ class Footer extends React.PureComponent{
       <div className="footer-copyright text-center py-3">
         <MDBContainer fluid>
           &copy; 2019 - {new Date().getFullYear()} Copyright: Werbeagentur Christian Aichner
-          <p className="my-2 font-weight-bold madeby">
+          <br/>
+          <small className="text-muted">v{process.env.REACT_APP_VERSION}</small>
+          <p className="mb-2 mt-1 font-weight-bold madeby">
             Made with <MDBIcon 
             icon="heart"
             className="pulse red-text"
