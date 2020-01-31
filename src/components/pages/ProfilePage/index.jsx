@@ -160,8 +160,8 @@ class ProfilePage extends React.Component {
                   switch(bid){
                     case "6403bf4d17b8472735a93b71a37e0bd0":
                       return(
-                        <MDBBadge color="elegant-color" key={i}>
-                          Founder
+                        <MDBBadge color="secondary-color" key={i}>
+                          Alpha
                         </MDBBadge>
                       )
                   }
