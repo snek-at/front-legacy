@@ -18,7 +18,10 @@ export async function fill(userList) {
         return retry(maxRetries - 1, fn, params);
       });
   }
-
+  console.log(userList)
+  userList.sort((x,y) => x.isVerified - y.isVerified);
+  console.log(userList)
+  
   for (let index = 0; index < userList.length; index++) {
     const user = userList[index];
     const maxRetries = 5;
