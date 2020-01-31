@@ -61,7 +61,6 @@ class Register extends React.Component {
     login_password: "",
     sourceList: [],
     usernames: [],
-    hasGitHub: false,
     promoCode: false,
     code: "",
   };
@@ -110,14 +109,9 @@ class Register extends React.Component {
   }
 
   pushToSourceList = (source, username, server, token) => {
-    let hasGitHub = false;
     let sourceList = this.state.sourceList;
 
     this.addToUsernames(username, source);
-
-    if(source === "github"){
-      hasGitHub = true;
-    }
 
     sourceList.push({
       id: username.length + source.length + username + source,
@@ -126,13 +120,21 @@ class Register extends React.Component {
       server,
       token,
     });
+
+    if(source === "github"){
+      this.setState({
+        username,
+        hasGitHub: true,
+        sourceList,
+      });
+    } else {
+      // Set the new list of user information
+      this.setState({
+        sourceList,
+      });
+    }
     
-    // Set the new list of user information
-    this.setState({
-      sourceList,
-      hasGitHub,
-      username: hasGitHub ? username : ""
-    });
+    
   }
 
   addToUsernames = (username, source) => {
@@ -689,13 +691,6 @@ class Register extends React.Component {
                       className="close-icon"
                       onClick={() => this.removeSource(source.id)}
                       />
-                      {source.verified ?(
-                        <MDBIcon
-                        icon="check"
-                        className="username-icon"
-                        onClick={() => this.handleUserNamePick(source.username)}
-                        />
-                      ):(null)}
                     </MDBListGroupItem>
                   );
                 })}
@@ -704,8 +699,8 @@ class Register extends React.Component {
               <MDBBtn
               color="green"
               className="mb-0"
-              disabled={!this.state.hasGitHub}
               onClick={this.handleSubmit}
+              disabled={!this.state.hasGitHub}
               >
               Join now
               </MDBBtn>
