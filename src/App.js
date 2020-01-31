@@ -298,6 +298,7 @@ class App extends React.Component {
         });
         // Redirect
       } else {
+        console.log("User not verified");
         this.setState({
           loading: false,
           logged: false,
