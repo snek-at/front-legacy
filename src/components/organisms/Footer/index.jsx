@@ -177,11 +177,11 @@ class Footer extends React.PureComponent{
                 <MDBIcon far icon="file-alt" />About
               </li>
             </Link>
-            <Link to="/privacy">
+            <a href="https://www.aichner-christian.com/privacy" target="_blank" rel="noopener noreferrer">
               <li className="list-unstyled">
                 <MDBIcon icon="balance-scale" />Privacy
               </li>
-            </Link>
+            </a>
             <Link to="/terms">
               <li className="list-unstyled">
                 <MDBIcon icon="balance-scale" />Terms of Service
