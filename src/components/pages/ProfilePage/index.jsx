@@ -103,8 +103,13 @@ class ProfilePage extends React.Component {
 
     languages.map((language, i) => {
       dataLabels.push(language.name);
-      dataBackground.push(language.color);
-      dataBackgroundHover.push(this._increaseBrightness(language.color, 10));
+      if(language.color){
+        dataBackground.push(language.color);
+        dataBackgroundHover.push(this._increaseBrightness(language.color, 10));
+      } else {
+        dataBackground.push("#ffffff");
+        dataBackgroundHover.push(this._increaseBrightness("#ffffff", 10));
+      }
       dataData.push(language.share);
     });
 
