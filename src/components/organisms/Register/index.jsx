@@ -437,6 +437,13 @@ class Register extends React.Component {
     }
   }
 
+  checkInputs = () =>{
+    if (this.state.code.length === 14 && this.state.hasGitHub){
+      return false;
+    }
+    return true;
+  }
+
   render() {
     const { gitlabServers, globalState } = this.props;
     console.log(this.state, globalState);
@@ -713,7 +720,7 @@ class Register extends React.Component {
               color="green"
               className="mb-0"
               onClick={this.handleSubmit}
-              disabled={!this.state.hasGitHub}
+              disabled={this.checkInputs()}
               >
               Join now
               </MDBBtn>
