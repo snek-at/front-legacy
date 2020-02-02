@@ -61,7 +61,7 @@ class Register extends React.Component {
     login_password: "",
     sourceList: [],
     usernames: [],
-    promoCode: false,
+    promoCode: true,
     code: "",
   };
 
@@ -325,6 +325,13 @@ class Register extends React.Component {
         weight: 10,
       });
     }
+    if(code === ""){
+      errors.push({
+        code: 9,
+        msg: "Please enter your promo code or contact us to receive one.",
+        weight: 5,
+      });
+    }
 
     if(errors.length === 0){
       this.setState({
@@ -395,7 +402,7 @@ class Register extends React.Component {
       }
       this.setState({
         code: code.toUpperCase()
-      });
+      }, () => this.removeError(9));
     } else {
       return false;
     }
@@ -415,13 +422,13 @@ class Register extends React.Component {
 
     if(this.state.login_username === ""){
       errors.push({
-        code: 9,
+        code: 20,
         weight: 10,
       });
     }
     if(this.state.login_password === ""){
       errors.push({
-        code: 10,
+        code: 21,
         weight: 10,
       });
     }
@@ -435,13 +442,6 @@ class Register extends React.Component {
     } else {
       this.props.logmein(this.state.login_username, sha256(this.state.login_password));
     }
-  }
-
-  checkInputs = () =>{
-    if (this.state.code.length === 14 && this.state.hasGitHub){
-      return false;
-    }
-    return true;
   }
 
   render() {
@@ -564,7 +564,7 @@ class Register extends React.Component {
               {this.state.promoCode &&
               <input
               value={this.state.code}
-              className="form-control mb-3"
+              className={this.testForError([9, 1]) ? "form-control mb-3 error" : "form-control mb-3"}
               spellCheck="false"
               autoComplete="autocomplete_off_874548537585743884357"
               onChange={this.handleCodeChange}
@@ -720,7 +720,7 @@ class Register extends React.Component {
               color="green"
               className="mb-0"
               onClick={this.handleSubmit}
-              disabled={this.checkInputs()}
+              disabled={!this.state.hasGitHub}
               >
               Join now
               </MDBBtn>
@@ -879,7 +879,7 @@ class Register extends React.Component {
             className={this.testForError(9) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Username"
             name="username"
-            onChange={(e) => this.handleChangeManual("login_username",e.target.value, 9)}
+            onChange={(e) => this.handleChangeManual("login_username",e.target.value, 20)}
             value={this.state.login_username}
             />
             <input 
@@ -887,7 +887,7 @@ class Register extends React.Component {
             className={this.testForError(10) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Password"
             name="password"
-            onChange={(e) => this.handleChangeManual("login_password",e.target.value, 10)}
+            onChange={(e) => this.handleChangeManual("login_password",e.target.value, 21)}
             onKeyDown={this.logMeIn}
             value={this.state.login_password}
             />
