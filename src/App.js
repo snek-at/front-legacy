@@ -457,7 +457,7 @@ class App extends React.Component {
             globalState={this.state}
             />
             <ToastContainer
-              hideProgressBar={true}
+              hideProgressBar={false}
               newestOnTop={true}
               autoClose={3000}
             />
