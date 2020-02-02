@@ -1,6 +1,8 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
+
+import { toast, ToastContainer} from 'mdbreact';
 // DOM bindings for React Router
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
 
@@ -385,9 +387,11 @@ class App extends React.Component {
           }
         }
       }
-    }).catch((loading, error) => {
+    }).catch((error) => {
       // Username or password is wrong
-      console.error("Can not login.", error);
+      toast.error(error.message.split(":")[1], {
+        closeButton: false,
+      });
       this.setState({
         user: false,
       }, () => localStorage.setItem("is_logged", false));
@@ -451,6 +455,11 @@ class App extends React.Component {
             username={this.state.user}
             logmeout={this._logout}
             globalState={this.state}
+            />
+            <ToastContainer
+              hideProgressBar={true}
+              newestOnTop={true}
+              autoClose={3000}
             />
             <main>
               <Routes 
