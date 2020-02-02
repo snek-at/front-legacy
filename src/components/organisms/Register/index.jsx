@@ -876,7 +876,7 @@ class Register extends React.Component {
             <p className="lead">Login to SNEK</p>
             <input 
             type="text"
-            className={this.testForError(9) ? "form-control my-2 error" : "form-control my-2"}
+            className={this.testForError(20) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Username"
             name="username"
             onChange={(e) => this.handleChangeManual("login_username",e.target.value, 20)}
@@ -884,7 +884,7 @@ class Register extends React.Component {
             />
             <input 
             type="password"
-            className={this.testForError(10) ? "form-control my-2 error" : "form-control my-2"}
+            className={this.testForError(21) ? "form-control my-2 error" : "form-control my-2"}
             placeholder="Password"
             name="password"
             onChange={(e) => this.handleChangeManual("login_password",e.target.value, 21)}
