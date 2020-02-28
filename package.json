@@ -2,7 +2,7 @@
   "name": "snek-front",
   "version": "1.0.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://snek.at",
   "license": "(EUPL-1.2)",
   "dependencies": {
     "alasql": "^0.5.4",
@@ -15,7 +15,7 @@
     "graphql": "^14.5.8",
     "js-sha256": "^0.9.0",
     "lodash.flowright": "^3.5.0",
-    "mdbreact": "mdbreact-4.25.0.tgz",
+    "mdbreact": "mdbreact-4.25.1.tgz",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
     "obelisk.js": "^1.2.2",
