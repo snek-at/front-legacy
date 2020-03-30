@@ -10,6 +10,7 @@ import {
   ProfilePage,
   MessagePage,
   RedirectPage,
+  SearchPage,
 } from './components/pages';
 
 class Routes extends React.Component {
@@ -52,6 +53,11 @@ class Routes extends React.Component {
         exact
         path='/donate/thankyou'
         component={(props) => <MessagePage {...props} />}
+        />
+        <Route
+        exact
+        path='/search'
+        component={(props) => <SearchPage {...props} />}
         />
         <Route
           render={function() {
