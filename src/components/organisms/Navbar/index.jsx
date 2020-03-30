@@ -68,7 +68,7 @@ class NavbarPage extends React.Component {
     if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      let url = "search?user=" + value;
+      let url = "search?q=" + value;
       window.open(url, "_self");
     }
     else{

@@ -4,7 +4,17 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import { MDBRow, MDBCol } from "mdbreact";
+import { 
+  MDBNav,
+  MDBNavItem,
+  MDBNavLink,
+  MDBContainer,
+  MDBCol,
+  MDBRow,
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody, 
+} from "mdbreact";
 
 import axios from 'axios';
 
@@ -19,24 +29,31 @@ class Search extends React.Component {
 
   state = {
     pages: [],
-    usernames: [],
-    filter: "",
+    values: [],
+    charFilter: "",
+    categoryFilter: "",
   }
 
   componentDidMount = async () => {
+    await this.getRequest();
     this.getAllPages();
-    this.getRequest();
   }
 
-  getRequest = async () => {
+  getRequest = () => {
     let search = window.location.search;
     if (search && search.includes("?")){
       search = search.substring(1);
       search.split("&").forEach(filter => {
-        if (filter.includes("user")){
-          filter = filter.replace("user=","");
+        if (filter.includes("q=")){
+          filter = filter.replace("q=","");
           this.setState({
-            filter
+            charFilter: filter
+          })
+        }
+        else if (filter.includes("type=user")){
+          filter = filter.replace("type=","");
+          this.setState({
+            categoryFilter: filter
           })
         }
       });
@@ -47,39 +64,73 @@ class Search extends React.Component {
     snekGraphQL
     .post('', { query: GET_PAGES(localStorage.getItem("jwt_snek"))})
     .then(result => {
-      if (result.data.data.pages){
-        this.addToPages(result.data.data.pages);
+      let allPages = result.data.data.pages;
+      let pages = this.state.pages;
+      if (allPages){
+        allPages.forEach(page => {
+          if (page.urlPath != "/registration" && page.urlPath != ""){
+            pages.push(page.urlPath);
+          }
+        });
+        this.addToValues(pages);
+        this.setState({
+          pages
+        })
       }
     });
   }
 
-  addToPages = (currentPages) => {
-    let pages = this.state.pages;
-    let usernames = this.state.usernames;
+  addToValues = (currentPages) => {
+    let values = this.state.values;
+    let categoryFilter = this.state.categoryFilter;
+    let charFilter = this.state.charFilter;
 
     currentPages.forEach(page => {
-      if (page.urlPath != "/registration" && page.urlPath != ""){
-        pages.push(page.urlPath);
-        usernames.push(page.urlPath.replace("/registration/", ""));
+      let value = page.replace("/registration/", "");
+      if (value.includes(charFilter)){
+        values.push(value);
       }
     });
-  
     this.setState({
-      pages,
-      usernames
+      values
     });
   }
 
   render() {
+    let site = window.location.pathname + window.location.search;
     return (
-      <div>
-        {this.state.usernames.map((username, key) => {
-          if (username.includes(this.state.filter)){
-            let link = "u/" + username;
-            return <p key={key}><a href={link} target="_self">{username}</a></p>;
-          }
-        })}
-      </div>
+      <MDBContainer>
+        <MDBRow>
+          <MDBCol size="3">
+            <MDBNav className="flex-column">
+              <MDBNavItem>
+                <MDBNavLink active to={site = site.split("&")[0] += "&type=user"}>Users</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to={site = site.split("&")[0] += "&type=software"}>Software Engineer</MDBNavLink>
+              </MDBNavItem>
+              <MDBNavItem>
+                <MDBNavLink to={site = site.split("&")[0] += "&type=media"} >Media Engineer</MDBNavLink>
+              </MDBNavItem>
+            </MDBNav>
+          </MDBCol>
+          <MDBCol>
+            <MDBTable>
+              <MDBTableHead>
+                <tr>
+                  <th><h1>{this.state.values.length} Users</h1></th>
+                </tr>
+              </MDBTableHead>
+              <MDBTableBody>
+                {this.state.values.map((value, key) => {
+                    let link = "u/" + value;
+                    return <tr><td><a href={link}>{value}</a></td></tr>;
+                })}
+              </MDBTableBody>
+            </MDBTable>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
     )
   }
 }
