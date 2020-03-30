@@ -21,7 +21,13 @@ import {
   MDBDropdownMenu,
   MDBSmoothScroll,
   MDBIcon,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOption,
+  MDBSelectOptions,
 } from "mdbreact";
+
+import axios from 'axios';
 
 //> Additional
 // Link
@@ -33,18 +39,75 @@ import SNEKLogo from "../../../assets/navigation/logo.png";
 //> CSS
 import "./navbar.scss";
 
+// Get pages
+const GET_PAGES = (token) => `query pages { pages(token: "${token}") { urlPath } } `;
+
+const snekGraphQL = axios.create({
+  baseURL: 'https://engine.snek.at/api/graphiql',
+});
+
 class NavbarPage extends React.Component {
   state = {
-    isOpen: false
+    isOpen: false,
+    filter: "",
+    usernames: [],
   };
+
+  componentDidMount = () => {
+    this.getAllUsernames();
+  }
 
   toggleCollapse = () => {
     this.setState({ isOpen: !this.state.isOpen });
   }
 
+  search = (event) => {
+    let value = document.getElementById("selectSearchInput").value;
+    console.log(value);
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      let url = "search?user=" + value;
+      window.open(url, "_self");
+    }
+    else{
+      this.setState({
+        filter: value,
+      })
+    }
+  }
+
+  getAllUsernames = async () => {
+    snekGraphQL
+    .post('', { query: GET_PAGES(localStorage.getItem("jwt_snek"))})
+    .then(result => {
+      if (result.data.data.pages){
+        this.addToUsernames(result.data.data.pages);
+      }
+    });
+  }
+
+  addToUsernames = (currentPages) => {
+    let usernames = this.state.usernames;
+
+    currentPages.forEach(page => {
+      if (page.urlPath != "/registration" && page.urlPath != ""){
+        usernames.push(page.urlPath.replace("/registration/", ""));
+      }
+    });
+  
+    this.setState({
+      usernames
+    });
+  }
+
+  getValueOfSelectOne = value => {
+    window.open("/u/"+value, "_self");
+  }
+
   render() {
     const { globalState } = this.props;
-
     return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
@@ -81,7 +144,18 @@ class NavbarPage extends React.Component {
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
             <MDBNavbarNav left>
               <MDBNavItem>
-                <input type="search" className="form-control" placeholder="Search..."/>
+                <MDBSelect getValue={value=> this.getValueOfSelectOne(value)} onKeyUp={this.search} id="search">
+                  <MDBSelectInput selected="Find a user"/>
+                    <MDBSelectOptions search >
+                      {this.state.usernames.map((username, key) => {
+                        if (username.includes(this.state.filter)){
+                          let link = "u/" + username;
+                          return <MDBSelectOption>{username}</MDBSelectOption>
+                          return <p key={key}><a href={link} target="_self">{username}</a></p>;
+                        }
+                      })}
+                    </MDBSelectOptions>
+                </MDBSelect>
               </MDBNavItem>
             </MDBNavbarNav>
             <MDBNavbarNav right>
