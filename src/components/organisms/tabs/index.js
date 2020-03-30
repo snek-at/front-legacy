@@ -1,8 +1,10 @@
-import Overview from "./Overview";
+import OverviewSoftware from "./OverviewSoftware";
+import OverviewMedia from "./OverviewMedia";
 import Projects from "./Projects";
 
 export {
-  Overview,
+  OverviewSoftware,
+  OverviewMedia,
   Projects,
 }
 
