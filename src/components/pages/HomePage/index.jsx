@@ -55,7 +55,7 @@ class HomePage extends React.Component {
       this.setState({
         rotate: 0,
       });
-    }  
+    }
   };
 
   componentWillUnmount() {

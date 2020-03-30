@@ -1,7 +1,9 @@
 import Donate from "./Donate";
+import Settings from "./Settings";
 
 export {
   Donate,
+  Settings,
 }
 
 /**

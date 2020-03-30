@@ -34,13 +34,16 @@ import {
   Overview,
   Projects,
 } from "../../organisms/tabs";
+import {
+  Settings,
+} from "../../molecules/modals";
 
 //> CSS
 import "./profile.scss";
 
 class ProfilePage extends React.Component {
   state = {
-    
+    showSettings: true,
   }
 
   componentDidMount = () => {
@@ -127,6 +130,14 @@ class ProfilePage extends React.Component {
     });
   }
 
+  handleSettingsClose = () => {
+    if(this.state.showSettings){
+      this.setState({
+        showSettings: false
+      });
+    }
+  }
+
   render() {
     const { globalState } = this.props;
     console.log(globalState);
@@ -139,6 +150,7 @@ class ProfilePage extends React.Component {
     }
 
     return (
+      <>
       <MDBContainer id="profile" className="py-3">
         <MDBRow>
           <MDBCol md="3" className="social">
@@ -224,6 +236,7 @@ class ProfilePage extends React.Component {
                   color="grey"
                   className="mx-0 px-4 w-100"
                   size="md"
+                  onClick={() => this.setState({showSettings: true})}
                   >
                   <MDBIcon icon="cogs" className="mr-1" />
                   Settings
@@ -328,6 +341,10 @@ class ProfilePage extends React.Component {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
+      {this.state.showSettings &&
+      <Settings {...this.props} closeModal={this.handleSettingsClose}/>
+      }
+      </>
     );
   }
 }
