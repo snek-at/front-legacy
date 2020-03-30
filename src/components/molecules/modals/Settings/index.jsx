@@ -36,7 +36,9 @@ const settingsTabs = [
 
 class Settings extends React.Component {
   state = {
+    changeDetected: false,
     activeItemInnerPills: 0,
+    checkSum: undefined,
   }
 
   componentDidMount = () => {
@@ -48,7 +50,7 @@ class Settings extends React.Component {
         if(this.props.globalState.fetchedUser.platformData){
           if(this.props.globalState.fetchedUser.platformData.user){
             let data = this.props.globalState.fetchedUser.platformData.user;
-            this.setState({
+            let enterData = {
               first_name: data.first_name ? data.first_name : "",
               last_name: data.last_name ? data.last_name : "",
               email: data.email ? data.email : "",
@@ -61,7 +63,12 @@ class Settings extends React.Component {
               showTopLanguages: data.showTopLanguages ? data.showTopLanguages : true,
               show3DDiagram: data.show3DDiagram ? data.show3DDiagram : true,
               show2DDiagram: data.show2DDiagram ? data.show2DDiagram : true,
-            })
+            }
+            let dataString = this.stringToHash(JSON.stringify(enterData));
+            this.setState({
+              ...enterData,
+              checksum: dataString,
+            });
           } else {
             this.initBlank();
           }
@@ -91,6 +98,62 @@ class Settings extends React.Component {
       show3DDiagram: true,
       show2DDiagram: true,
     });
+  }
+
+  stringToHash = (string) => { 
+    let hash = 0; 
+    if (string.length == 0) return hash; 
+    for (let i = 0; i < string.length; i++) { 
+      let char = string.charCodeAt(i); 
+      hash = ((hash << 5) - hash) + char; 
+      hash = hash & hash; 
+    } 
+    return hash; 
+  } 
+
+  handleCheckChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.checked
+    }, () => this.getChange());
+  }
+
+  handleTextChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    }, () => this.getChange());
+  }
+
+  getChange = () => {
+    let currentData = {
+      first_name: this.state.first_name,
+      last_name: this.state.last_name,
+      email: this.state.email,
+      showEmailPublic: this.state.showEmailPublic,
+      company: this.state.company,
+      showCompanyPublic: this.state.showCompanyPublic,
+      website: this.state.website,
+      location: this.state.location,
+      showLocalRanking: this.state.showLocalRanking,
+      showTopLanguages: this.state.showTopLanguages,
+      show3DDiagram: this.state.show3DDiagram,
+      show2DDiagram: this.state.show2DDiagram,
+    }
+    // Get hash of current data
+    let currentHash = this.stringToHash(JSON.stringify(currentData));
+
+    if(this.state.changeDetected){
+      if(this.state.checksum === currentHash){
+        this.setState({
+          changeDetected: false
+        });
+      }
+    } else {
+      if(this.state.checksum !== currentHash){
+        this.setState({
+          changeDetected: true
+        });
+      }
+    }
   }
 
   toggleInnerPills = tab => e => {
@@ -304,7 +367,10 @@ class Settings extends React.Component {
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter className="text-right">
-          <MDBBtn color="elegant" size="md" outline onClick={this.props.closeModal}>Close</MDBBtn>
+          {this.state.changeDetected &&
+          <MDBBtn color="green">Save</MDBBtn>
+          }
+          <MDBBtn color="elegant" outline onClick={this.props.closeModal}>Close</MDBBtn>
         </MDBModalFooter>
       </MDBModal>
     );
