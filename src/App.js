@@ -201,7 +201,7 @@ class App extends React.Component {
   }
 
   getData = async (username) => {
-    console.log(username);
+    await this._verifyToken();
     await this.props.client.query({
       query: GET_USER_DATA,
       variables: { 

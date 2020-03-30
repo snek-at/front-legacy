@@ -73,7 +73,6 @@ export const githubProvider: IProvider<boolean> = {
     .then(async res => await res.json())
     .then(async res => {
       const access_token = res.access_token
-      console.log("xxxxxx", access_token);
       // GET request to get the user used for OAuth 
       await fetch(`https://api.github.com/user?access_token=${access_token}`)
       .then(async res => await res.json())
