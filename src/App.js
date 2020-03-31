@@ -254,12 +254,6 @@ class App extends React.Component {
               { name: "2", coordinates: [13.8496928, 46.6114363 ] },
               { name: "3", coordinates: [11.489387, 48.783450 ] }
             ]
-            // Settings
-            platformData.user.settings = {
-              showMap: true,
-              showInstagramFeed: true,
-              instagramHideCaption: true,
-            }
             // Skills (like languages for programmers)
             platformData.user.skills = [
               {name: "Photography", color: "#563d7c", size: 54, share: 10},
@@ -275,6 +269,17 @@ class App extends React.Component {
             // Add needed variables software engineer
             platformData.user.type = "software";
           }
+          // Settings
+            platformData.user.settings = {
+              showMap: true,
+              showInstagramFeed: true,
+              instagramHideCaption: true,
+              show3DDiagram: true,
+              show2DDiagram: true,
+              showCompanyPublic: true,
+              showEmailPublic: true,
+              showLocalRanking: true,
+            }
           // Add needed variables for both software- and media engineer
           platformData.user.first_name = "Max";
           platformData.user.last_name = "Mustermann";
