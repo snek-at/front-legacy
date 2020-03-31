@@ -63,7 +63,6 @@ class NavbarPage extends React.Component {
 
   search = (event) => {
     let value = document.getElementById("selectSearchInput").value;
-    console.log(value);
     // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
     if (event.key === 'Enter') {
       event.preventDefault();

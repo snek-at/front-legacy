@@ -133,16 +133,17 @@ class App extends React.Component {
     if(localStorage.getItem('jwt_snek')){
       this._verifyToken();
     } else {
+      console.log("No token, login anonymous");
       this._loginAnonymous();
     }
   }
 
   _verifyToken = async () => {
-    console.log("Verifying");
+    console.log("Verifying token");
     await this.props.verify({
       variables: { "token": localStorage.getItem('jwt_snek') }
     }).then(({data}) => {
-      console.log(data);
+      console.log("Verify data",data);
       if(data){
         if(data.verifyToken){
           this.fetchGitLabServers(localStorage.getItem('jwt_snek'));
@@ -153,6 +154,7 @@ class App extends React.Component {
             console.log("Get login data from verifyToken");
             this._getLoginData(data.verifyToken.payload.username, localStorage.getItem('jwt_snek'));
           } else {
+            console.log("Is anonymous user");
             this.setState({
               loading: false,
               logged: false,
@@ -208,7 +210,7 @@ class App extends React.Component {
         "token": localStorage.getItem('jwt_snek')
       }
     }).then(({data}) => {
-      console.log("Get data from "+username,data);
+      console.log("Get user data from "+username,data);
       if(data.profile.verified){
         // Redirect and login
         let platformData = JSON.parse(data.profile.platformData);
@@ -340,8 +342,45 @@ class App extends React.Component {
     })
   }
 
+  saveSettings = (state) => {
+    console.log("State",state);
+    console.log(this.state);
+    /**
+     * Use caching to save new, edited data.
+     * This has to be updated whenever parameters are added or removed.
+     */
+    // Fill platformData to be used and edited locally
+    let cache = this.state.fetchedUser.platformData;
+    // Check for mandatory fields
+    if(state.email){
+      cache.user.first_name = state.first_name ? state.first_name : "";
+      cache.user.last_name = state.last_name ? state.last_name : "";
+      cache.user.email = state.email ? state.email : cache.user.email;
+      cache.user.websiteUrl = state.website ? state.website : "";
+      cache.user.location = state.location ? state.location : "";
+      cache.user.settings = {
+        showTopLanguages: state.showTopLanguages,
+        showLocalRanking: state.showLocalRanking,
+        show3DDiagram: state.show3DDiagram,
+        show2DDiagram: state.show2DDiagram,
+        showEmailPublic: state.showEmailPublic,
+        showCompanyPublic: state.showCompanyPublic,
+        showMap: state.showMap,
+        showInstagramFeed: state.showInstagramFeed,
+        instagramHideCaption: state.instagramHideCaption,
+      }
+      let platformData = JSON.stringify(cache);
+      this.props.caching({
+          variables: { 
+          token: localStorage.getItem("jwt_snek"),
+          platformData
+        }
+      })
+    }
+  }
+
   _getLoginData = async (username, token) => {
-    console.log(username);
+    console.log("Getting login data for user "+username);
     await this.props.client.query({
       query: GET_USER_LOGINDATA,
       variables: { 
@@ -349,7 +388,7 @@ class App extends React.Component {
         "token": token
       }
     }).then(({data}) => {
-      console.log(data);
+      console.log("Got login data from "+username,data);
       if(data.profile.verified){
         // Fill data
         this.setState({
@@ -368,7 +407,7 @@ class App extends React.Component {
       }
     }).catch(error => {
       //console.error(error);
-      console.error("Can not get login data.", error)
+      console.error("Can not get login data", error)
       this.setState({
         loading: false,
         logged: false,
@@ -399,13 +438,14 @@ class App extends React.Component {
   }
 
   _loginAnonymous = async () => {
-    console.log("Login anonymous");
+    console.log("Perform anonymous login");
     await this.props.login({ 
       variables: { 
         "username": process.env.REACT_APP_ANONYMOUS_USER,
         "password": process.env.REACT_APP_ANONYMOUS_PASS
       }
     }).then(({ loading, data }) => {
+      console.log("Anonymous login success");
       if(data){
         if(data.tokenAuth){
           if(data.tokenAuth.token){
@@ -422,13 +462,12 @@ class App extends React.Component {
         }
       }
     }).catch((error) => {
-      console.error(error);
+      console.log("Anonymous login failed",error);
     });
   }
 
   _login = async (username, password) => {
-    console.log("Login");
-    console.log(username, password);
+    console.log("Perform login with "+username);
 
     await this.props.login({ 
       variables: { 
@@ -436,7 +475,7 @@ class App extends React.Component {
         "password": password
       }
     }).then(({ loading, data }) => {
-      console.log(data);
+      console.log("Login successful with "+username,data);
       if(data){
         if(data.tokenAuth){
           if(data.tokenAuth.token){
@@ -448,6 +487,7 @@ class App extends React.Component {
       }
     }).catch((error) => {
       // Username or password is wrong
+      console.log("Login failed with "+username);
       toast.error(error.message.split(":")[1], {
         closeButton: false,
       });
@@ -504,8 +544,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-
     return (
       <Router>
         <ScrollToTop>
@@ -526,6 +564,7 @@ class App extends React.Component {
               fetchProfileData={this.getData}
               globalState={this.state}
               registerUser={this._registerUser}
+              saveSettings={this.saveSettings}
               />
             </main>
             <Footer />

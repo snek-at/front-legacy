@@ -14,6 +14,10 @@ import {
 } from './components/pages';
 
 class Routes extends React.Component {
+  saveSettings = (state) => {
+    this.props.saveSettings(state);
+  }
+
   render() {
     return (
       <Switch>
@@ -41,6 +45,7 @@ class Routes extends React.Component {
           (props) => <ProfilePage
           globalState={this.props.globalState}
           fetchProfileData={this.props.fetchProfileData}
+          saveSettings={this.saveSettings}
           {...props}
           />
         } />

@@ -43,8 +43,6 @@ class Settings extends React.Component {
 
   componentDidMount = () => {
     // Check for the current values
-    console.log("####################");
-    console.log(this.props);
     if(this.props.globalState){
       if(this.props.globalState.fetchedUser){
         if(this.props.globalState.fetchedUser.platformData){
@@ -163,6 +161,10 @@ class Settings extends React.Component {
       });
     }
   };
+
+  save = () => {
+    this.props.saveSettings(this.state)
+  }
 
   render() {
     return (
@@ -368,7 +370,7 @@ class Settings extends React.Component {
         </MDBModalBody>
         <MDBModalFooter className="text-right">
           {this.state.changeDetected &&
-          <MDBBtn color="green">Save</MDBBtn>
+          <MDBBtn color="green" onClick={this.save}>Save</MDBBtn>
           }
           <MDBBtn color="elegant" outline onClick={this.props.closeModal}>Close</MDBBtn>
         </MDBModalFooter>

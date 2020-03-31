@@ -38,6 +38,10 @@ import "./profile.scss";
 class ProfilePage extends React.Component {
   state = {};
 
+  saveSettings = (state) => {
+    this.props.saveSettings(state);
+  }
+
   componentDidMount = () => {
     if(this.props.match){
       if(this.props.match.params){
@@ -52,16 +56,15 @@ class ProfilePage extends React.Component {
   }
 
   render(){
-    console.log("GS",this.props);
     const { globalState } = this.props;
     if(globalState.fetchedUser){
       if(globalState.fetchedUser.platformData.user.type === "software"){
         return(
-          <SoftwareEngineer {...this.props} />
+          <SoftwareEngineer {...this.props} saveSettings={this.saveSettings} />
         );
       } else if (globalState.fetchedUser.platformData.user.type === "media"){
         return(
-          <MediaEngineer {...this.props} />
+          <MediaEngineer {...this.props} saveSettings={this.saveSettings} />
         );
       } else {
         return (

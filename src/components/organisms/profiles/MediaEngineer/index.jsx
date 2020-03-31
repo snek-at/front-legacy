@@ -48,7 +48,10 @@ class MediaEngineer extends React.Component {
 
   componentDidMount = () => {
     console.log("########## MEDIA ###########");
-    console.log(this.props.match);
+  }
+
+  saveSettings = (state) => {
+    this.props.saveSettings(state);
   }
 
   displaySources = (sources) => {
@@ -274,7 +277,7 @@ class MediaEngineer extends React.Component {
         </MDBRow>
       </MDBContainer>
       {this.state.showSettings &&
-      <Settings {...this.props} closeModal={this.handleSettingsClose}/>
+      <Settings {...this.props} closeModal={this.handleSettingsClose} saveSettings={this.saveSettings} />
       }
       </>
     );
