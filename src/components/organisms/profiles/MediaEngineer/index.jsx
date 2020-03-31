@@ -156,12 +156,23 @@ class MediaEngineer extends React.Component {
             </MDBView>
             <div className="bg-elegant py-3 px-3">
               <h4 className="mb-0">
-              {globalState.fetchedUser && globalState.fetchedUser.platformData.user.name}
+              {globalState.fetchedUser && 
+              globalState.fetchedUser.platformData.user.first_name && 
+              globalState.fetchedUser.platformData.user.last_name &&
+              <>
+                {globalState.fetchedUser.platformData.user.first_name + " "}
+                {globalState.fetchedUser.platformData.user.last_name}
+              </>
+              }
               </h4>
               {globalState.fetchedUser && globalState.fetchedUser.platformData.user.company &&
-              <small className="text-muted py-3">
-              {globalState.fetchedUser.platformData.user.company}
-              </small>
+              <>
+              {globalState.fetchedUser && globalState.fetchedUser.platformData.user.settings.showCompanyPublic &&
+                <small className="text-muted py-3">
+                {globalState.fetchedUser.platformData.user.company}
+                </small>
+              }
+              </>
               }
               <div className="badges">
               {globalState.fetchedUser && globalState.fetchedUser.accessories.badges &&
