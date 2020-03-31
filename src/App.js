@@ -229,9 +229,23 @@ class App extends React.Component {
         } else {
           platformData.user.type = "software";
         }
+
+        if(!platformData.user.settings){
+          // Settings
+          platformData.user.settings = {
+            showMap: true,
+            showInstagramFeed: true,
+            instagramHideCaption: true,
+            show3DDiagram: true,
+            show2DDiagram: true,
+            showCompanyPublic: true,
+            showEmailPublic: true,
+            showLocalRanking: true,
+          }
+        }
+        console.log(platformData.user.type);
         // If no type has been set, perform user data injection
         if(!platformData.user.type){
-        
           // Injecting platformData
           if(enableMediaEngineer){
             // Set type to media to distinguish
@@ -269,17 +283,7 @@ class App extends React.Component {
             // Add needed variables software engineer
             platformData.user.type = "software";
           }
-          // Settings
-            platformData.user.settings = {
-              showMap: true,
-              showInstagramFeed: true,
-              instagramHideCaption: true,
-              show3DDiagram: true,
-              show2DDiagram: true,
-              showCompanyPublic: true,
-              showEmailPublic: true,
-              showLocalRanking: true,
-            }
+          console.log(platformData);
           // Add needed variables for both software- and media engineer
           platformData.user.first_name = "Max";
           platformData.user.last_name = "Mustermann";
