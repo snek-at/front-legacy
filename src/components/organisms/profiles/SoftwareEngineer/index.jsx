@@ -203,7 +203,9 @@ class SoftwareEngineer extends React.Component {
                 className={this.state.sources && this.state.sources.includes("bitbucket") ? "active" : ""}
                 />
               </div>
-              {globalState.fetchedUser && globalState.fetchedUser.platformData.user.settings.showLocalRanking &&
+              {globalState.fetchedUser && 
+              globalState.fetchedUser.platformData.user.settings && 
+              globalState.fetchedUser.platformData.user.settings.showLocalRanking &&
               <p className="mb-1 mt-1"><a href="#!">#3</a> in your region</p>
               }
               {globalState.fetchedUser && (globalState.fetchedUser.username !== globalState.user) ? (
