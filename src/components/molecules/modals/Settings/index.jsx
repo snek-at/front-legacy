@@ -48,19 +48,20 @@ class Settings extends React.Component {
         if(this.props.globalState.fetchedUser.platformData){
           if(this.props.globalState.fetchedUser.platformData.user){
             let data = this.props.globalState.fetchedUser.platformData.user;
+            console.log(data);
             let enterData = {
               first_name: data.first_name ? data.first_name : "",
               last_name: data.last_name ? data.last_name : "",
               email: data.email ? data.email : "",
-              showEmailPublic: data.showEmailPublic ? data.showEmailPublic : true,
+              showEmailPublic: data.settings.showEmailPublic,
               company: data.company ? data.company : "",
-              showCompanyPublic: data.showCompanyPublic ? data.showCompanyPublic : true,
+              showCompanyPublic: data.settings.showCompanyPublic,
               website: data.websiteUrl ? data.websiteUrl : "",
               location: data.location ? data.location : "",
-              showLocalRanking: data.showLocalRanking ? data.showLocalRanking : true,
-              showTopLanguages: data.showTopLanguages ? data.showTopLanguages : true,
-              show3DDiagram: data.show3DDiagram ? data.show3DDiagram : true,
-              show2DDiagram: data.show2DDiagram ? data.show2DDiagram : true,
+              showLocalRanking: data.settings.showLocalRanking,
+              showTopLanguages: data.settings.showTopLanguages,
+              show3DDiagram: data.settings.show3DDiagram,
+              show2DDiagram: data.settings.show2DDiagram,
             }
             let dataString = this.stringToHash(JSON.stringify(enterData));
             this.setState({

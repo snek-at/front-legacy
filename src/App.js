@@ -115,7 +115,7 @@ const UPDATE_CACHE = gql`
   mutation cache ($token: String!, $platformData: String!) {
     cacheUser(token: $token, platformData: $platformData){
       user{
-        platformData
+        id
       }
     }
   }
@@ -223,54 +223,63 @@ class App extends React.Component {
          * ################
          */
         // Change this to change from software to media
-        let enableMediaEngineer = true;
-        // Injecting platformData
+        let enableMediaEngineer = false;
         if(enableMediaEngineer){
-          // Set type to media to distinguish
           platformData.user.type = "media";
-          // Set media engineer platforms
-          platformData.user.platforms = {
-            instagram: {
-              url: "https://www.instagram.com/aichnerchristian/"
-            },
-            facebook: {
-              url: "https://www.facebook.com/aichner.christian"
-            },
-            portfolio: {
-              url: "https://www.aichner-christia.com/portfolio"
-            }
-          }
-          // Portfolio map
-          platformData.user.mapData = [
-            { name: "1", coordinates: [12.8506, 44.6086] },
-            { name: "2", coordinates: [13.8496928, 46.6114363 ] },
-            { name: "3", coordinates: [11.489387, 48.783450 ] }
-          ]
-          // Settings
-          platformData.user.settings = {
-            showMap: true,
-            showInstagramFeed: true,
-            instagramHideCaption: true,
-          }
-          // Skills (like languages for programmers)
-          platformData.user.skills = [
-            {name: "Photography", color: "#563d7c", size: 54, share: 10},
-            {name: "Video", color: "#263d1c", size: 54, share: 20},
-            {name: "Web", color: "#763d2c", size: 54, share: 70},
-          ]
-          // Instagram posts
-          platformData.user.instagram = [
-            {url: "https://www.instagram.com/p/B9cOSWMJbXD/"},
-            {url: "https://www.instagram.com/p/B9TWGNaglUz/"}
-          ]
         } else {
-          // Add needed variables software engineer
           platformData.user.type = "software";
         }
-        // Add needed variables for both software- and media engineer
-        platformData.user.first_name = "Max";
-        platformData.user.last_name = "Mustermann";
-        console.log("PD",platformData);
+        // If no type has been set, perform user data injection
+        if(!platformData.user.type){
+        
+          // Injecting platformData
+          if(enableMediaEngineer){
+            // Set type to media to distinguish
+            platformData.user.type = "media";
+            // Set media engineer platforms
+            platformData.user.platforms = {
+              instagram: {
+                url: "https://www.instagram.com/aichnerchristian/"
+              },
+              facebook: {
+                url: "https://www.facebook.com/aichner.christian"
+              },
+              portfolio: {
+                url: "https://www.aichner-christia.com/portfolio"
+              }
+            }
+            // Portfolio map
+            platformData.user.mapData = [
+              { name: "1", coordinates: [12.8506, 44.6086] },
+              { name: "2", coordinates: [13.8496928, 46.6114363 ] },
+              { name: "3", coordinates: [11.489387, 48.783450 ] }
+            ]
+            // Settings
+            platformData.user.settings = {
+              showMap: true,
+              showInstagramFeed: true,
+              instagramHideCaption: true,
+            }
+            // Skills (like languages for programmers)
+            platformData.user.skills = [
+              {name: "Photography", color: "#563d7c", size: 54, share: 10},
+              {name: "Video", color: "#263d1c", size: 54, share: 20},
+              {name: "Web", color: "#763d2c", size: 54, share: 70},
+            ]
+            // Instagram posts
+            platformData.user.instagram = [
+              {url: "https://www.instagram.com/p/B9cOSWMJbXD/"},
+              {url: "https://www.instagram.com/p/B9TWGNaglUz/"}
+            ]
+          } else {
+            // Add needed variables software engineer
+            platformData.user.type = "software";
+          }
+          // Add needed variables for both software- and media engineer
+          platformData.user.first_name = "Max";
+          platformData.user.last_name = "Mustermann";
+          console.log("PD",platformData);
+        }
         /**
          * ################
          * DUMMY DATA END
@@ -358,6 +367,7 @@ class App extends React.Component {
       cache.user.email = state.email ? state.email : cache.user.email;
       cache.user.websiteUrl = state.website ? state.website : "";
       cache.user.location = state.location ? state.location : "";
+      cache.user.company = state.company ? state.company : "";
       cache.user.settings = {
         showTopLanguages: state.showTopLanguages,
         showLocalRanking: state.showLocalRanking,
@@ -369,14 +379,24 @@ class App extends React.Component {
         showInstagramFeed: state.showInstagramFeed,
         instagramHideCaption: state.instagramHideCaption,
       }
-      let platformData = JSON.stringify(cache);
+    }
+    console.log(cache);
+    let platformData = JSON.stringify(cache);
       this.props.caching({
           variables: { 
           token: localStorage.getItem("jwt_snek"),
           platformData
         }
       })
-    }
+      .then(({data}) => {
+        console.log(data);
+        this.setState({
+          fetchedUser: {
+            ...this.state.fetchedUser,
+            platformData: JSON.parse(platformData)
+          }
+        });
+      })
   }
 
   _getLoginData = async (username, token) => {

@@ -43,12 +43,16 @@ class Overview extends React.Component {
         })}
         </MDBRow>
         }
+        {platformData && platformData.user.settings.show3DDiagram &&
         <Calendar3D
         platformData={platformData}
         />
+        }
+        {platformData && platformData.user.settings.show2DDiagram &&
         <Calendar2D
         platformData={platformData}
         />
+        }
       </MDBTabPane>
     );
   }
