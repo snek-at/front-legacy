@@ -13,7 +13,8 @@ import {
   MDBRow,
   MDBTable,
   MDBTableHead,
-  MDBTableBody, 
+  MDBTableBody,
+  MDBProgress, 
 } from "mdbreact";
 
 import axios from 'axios';
@@ -29,14 +30,29 @@ class Search extends React.Component {
 
   state = {
     pages: [],
-    values: [],
+    users: [],
+    software: [],
+    media: [],
     charFilter: "",
     categoryFilter: "",
   }
 
-  componentDidMount = async () => {
-    await this.getRequest();
+  componentWillMount = () => {
+    this.getRequest();
     this.getAllPages();
+  }
+
+  componentDidUpdate = async () => {
+    let search = window.location.search;
+    search = search.replace("?");
+    search.split("&").forEach(filter => {
+      if (filter.includes("type=")){
+        filter = filter.replace("type=", "");
+        if (this.state.categoryFilter != filter){
+          window.location.reload();
+        }
+      }
+    });
   }
 
   getRequest = () => {
@@ -44,6 +60,7 @@ class Search extends React.Component {
     if (search && search.includes("?")){
       search = search.substring(1);
       search.split("&").forEach(filter => {
+        let categoryFilter = "";
         if (filter.includes("q=")){
           filter = filter.replace("q=","");
           this.setState({
@@ -51,11 +68,17 @@ class Search extends React.Component {
           })
         }
         else if (filter.includes("type=user")){
-          filter = filter.replace("type=","");
-          this.setState({
-            categoryFilter: filter
-          })
+          categoryFilter = filter.replace("type=","");
         }
+        else if (filter.includes("type=software")){
+          categoryFilter = filter.replace("type=","");
+        }
+        else if (filter.includes("type=media")){
+          categoryFilter = filter.replace("type=","");
+        }
+        this.setState({
+          categoryFilter
+        })
       });
     }
   };
@@ -81,18 +104,18 @@ class Search extends React.Component {
   }
 
   addToValues = (currentPages) => {
-    let values = this.state.values;
+    let users = this.state.users;
     let categoryFilter = this.state.categoryFilter;
     let charFilter = this.state.charFilter;
 
     currentPages.forEach(page => {
-      let value = page.replace("/registration/", "");
-      if (value.includes(charFilter)){
-        values.push(value);
+      let user = page.replace("/registration/", "");
+      if (user.includes(charFilter)){
+        users.push(user);
       }
     });
     this.setState({
-      values
+      users
     });
   }
 
@@ -102,30 +125,116 @@ class Search extends React.Component {
       <MDBContainer>
         <MDBRow>
           <MDBCol size="3">
-            <MDBNav className="flex-column">
-              <MDBNavItem>
-                <MDBNavLink active to={site = site.split("&")[0] += "&type=user"}>Users</MDBNavLink>
+            <MDBNav className="flex-column" >
+              <MDBNavItem className="border">
+                <MDBNavLink active to={site = site.split("&")[0] += "&type=user"}>
+                  <a href={site = site.split("&")[0] += "&type=user"}>
+                    Users
+                    <span className="float-md-right">
+                      <span class={this.state.users.length > 0 ? "badge badge-pill badge-dark":"badge badge-pill badge-light"}>
+                        {this.state.users.length}
+                      </span>
+                    </span>
+                  </a>
+                </MDBNavLink>
               </MDBNavItem>
-              <MDBNavItem>
-                <MDBNavLink to={site = site.split("&")[0] += "&type=software"}>Software Engineer</MDBNavLink>
+              <MDBNavItem className="border">
+                <MDBNavLink active to={site = site.split("&")[0] += "&type=software"}>
+                  <a href={site = site.split("&")[0] += "&type=software"}>
+                    Software Engineer
+                    <span className="float-md-right">
+                      <span class={this.state.software.length > 0 ? "badge badge-pill badge-dark":"badge badge-pill badge-light"}>
+                        {this.state.software.length}
+                      </span>
+                    </span>
+                  </a>
+                </MDBNavLink>
               </MDBNavItem>
-              <MDBNavItem>
-                <MDBNavLink to={site = site.split("&")[0] += "&type=media"} >Media Engineer</MDBNavLink>
+              <MDBNavItem className="border">
+                <MDBNavLink active to={site = site.split("&")[0] += "&type=media"}>
+                  <a href={site = site.split("&")[0] += "&type=media"}>
+                    Media Engineer
+                    <span className="float-md-right">
+                      <span class={this.state.media.length > 0 ? "badge badge-pill badge-dark":"badge badge-pill badge-light"}>
+                        {this.state.media.length}
+                      </span>
+                    </span>
+                  </a>
+                </MDBNavLink>
               </MDBNavItem>
             </MDBNav>
           </MDBCol>
           <MDBCol>
             <MDBTable>
               <MDBTableHead>
-                <tr>
-                  <th><h1>{this.state.values.length} Users</h1></th>
-                </tr>
+                {this.state.categoryFilter == "user" || this.state.categoryFilter == ""?(
+                  <tr>
+                    <th>{this.state.users.length > 0 ?(
+                        <h1>{this.state.users.length} Users</h1>
+                      ):(
+                      <h3>We couldn't find any users with the filter '{this.state.charFilter}' in the category '{this.state.categoryFilter}'</h3>
+                      )}
+                    </th>
+                  </tr>
+                ):(null)
+                }
+                {this.state.categoryFilter == "software"?(
+                  <tr>
+                    <th>{this.state.software.length > 0 ?(
+                        <h1>{this.state.software.length} Software Engineers</h1>
+                      ):(
+                        <h3>We couldn't find any users with the filter '{this.state.charFilter}' in the category '{this.state.categoryFilter}'</h3>
+                      )}
+                    </th>
+                  </tr>
+                ):(null)
+                }
+                {this.state.categoryFilter == "media"?(
+                  <tr>
+                    <th>{this.state.media.length > 0 ?(
+                        <h1>{this.state.media.length} Media Engineers</h1>
+                      ):(
+                        <h3>We couldn't find any users with the filter '{this.state.charFilter}' in the category '{this.state.categoryFilter}'</h3>
+                      )}
+                    </th>
+                  </tr>
+                ):(null)
+                }
               </MDBTableHead>
               <MDBTableBody>
-                {this.state.values.map((value, key) => {
-                    let link = "u/" + value;
-                    return <tr><td><a href={link}>{value}</a></td></tr>;
-                })}
+                {this.state.categoryFilter == "user" || this.state.categoryFilter == ""?
+                (this.state.users.map((value, key) => {
+                    let link = "/u/" + value;
+                    return (
+                      <tr>
+                        <td>
+                          <a href={link}>{value}</a>
+                        </td>
+                      </tr>);
+                })):(null)
+                }
+                {this.state.categoryFilter == "software"?
+                (this.state.software.map((value, key) => {
+                    let link = "/u/" + value;
+                    return (
+                      <tr>
+                        <td>
+                          <a href={link}>{value}</a>
+                        </td>
+                      </tr>);
+                })):(null)
+                }
+                {this.state.categoryFilter == "media"?
+                (this.state.media.map((value, key) => {
+                    let link = "/u/" + value;
+                    return (
+                      <tr>
+                        <td>
+                          <a href={link}>{value}</a>
+                        </td>
+                      </tr>);
+                })):(null)
+                }
               </MDBTableBody>
             </MDBTable>
           </MDBCol>

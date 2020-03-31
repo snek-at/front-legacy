@@ -150,7 +150,6 @@ class NavbarPage extends React.Component {
                         if (username.includes(this.state.filter)){
                           let link = "u/" + username;
                           return <MDBSelectOption>{username}</MDBSelectOption>
-                          return <p key={key}><a href={link} target="_self">{username}</a></p>;
                         }
                       })}
                     </MDBSelectOptions>
