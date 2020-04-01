@@ -205,10 +205,8 @@ class App extends React.Component {
     }).then(({data}) => {
       if(data){
         let registrationData = JSON.parse(data.user.registrationData);
-
-        let platformTemp = registrationData.platform_data.replace(/'/g,'"');
-        let platformData = JSON.parse(platformTemp);
-
+        let plattformDataTemp = registrationData.platform_data.replace(/'/g,'"');
+        let platformData = JSON.parse(plattformDataTemp);
         intel
         .fill(Object.values(platformData))
         .then(() => {
