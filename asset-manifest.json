@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.6a952317.chunk.css",
-    "main.js": "/static/js/main.3c364680.chunk.js",
-    "main.js.map": "/static/js/main.3c364680.chunk.js.map",
+    "main.css": "/static/css/main.e43738d0.chunk.css",
+    "main.js": "/static/js/main.ee2a4f92.chunk.js",
+    "main.js.map": "/static/js/main.ee2a4f92.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.3a289dd3.js",
     "runtime-main.js.map": "/static/js/runtime-main.3a289dd3.js.map",
-    "static/css/2.9117752b.chunk.css": "/static/css/2.9117752b.chunk.css",
-    "static/js/2.f870f101.chunk.js": "/static/js/2.f870f101.chunk.js",
-    "static/js/2.f870f101.chunk.js.map": "/static/js/2.f870f101.chunk.js.map",
+    "static/css/2.c4287cab.chunk.css": "/static/css/2.c4287cab.chunk.css",
+    "static/js/2.416cd4f9.chunk.js": "/static/js/2.416cd4f9.chunk.js",
+    "static/js/2.416cd4f9.chunk.js.map": "/static/js/2.416cd4f9.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.90f6317cbcfc8edb706480c5d81a3b10.js": "/precache-manifest.90f6317cbcfc8edb706480c5d81a3b10.js",
+    "precache-manifest.a3342fde3bec5f85cc36e7c93db97f00.js": "/precache-manifest.a3342fde3bec5f85cc36e7c93db97f00.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/2.9117752b.chunk.css.map": "/static/css/2.9117752b.chunk.css.map",
-    "static/css/main.6a952317.chunk.css.map": "/static/css/main.6a952317.chunk.css.map",
-    "static/js/2.f870f101.chunk.js.LICENSE": "/static/js/2.f870f101.chunk.js.LICENSE",
+    "static/css/2.c4287cab.chunk.css.map": "/static/css/2.c4287cab.chunk.css.map",
+    "static/css/main.e43738d0.chunk.css.map": "/static/css/main.e43738d0.chunk.css.map",
+    "static/js/2.416cd4f9.chunk.js.LICENSE": "/static/js/2.416cd4f9.chunk.js.LICENSE",
     "static/media/mdb.css": "/static/media/default-skin.b257fa9c.svg",
     "static/media/dev.c067674a.svg": "/static/media/dev.c067674a.svg",
     "static/media/donor.jpg": "/static/media/donor.86b7dfa1.jpg",
-    "static/media/all.min.css": "/static/media/fa-solid-900.cdfec5cf.woff",
+    "static/media/all.min.css": "/static/media/fa-solid-900.ec763292.svg",
     "static/media/liberapay.ea4ec1f6.svg": "/static/media/liberapay.ea4ec1f6.svg",
     "static/media/media.888b7568.svg": "/static/media/media.888b7568.svg",
     "static/media/profiles.png": "/static/media/profiles.bb782f9f.png",
@@ -27,9 +27,9 @@
   },
   "entrypoints": [
     "static/js/runtime-main.3a289dd3.js",
-    "static/css/2.9117752b.chunk.css",
-    "static/js/2.f870f101.chunk.js",
-    "static/css/main.6a952317.chunk.css",
-    "static/js/main.3c364680.chunk.js"
+    "static/css/2.c4287cab.chunk.css",
+    "static/js/2.416cd4f9.chunk.js",
+    "static/css/main.e43738d0.chunk.css",
+    "static/js/main.ee2a4f92.chunk.js"
   ]
 }
