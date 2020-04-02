@@ -241,6 +241,7 @@ class App extends React.Component {
             showCompanyPublic: true,
             showEmailPublic: true,
             showLocalRanking: true,
+            activeTheme: null,
           }
         }
         console.log(platformData.user.type);
@@ -387,6 +388,7 @@ class App extends React.Component {
         showMap: state.showMap,
         showInstagramFeed: state.showInstagramFeed,
         instagramHideCaption: state.instagramHideCaption,
+        activeTheme: state.activeTheme,
       }
     }
     console.log(cache);
@@ -587,7 +589,15 @@ class App extends React.Component {
               newestOnTop={true}
               autoClose={3000}
             />
-            <main>
+            <main 
+            className={
+              this.state.fetchedUser &&
+              this.state.fetchedUser.platformData &&
+              this.state.fetchedUser.platformData.user.settings &&
+              this.state.fetchedUser.platformData.user.settings.activeTheme &&
+              "theme-"+this.state.fetchedUser.platformData.user.settings.activeTheme
+            }
+            >
               <Routes 
               logmein={this._login}
               fetchProfileData={this.getData}

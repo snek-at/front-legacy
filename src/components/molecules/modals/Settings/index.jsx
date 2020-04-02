@@ -19,6 +19,11 @@ import {
   MDBNavLink,
   MDBNavItem,
   MDBInput,
+  MDBAnimation,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOption,
+  MDBSelectOptions,
 } from "mdbreact";
 
 //> CSS
@@ -27,6 +32,7 @@ import "./settings.scss";
 //> Settings data
 const settingsTabs = [
   {name: "Profile", icon: ""},
+  {name: "Customization", icon: ""},
   {name: "Account", icon: ""},
   {name: "Connections", icon: ""},
   {name: "Blocked users", icon: ""},
@@ -62,6 +68,7 @@ class Settings extends React.Component {
               showTopLanguages: data.settings.showTopLanguages,
               show3DDiagram: data.settings.show3DDiagram,
               show2DDiagram: data.settings.show2DDiagram,
+              activeTheme: data.settings.activeTheme,
             }
             let dataString = this.stringToHash(JSON.stringify(enterData));
             this.setState({
@@ -96,6 +103,7 @@ class Settings extends React.Component {
       showTopLanguages: true,
       show3DDiagram: true,
       show2DDiagram: true,
+      activeTheme: null,
     });
   }
 
@@ -109,6 +117,13 @@ class Settings extends React.Component {
     } 
     return hash; 
   } 
+
+  handleSelectChange = (val) => {
+    console.log(val);
+    this.setState({
+      activeTheme: val[0]
+    }, () => this.getChange());
+  }
 
   handleCheckChange = (e) => {
     this.setState({
@@ -136,6 +151,7 @@ class Settings extends React.Component {
       showTopLanguages: this.state.showTopLanguages,
       show3DDiagram: this.state.show3DDiagram,
       show2DDiagram: this.state.show2DDiagram,
+      activeTheme: this.state.activeTheme,
     }
     // Get hash of current data
     let currentHash = this.stringToHash(JSON.stringify(currentData));
@@ -164,24 +180,25 @@ class Settings extends React.Component {
   };
 
   save = () => {
+    console.log(this.state);
     this.props.saveSettings(this.state)
   }
 
   render() {
     return (
-      <MDBModal 
-      modalStyle="white"
-      className="text-dark"
-      size="lg"
-      id="settings"
-      backdrop={true}
-      isOpen={true}
-      toggle={this.props.closeModal}
+      <MDBModal
+        modalStyle="white"
+        className="text-dark"
+        size="lg"
+        id="settings"
+        backdrop={true}
+        isOpen={true}
+        toggle={this.props.closeModal}
       >
         <MDBModalHeader
-        className="text-center text-dark donate"
-        titleClass="w-100"
-        tag="p"
+          className="text-center text-dark donate"
+          titleClass="w-100"
+          tag="p"
         >
           <MDBIcon icon="wrench" className="green-text pr-2" />
           Settings
@@ -190,15 +207,30 @@ class Settings extends React.Component {
           <MDBRow>
             <MDBCol md="4">
               <MDBNav pills color="primary" className="flex-column">
-              {settingsTabs.map((tab, i) => {
-                return(
-                  <MDBNavItem>
-                    <MDBNavLink link to="#" active={ this.state.activeItemInnerPills === i} onClick={this.toggleInnerPills(i)} >
-                      {tab.name}
-                    </MDBNavLink>
-                  </MDBNavItem>
-                )
-              })}
+                {settingsTabs.map((tab, i) => {
+                  return (
+                    <MDBNavItem>
+                      <MDBNavLink
+                        link
+                        to="#"
+                        active={this.state.activeItemInnerPills === i}
+                        onClick={this.toggleInnerPills(i)}
+                      >
+                        {tab.name}
+                        {this.state.activeItemInnerPills === i &&
+                          tab.icon !== "" && (
+                            <MDBAnimation
+                              type="fadeInLeft"
+                              className="d-inline-block"
+                              duration="500ms"
+                            >
+                              <MDBIcon icon={tab.icon} />
+                            </MDBAnimation>
+                          )}
+                      </MDBNavLink>
+                    </MDBNavItem>
+                  );
+                })}
               </MDBNav>
             </MDBCol>
             <MDBCol md="8">
@@ -209,100 +241,105 @@ class Settings extends React.Component {
                     <p className="font-weight-bold">Your full name</p>
                     <MDBRow>
                       <MDBCol md="6">
-                        <input 
-                        type="text"
-                        name="first_name"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.first_name}
-                        placeholder="Firstname"
+                        <input
+                          type="text"
+                          name="first_name"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.first_name}
+                          placeholder="Firstname"
                         />
                       </MDBCol>
                       <MDBCol md="6">
                         <input
-                        type="text"
-                        name="last_name"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.last_name}
-                        placeholder="Lastname"
+                          type="text"
+                          name="last_name"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.last_name}
+                          placeholder="Lastname"
                         />
                       </MDBCol>
                     </MDBRow>
                     <p className="font-weight-bold">Public email</p>
                     <MDBRow>
                       <MDBCol md="12">
-                        <input 
-                        type="email"
-                        name="email"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.email}
-                        placeholder="Email"
+                        <input
+                          type="email"
+                          name="email"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.email}
+                          placeholder="Email"
                         />
                       </MDBCol>
                     </MDBRow>
                     <MDBInput
                       label={<p>Display email on profile</p>}
                       filled
-                      type='checkbox'
-                      id='checkbox0'
+                      type="checkbox"
+                      id="checkbox0"
                       name="showEmailPublic"
                       onChange={this.handleCheckChange}
                       checked={this.state.showEmailPublic}
-                      containerClass='mr-5'
+                      containerClass="mr-5"
                     />
                     <p className="font-weight-bold">Your workplace</p>
                     <MDBRow>
                       <MDBCol md="12">
-                        <input 
-                        type="text"
-                        name="company"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.company}
-                        placeholder="Company"
+                        <input
+                          type="text"
+                          name="company"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.company}
+                          placeholder="Company"
                         />
                       </MDBCol>
                     </MDBRow>
-                    <small className="d-block">You can @mention your company anywhere on SNEK</small>
+                    <small className="d-block">
+                      You can @mention your company anywhere on SNEK
+                    </small>
                     <MDBInput
                       label={<p>Display company on profile</p>}
                       filled
-                      type='checkbox'
-                      id='checkbox1'
+                      type="checkbox"
+                      id="checkbox1"
                       name="showCompanyPublic"
                       onChange={this.handleCheckChange}
                       checked={this.state.showCompanyPublic}
-                      containerClass='mr-5'
+                      containerClass="mr-5"
                     />
                     <p className="font-weight-bold">Website</p>
                     <MDBRow>
                       <MDBCol md="12">
-                        <input 
-                        type="text"
-                        name="website"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.website}
-                        placeholder="Website URL"
+                        <input
+                          type="text"
+                          name="website"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.website}
+                          placeholder="Website URL"
                         />
                       </MDBCol>
                     </MDBRow>
                     <p className="font-weight-bold">Location</p>
                     <MDBRow>
                       <MDBCol md="12">
-                        <input 
-                        type="text"
-                        name="location"
-                        className="form-control"
-                        onChange={this.handleTextChange}
-                        value={this.state.location}
-                        placeholder="City, Country"
+                        <input
+                          type="text"
+                          name="location"
+                          className="form-control"
+                          onChange={this.handleTextChange}
+                          value={this.state.location}
+                          placeholder="City, Country"
                         />
                       </MDBCol>
                     </MDBRow>
-                    <small className="d-block">This can also assist us in finding you the best local matches</small>
+                    <small className="d-block">
+                      This can also assist us in finding you the best local
+                      matches
+                    </small>
                   </div>
                   <hr />
                   <MDBRow>
@@ -310,24 +347,24 @@ class Settings extends React.Component {
                       <MDBInput
                         label={<p>Show local ranking</p>}
                         filled
-                        type='checkbox'
-                        id='checkbox3'
+                        type="checkbox"
+                        id="checkbox3"
                         name="showLocalRanking"
                         onChange={this.handleCheckChange}
                         checked={this.state.showLocalRanking}
-                        containerClass='mr-5'
+                        containerClass="mr-5"
                       />
                     </MDBCol>
                     <MDBCol md="12">
                       <MDBInput
                         label={<p>Show top programming languages</p>}
                         filled
-                        type='checkbox'
-                        id='checkbox4'
+                        type="checkbox"
+                        id="checkbox4"
                         name="showTopLanguages"
                         onChange={this.handleCheckChange}
                         checked={this.state.showTopLanguages}
-                        containerClass='mr-5'
+                        containerClass="mr-5"
                       />
                     </MDBCol>
                     <MDBCol md="12">
@@ -337,30 +374,69 @@ class Settings extends React.Component {
                       <MDBInput
                         label={<p>Show 3D work activity diagram</p>}
                         filled
-                        type='checkbox'
-                        id='checkbox5'
+                        type="checkbox"
+                        id="checkbox5"
                         name="show3DDiagram"
                         onChange={this.handleCheckChange}
                         checked={this.state.show3DDiagram}
-                        containerClass='mr-5'
+                        containerClass="mr-5"
                       />
                     </MDBCol>
                     <MDBCol md="12">
                       <MDBInput
                         label={<p>Show 2D work activity diagram</p>}
                         filled
-                        type='checkbox'
-                        id='checkbox6'
+                        type="checkbox"
+                        id="checkbox6"
                         name="show2DDiagram"
                         onChange={this.handleCheckChange}
                         checked={this.state.show2DDiagram}
-                        containerClass='mr-5'
+                        containerClass="mr-5"
                       />
                     </MDBCol>
                   </MDBRow>
                 </MDBTabPane>
                 <MDBTabPane tabId={1}>
-                  <h5>Panel 2</h5>
+                  <h5>Customization</h5>
+                  <div className="personal-data">
+                    <p className="font-weight-bold">Choose your theme</p>
+                    <MDBRow>
+                      <MDBCol md="12">
+                        <MDBSelect getValue={this.handleSelectChange} outline>
+                          <MDBSelectInput
+                            selected={
+                              this.state.activeTheme
+                                ? this.state.activeTheme
+                                : "Default"
+                            }
+                          />
+                          <MDBSelectOptions>
+                            <MDBSelectOption value="">
+                              Default
+                            </MDBSelectOption>
+                            {this.props.globalState.fetchedUser.accessories.themes.tids.map(
+                              (tid, i) => {
+                                let name = "Unnamed";
+                                switch (tid) {
+                                  case "9d88bda4657dcf17581ee91dfe6ab2a3":
+                                    name = "Alpha";
+                                    break;
+                                  default:
+                                    name = "Unnamed";
+                                }
+                                name += " Theme";
+                                return (
+                                  <MDBSelectOption value={tid}>
+                                    {tid}
+                                  </MDBSelectOption>
+                                );
+                              }
+                            )}
+                          </MDBSelectOptions>
+                        </MDBSelect>
+                      </MDBCol>
+                    </MDBRow>
+                  </div>
                 </MDBTabPane>
                 <MDBTabPane tabId={2}>
                   <h5>Panel 3</h5>
@@ -370,10 +446,14 @@ class Settings extends React.Component {
           </MDBRow>
         </MDBModalBody>
         <MDBModalFooter className="text-right">
-          {this.state.changeDetected &&
-          <MDBBtn color="green" onClick={this.save}>Save</MDBBtn>
-          }
-          <MDBBtn color="elegant" outline onClick={this.props.closeModal}>Close</MDBBtn>
+          {this.state.changeDetected && (
+            <MDBBtn color="green" onClick={this.save}>
+              Save
+            </MDBBtn>
+          )}
+          <MDBBtn color="elegant" outline onClick={this.props.closeModal}>
+            Close
+          </MDBBtn>
         </MDBModalFooter>
       </MDBModal>
     );
