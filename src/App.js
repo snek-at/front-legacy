@@ -589,7 +589,7 @@ class App extends React.Component {
               newestOnTop={true}
               autoClose={3000}
             />
-            <main 
+            <main
             className={
               this.state.fetchedUser &&
               this.state.fetchedUser.platformData &&
