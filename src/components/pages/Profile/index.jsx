@@ -21,7 +21,7 @@ import {
   MDBAnimation,
   MDBAvatar,
   MDBCardUp,
-  MDBSpinner
+  MDBSpinner,
 } from "mdbreact";
 
 //> Components
@@ -38,36 +38,55 @@ import {
 //> CSS
 import "./profile.scss";
 
-//> Dummy data
-// Tab headers
-const tabitems = [
-  {
-    title: "Overview",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Resume",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Projects",
-    visible: true,
-    pill: "22",
-    notification: false
-  },
-  {
-    title: "Education",
-    visible: true,
-    pill: "0",
-    notification: true
-  }
-];
-
 class Dashboard extends React.Component {
+  state = {};
+
+  setTabItems = () => {
+    // Get project count
+    console.log(this.props.globalStore.data);
+    const projectcount = this.props.globalStore.data.repos.length;
+
+    this.setState({
+      tabitems: [
+        {
+          title: "Overview",
+          visible: true,
+          pill: false,
+          notification: false,
+        },
+        {
+          title: "Projects",
+          visible: true,
+          pill: projectcount,
+          notification: true,
+        },
+        {
+          title: "Education",
+          visible: true,
+          notification: false,
+        },
+        {
+          title: "Posts",
+          visible: true,
+          pill: "0",
+          notification: false,
+        },
+        {
+          title: "Papers",
+          visible: true,
+          pill: "0",
+          notification: false,
+        },
+        {
+          title: "Talks",
+          visible: true,
+          pill: "0",
+          notification: false,
+        },
+      ],
+    });
+  };
+
   render() {
     const { globalStore } = this.props;
 
@@ -81,11 +100,18 @@ class Dashboard extends React.Component {
 
     let data = globalStore.data;
 
-    if (data) {
+    // Get tab items
+    if (data && !this.state.tabitems) {
+      this.setTabItems();
+    }
+
+    if (data && this.state.tabitems) {
+      console.log("Reached 0");
+      console.log(data);
       if (data.user) {
         return (
           <div id="profile">
-            <MDBContainer className="pt-5">
+            <MDBContainer className="py-5">
               <MDBRow>
                 <MDBCol md="4" className="text-center">
                   <MDBCard testimonial>
@@ -94,7 +120,7 @@ class Dashboard extends React.Component {
                     <Socialdata
                       status={{
                         message: data.user.status,
-                        icon: data.user.statusEmojiHTML
+                        icon: data.user.statusEmojiHTML,
                       }}
                       name={data.user.name}
                       company={data.user.company}
@@ -102,23 +128,22 @@ class Dashboard extends React.Component {
                       email={data.user.email}
                       languages={data.languages}
                       website={data.user.websiteUrl}
-                      accounts={{
-                        github: data.user
-                      }}
+                      organisations={data.orgs}
+                      platforms={data.user.platforms}
                     />
                   </MDBCard>
                 </MDBCol>
                 <MDBCol md="8">
-                  <TabContainer items={tabitems} horizontal>
+                  <TabContainer items={this.state.tabitems} horizontal>
                     <OverviewTab
                       id={0}
                       contrib={data.contrib}
                       calendar={data.contribCalendar}
                       contribTypes={data.contribTypes}
+                      languages={data.languages.slices}
                     />
-                    <ResumeTab id={1} />
-                    <ProjectsTab id={2} repos={data.repos} />
-                    <EducationTab id={3} />
+                    <ProjectsTab id={1} repos={data.repos} />
+                    <EducationTab id={2} />
                   </TabContainer>
                 </MDBCol>
               </MDBRow>
@@ -126,9 +151,11 @@ class Dashboard extends React.Component {
           </div>
         );
       } else {
+        console.log("Reached 2");
         return <MDBSpinner />;
       }
     } else {
+      console.log("Reached 1");
       return <MDBSpinner />;
     }
   }
