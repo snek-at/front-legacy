@@ -38,13 +38,18 @@ class App extends React.Component {
      * Start a new session based on authentication history.
      * New site access will lead to a anonymous login.
      */
-    await this.session.begin()
+    await this.session.begin();
 
     /**
      * Fetch Gitlab server:
      * Get all available Gitlab server for registration.
      */
     this.fetchGitLabServers();
+    /**
+     * Fetch all user:
+     * Get all registered usernames.
+     */
+    this.getAllPageUrls();
   }
 
   /**

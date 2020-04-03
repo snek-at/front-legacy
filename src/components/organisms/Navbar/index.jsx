@@ -50,12 +50,7 @@ class NavbarPage extends React.Component {
   state = {
     isOpen: false,
     filter: "",
-    usernames: [],
   };
-
-  componentDidMount = () => {
-    this.getAllUsernames();
-  }
 
   toggleCollapse = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -76,30 +71,31 @@ class NavbarPage extends React.Component {
       })
     }
   }
-
-  getAllUsernames = async () => {
-    snekGraphQL
-    .post('', { query: GET_PAGES(localStorage.getItem("jwt_snek"))})
-    .then(result => {
-      if (result.data.data.pages){
-        this.addToUsernames(result.data.data.pages);
-      }
-    });
-  }
-
-  addToUsernames = (currentPages) => {
-    let usernames = this.state.usernames;
-
-    currentPages.forEach(page => {
-      if (page.urlPath != "/registration" && page.urlPath != ""){
-        usernames.push(page.urlPath.replace("/registration/", ""));
-      }
-    });
   
-    this.setState({
-      usernames
-    });
-  }
+
+  // getAllUsernames = async () => {
+  //   snekGraphQL
+  //   .post('', { query: GET_PAGES(localStorage.getItem("jwt_snek"))})
+  //   .then(result => {
+  //     if (result.data.data.pages){
+  //       this.addToUsernames(result.data.data.pages);
+  //     }
+  //   });
+  // }
+
+  // addToUsernames = (currentPages) => {
+  //   let usernames = this.state.usernames;
+
+  //   currentPages.forEach(page => {
+  //     if (page.urlPath != "/registration" && page.urlPath != ""){
+  //       usernames.push(page.urlPath.replace("/registration/", ""));
+  //     }
+  //   });
+  
+  //   this.setState({
+  //     usernames
+  //   });
+  // }
 
   getValueOfSelectOne = value => {
     window.open("/u/"+value, "_self");
@@ -107,6 +103,7 @@ class NavbarPage extends React.Component {
 
   render() {
     const { globalState } = this.props;
+    console.log(globalState)
     return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
@@ -146,12 +143,20 @@ class NavbarPage extends React.Component {
                 <MDBSelect getValue={value=> this.getValueOfSelectOne(value)} onKeyUp={this.search} id="search">
                   <MDBSelectInput selected="Find a user"/>
                     <MDBSelectOptions search >
-                      {this.state.usernames.map((username, key) => {
+                      {(globalState.all_usernames) ? (
+                        this.props.globalState.all_usernames.map((username, key) => {
+                          if (username.includes(this.state.filter)){
+                            return <MDBSelectOption>{username}</MDBSelectOption>
+                          }
+                        })
+                      ) : undefined}
+                      {/* {
+                      this.props.globalState.all_usernames.map((username, key) => {
                         if (username.includes(this.state.filter)){
                           let link = "u/" + username;
                           return <MDBSelectOption>{username}</MDBSelectOption>
                         }
-                      })}
+                      })} */}
                     </MDBSelectOptions>
                 </MDBSelect>
               </MDBNavItem>

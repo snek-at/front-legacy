@@ -11,61 +11,64 @@ import {
   MessagePage,
   RedirectPage,
   SearchPage,
-} from './components/pages';
+} from "./components/pages";
 
 class Routes extends React.Component {
   saveSettings = (state) => {
     this.props.saveSettings(state);
-  }
+  };
 
   render() {
     return (
       <Switch>
         <Route
-        exact
-        path='/' 
-        component={
-          (props) => <HomePage 
-          logmein={this.props.logmein} 
-          globalState={this.props.globalState} 
-          registerUser={this.props.registerUser}
-          {...props}
-          />
-        }
-        />
-        <Route 
-        exact
-        path="/redirect"
-        component={(props) => <RedirectPage {...props} />}
-        />
-        <Route 
-        exact
-        path='/u/:username'
-        component={
-          (props) => <ProfilePage
-          globalState={this.props.globalState}
-          fetchProfileData={this.props.fetchProfileData}
-          saveSettings={this.saveSettings}
-          {...props}
-          />
-        } />
-        <Route 
-        exact
-        path='/donate/cancel'
-        component={(props) => <MessagePage {...props}/>}
+          exact
+          path="/"
+          component={(props) => (
+            <HomePage
+              logmein={this.props.logmein}
+              globalState={this.props.globalState}
+              registerUser={this.props.registerUser}
+              {...props}
+            />
+          )}
         />
         <Route
-        exact
-        path='/donate/thankyou'
-        component={(props) => <MessagePage {...props} />}
+          exact
+          path="/redirect"
+          component={(props) => <RedirectPage {...props} />}
         />
         <Route
-        exact
-        path='/search'
-        component={(props) => <SearchPage {...props} />}
+          exact
+          path="/u/:username"
+          component={(props) => (
+            <ProfilePage
+              globalState={this.props.globalState}
+              fetchProfileData={this.props.fetchProfileData}
+              saveSettings={this.saveSettings}
+              {...props}
+            />
+          )}
         />
         <Route
-          render={function() {
+          exact
+          path="/donate/cancel"
+          component={(props) => <MessagePage {...props} />}
+        />
+        <Route
+          exact
+          path="/donate/thankyou"
+          component={(props) => <MessagePage {...props} />}
+        />
+        <Route
+          exact
+          path="/search"
+          component={(props) => (
+            <SearchPage globalState={this.props.globalState} {...props} />
+          )}
+        />
+        <Route
+          render={function () {
             return <h1>Not Found</h1>;
           }}
         />
