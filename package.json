@@ -31,7 +31,7 @@
     "react-typed": "^1.2.0",
     "react-very-simple-oauth": "^1.1.0",
     "tippy.js": "^5.1.4",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",
