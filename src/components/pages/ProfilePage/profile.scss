@@ -112,7 +112,7 @@
       &.active{
         border-bottom: 3px #ededed solid;
         &:hover{
-          border-bottom: 3px #c9e5b3 solid !important;
+          border-bottom: 3px #c9e5b3 solid;
         }
       }
       // Active
@@ -120,7 +120,7 @@
         color: blue;
         border-bottom: 3px #77bd43 solid;
         &:hover{
-          border-bottom: 3px #77bd43 solid !important;
+          border-bottom: 3px #77bd43 solid;
         }
       }
       .badge{

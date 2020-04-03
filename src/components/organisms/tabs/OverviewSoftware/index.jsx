@@ -96,14 +96,14 @@ class Overview extends React.Component {
                 </div>
                 <div>
                   <MDBRow className="mx-1">
-                  <MDBCol col="6" className="text-left">
-                    <span className="text-muted">
-                    <MDBIcon icon="eye" className="mr-1"/> 23
-                    </span>
-                  </MDBCol>
-                  <MDBCol col="6" className="text-right">
-                    <span className="clickable text-muted blue-text">More</span>
-                  </MDBCol>
+                    <MDBCol col="6" className="text-left">
+                      <span className="text-muted">
+                      <MDBIcon icon="eye" className="mr-1"/> 23
+                      </span>
+                    </MDBCol>
+                    <MDBCol col="6" className="text-right">
+                      <span className="clickable text-muted blue-text">More</span>
+                    </MDBCol>
                   </MDBRow>
                 </div>
               </MDBCardBody>
