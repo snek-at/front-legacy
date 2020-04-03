@@ -6,7 +6,35 @@
 
 // Buttons
 .btn {
-  box-shadow: none;
+  box-shadow: none !important;
+  &:hover{
+    box-shadow: none !important;
+  }
+  &:active{
+    box-shadow: none !important;
+  }
+  &:focus{
+    box-shadow: none !important;
+  }
+  &:visited{
+    box-shadow: none !important;
+  }
+}
+.btn-grey{
+  background: #e6e6e6 !important;
+  color: #262626;
+  &:hover{
+    background: darken(#e6e6e6,7%) !important;
+    color: #262626;
+  }
+  &:active{
+    background: darken(#e6e6e6,10%) !important;
+    color: #262626;
+  }
+  &:focus{
+    background: darken(#e6e6e6,10%) !important;
+    color: #262626;
+  }
 }
 
 // Custom mouse
