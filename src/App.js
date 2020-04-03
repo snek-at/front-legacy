@@ -23,7 +23,7 @@ class App extends React.Component {
     logged: false,
     username: undefined,
     gitlab_servers: undefined,
-    user: undefined
+    user: undefined,
   };
 
   constructor() {
@@ -60,17 +60,17 @@ class App extends React.Component {
     this.session
       .begin({
         username,
-        password
+        password,
       })
-      .then(res => {
+      .then((res) => {
         console.log(res);
         this.setState({
           loading: false,
           logged: true,
-          user: res.username
+          user: res.username,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
 
@@ -88,7 +88,7 @@ class App extends React.Component {
       {
         loading: false,
         logged: false,
-        user: undefined
+        user: undefined,
       },
       () => {
         this.session.end().then(() => {
@@ -98,42 +98,27 @@ class App extends React.Component {
     );
   };
 
-  registerUser = values => {
-    this.session.tasks.user
-      .registration(values)
-      .then(res => {
-        console.log(res);
-        if (res.message === "FAIL") {
-          console.log("warn", "All fields have to be filled!");
-        } else {
-          this.login(values.username, values.password);
-        }
-
-        if(!platformData.user.settings){
-          // Settings
-          platformData.user.settings = {
-            showMap: true,
-            showInstagramFeed: true,
-            show3DDiagram: true,
-            instagramHideCaption: true,
-            show2DDiagram: true,
-            showCompanyPublic: true,
-            showEmailPublic: true,
-            showLocalRanking: true,
-            activeTheme: null,
-          }
-        }
-      });
+  registerUser = (values) => {
+    this.session.tasks.user.registration(values).then((res) => {
+      console.log(res);
+      if (res.message === "FAIL") {
+        console.log("warn", "All fields have to be filled!");
+      } else {
+        this.login(values.username, values.password);
+      }
+    });
   };
 
   /**
    * Data Tasks
    */
 
-  getData = async username => {
+  getData = async (username) => {
+    console.log("#########Data start");
     this.session.tasks.user
       .profile("/registration/" + username)
       .then(({ data }) => {
+        console.log("#########Data", data);
         if (data.profile.verified) {
           // Redirect and login
           let platformData = JSON.parse(data.profile.platformData);
@@ -152,6 +137,7 @@ class App extends React.Component {
           } else {
             platformData.user.type = "software";
           }
+          console.log("##### Platform Data", platformData);
 
           if (!platformData.user.settings) {
             // Settings
@@ -163,7 +149,7 @@ class App extends React.Component {
               show2DDiagram: true,
               showCompanyPublic: true,
               showEmailPublic: true,
-              showLocalRanking: true
+              showLocalRanking: true,
             };
           }
           console.log(platformData.user.type);
@@ -176,35 +162,49 @@ class App extends React.Component {
               // Set media engineer platforms
               platformData.user.platforms = {
                 instagram: {
-                  url: "https://www.instagram.com/aichnerchristian/"
+                  url: "https://www.instagram.com/aichnerchristian/",
                 },
                 facebook: {
-                  url: "https://www.facebook.com/aichner.christian"
+                  url: "https://www.facebook.com/aichner.christian",
                 },
                 portfolio: {
-                  url: "https://www.aichner-christia.com/portfolio"
-                }
+                  url: "https://www.aichner-christia.com/portfolio",
+                },
               };
               // Portfolio map
               platformData.user.mapData = [
                 { name: "1", coordinates: [12.8506, 44.6086] },
                 { name: "2", coordinates: [13.8496928, 46.6114363] },
-                { name: "3", coordinates: [11.489387, 48.78345] }
+                { name: "3", coordinates: [11.489387, 48.78345] },
               ];
               // Skills (like languages for programmers)
               platformData.user.skills = [
                 { name: "Photography", color: "#563d7c", size: 54, share: 10 },
                 { name: "Video", color: "#263d1c", size: 54, share: 20 },
-                { name: "Web", color: "#763d2c", size: 54, share: 70 }
+                { name: "Web", color: "#763d2c", size: 54, share: 70 },
               ];
               // Instagram posts
               platformData.user.instagram = [
                 { url: "https://www.instagram.com/p/B9cOSWMJbXD/" },
-                { url: "https://www.instagram.com/p/B9TWGNaglUz/" }
+                { url: "https://www.instagram.com/p/B9TWGNaglUz/" },
               ];
             } else {
               // Add needed variables software engineer
               platformData.user.type = "software";
+            }
+            if (!platformData.user.settings) {
+              // Settings
+              platformData.user.settings = {
+                showMap: true,
+                showInstagramFeed: true,
+                show3DDiagram: true,
+                instagramHideCaption: true,
+                show2DDiagram: true,
+                showCompanyPublic: true,
+                showEmailPublic: true,
+                showLocalRanking: true,
+                activeTheme: null,
+              };
             }
             console.log(platformData);
             // Add needed variables for both software- and media engineer
@@ -227,9 +227,11 @@ class App extends React.Component {
                 badges: data.profile.bids
                   ? JSON.parse(data.profile.bids)
                   : null,
-                themes: data.profile.tids ? JSON.parse(data.profile.tids) : null
-              }
-            }
+                themes: data.profile.tids
+                  ? JSON.parse(data.profile.tids)
+                  : null,
+              },
+            },
           });
           /*intel
           .fill(sources)
@@ -269,23 +271,23 @@ class App extends React.Component {
           });*/
         } else {
           this.setState({
-            fetchedUser: false
+            fetchedUser: false,
           });
         }
         this.setState({
-          fetchedUser: false
+          fetchedUser: false,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         //console.error(error);
         console.error("Can not get user data.");
         this.setState({
-          fetchedUser: false
+          fetchedUser: false,
         });
       });
   };
 
-  saveSettings = state => {
+  saveSettings = (state) => {
     console.log("State", state);
     console.log(this.state);
     /**
@@ -313,7 +315,7 @@ class App extends React.Component {
         showInstagramFeed: state.showInstagramFeed,
         instagramHideCaption: state.instagramHideCaption,
         activeTheme: state.activeTheme,
-      }
+      };
     }
     console.log(cache);
     let platformData = JSON.stringify(cache);
@@ -327,8 +329,8 @@ class App extends React.Component {
         this.setState({
           fetchedUser: {
             ...this.state.fetchedUser,
-            platformData: JSON.parse(platformData)
-          }
+            platformData: JSON.parse(platformData),
+          },
         });
       }
     });
@@ -340,16 +342,33 @@ class App extends React.Component {
       .then(({ data }) => {
         console.log(data);
         this.setState({
-          gitlab_servers: data.page.supportedGitlabs
+          gitlab_servers: data.page.supportedGitlabs,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         //console.error(error);
         console.error("Can not get gitlab severs.", error);
         this.setState({
-          gitlab_servers: false
+          gitlab_servers: false,
         });
       });
+  };
+
+  getAllPageUrls = async () => {
+    this.session.tasks.general.allPageUrls().then((res) => {
+      let urls = [];
+
+      res.data.pages.forEach((page) => {
+        if (page.urlPath.includes("registration/")) {
+          let url = page.urlPath.split("/")[2];
+          urls.push(url);
+        }
+      });
+
+      this.setState({
+        all_usernames: urls,
+      });
+    });
   };
 
   render() {
@@ -368,20 +387,23 @@ class App extends React.Component {
               autoClose={3000}
             />
             <main
-            className={
-              this.state.fetchedUser &&
-              this.state.fetchedUser.platformData.user.settings &&
-              this.state.fetchedUser.platformData &&
-              this.state.fetchedUser.platformData.user.settings.activeTheme &&
-              "theme-"+this.state.fetchedUser.platformData.user.settings.activeTheme
-            }
+              className={
+                this.state.fetchedUser &&
+                this.state.fetchedUser.platformData.user.settings &&
+                this.state.fetchedUser.platformData &&
+                this.state.fetchedUser.platformData.user.settings.activeTheme
+                  ? "theme-" +
+                    this.state.fetchedUser.platformData.user.settings
+                      .activeTheme
+                  : undefined
+              }
             >
-              <Routes 
-              logmein={this._login}
-              fetchProfileData={this.getData}
-              globalState={this.state}
-              registerUser={this._registerUser}
-              saveSettings={this.saveSettings}
+              <Routes
+                logmein={this.login}
+                fetchProfileData={this.getData}
+                globalState={this.state}
+                registerUser={this.registerUser}
+                saveSettings={this.saveSettings}
               />
             </main>
             <Footer />
