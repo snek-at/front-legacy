@@ -30,6 +30,7 @@
     "react-text-loop": "^2.3.0",
     "react-typed": "^1.2.0",
     "react-very-simple-oauth": "^1.1.0",
+    "snek-intel": "file:../intel",
     "tippy.js": "^5.1.4",
     "typescript": "^3.8.3"
   },
