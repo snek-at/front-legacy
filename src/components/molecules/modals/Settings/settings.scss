@@ -8,6 +8,10 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
     color: #212529;
+    text-align: left;
+    i{
+      padding-left: .5rem;
+    }
     box-shadow: none;
     &:hover {
       background-color: darken(#fff, 5%) !important;

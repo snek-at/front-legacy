@@ -108,15 +108,20 @@ class App extends React.Component {
         } else {
           this.login(values.username, values.password);
         }
-      })
-      .catch(error => {
-        console.log(error);
-        if (error.message.includes("Authentication required")) {
-          console.log("success", " Welcome to SNEK!");
-        } else if (error.message.includes("Duplicate entry")) {
-          console.log("warn", " Username already taken!");
-        } else {
-          console.error("error", error);
+
+        if(!platformData.user.settings){
+          // Settings
+          platformData.user.settings = {
+            showMap: true,
+            showInstagramFeed: true,
+            show3DDiagram: true,
+            instagramHideCaption: true,
+            show2DDiagram: true,
+            showCompanyPublic: true,
+            showEmailPublic: true,
+            showLocalRanking: true,
+            activeTheme: null,
+          }
         }
       });
   };
@@ -306,8 +311,9 @@ class App extends React.Component {
         showCompanyPublic: state.showCompanyPublic,
         showMap: state.showMap,
         showInstagramFeed: state.showInstagramFeed,
-        instagramHideCaption: state.instagramHideCaption
-      };
+        instagramHideCaption: state.instagramHideCaption,
+        activeTheme: state.activeTheme,
+      }
     }
     console.log(cache);
     let platformData = JSON.stringify(cache);
@@ -361,13 +367,21 @@ class App extends React.Component {
               newestOnTop={true}
               autoClose={3000}
             />
-            <main>
-              <Routes
-                logmein={this.login}
-                fetchProfileData={this.getData}
-                globalState={this.state}
-                registerUser={this.registerUser}
-                saveSettings={this.saveSettings}
+            <main
+            className={
+              this.state.fetchedUser &&
+              this.state.fetchedUser.platformData.user.settings &&
+              this.state.fetchedUser.platformData &&
+              this.state.fetchedUser.platformData.user.settings.activeTheme &&
+              "theme-"+this.state.fetchedUser.platformData.user.settings.activeTheme
+            }
+            >
+              <Routes 
+              logmein={this._login}
+              fetchProfileData={this.getData}
+              globalState={this.state}
+              registerUser={this._registerUser}
+              saveSettings={this.saveSettings}
               />
             </main>
             <Footer />
