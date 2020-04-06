@@ -43,7 +43,6 @@ class Dashboard extends React.Component {
 
   setTabItems = () => {
     // Get project count
-    console.log(this.props.globalStore.data);
     const projectcount = this.props.globalStore.data.repos.length;
 
     this.setState({
@@ -106,8 +105,6 @@ class Dashboard extends React.Component {
     }
 
     if (data && this.state.tabitems) {
-      console.log("Reached 0");
-      console.log(data);
       if (data.user) {
         return (
           <div id="profile">
@@ -151,11 +148,9 @@ class Dashboard extends React.Component {
           </div>
         );
       } else {
-        console.log("Reached 2");
         return <MDBSpinner />;
       }
     } else {
-      console.log("Reached 1");
       return <MDBSpinner />;
     }
   }
