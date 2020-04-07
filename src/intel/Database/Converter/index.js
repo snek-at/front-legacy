@@ -149,7 +149,7 @@ export function getLanguages(data) {
   });
 
   // Sort dict by size of language slice
-  pie.slices = Object.values(pie.slices).sort((a,b) => b.size - a.size)
+  pie.slices = Object.values(pie.slices).sort((a,b) => b.size - a.size);
 
   return pie;
 }
