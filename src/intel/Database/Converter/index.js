@@ -24,6 +24,18 @@ export function getUser(data) {
   user.isEmployee = false;
   user.isHireable = false;
   user.location = platform.location;
+  user.platforms = {};
+
+  // Add a list of unique platforms to the user
+  platforms.forEach((p) => {
+    user.platforms[p.platformName] = {
+      platform: p.platformName,
+      username: p.username,
+      url: p.platformUrl
+    };
+  });
+
+  user.platforms = Object.values(user.platforms);
 
   return user;
 }
