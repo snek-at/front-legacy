@@ -32,13 +32,13 @@ class Overview extends React.Component {
       <MDBTabPane tabId={this.props.id} role="tabpanel">
         {platformData &&
         <MDBRow className="text-center text-md-left mb-4">
-        {Object.keys(platformData.languages.slices).map((key, i) => {
+        {platformData.language.map((language, i) => {
           if(i < 6){
             return(
               <MDBCol md="4" key={i}>
                 <span className="mb-2 text-muted">
-                  <MDBIcon icon="square" className="pr-2" style={{color: platformData.languages.slices[key].color}} />
-                  {platformData.languages.slices[key].name} <small>{platformData.languages.slices[key].share}%</small>
+                  <MDBIcon icon="square" className="pr-2" style={{color: language.color}} />
+                  {language.name} <small>{language.share}%</small>
                 </span>
               </MDBCol>
             );

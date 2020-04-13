@@ -43,12 +43,13 @@ class ProfilePage extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log("Profile props on startup", this.props);
     if(this.props.match){
       if(this.props.match.params){
         if(this.props.match.params.username){
           const username = this.props.match.params.username;
           if(this.props.globalState.fetchedUser === undefined){
-            this.props.fetchProfileData(username);
+            this.props.fetchCacheData(username);
           }
         }
       }
@@ -57,6 +58,7 @@ class ProfilePage extends React.Component {
 
   render(){
     const { globalState } = this.props;
+
     if(globalState.fetchedUser){
       if(globalState.fetchedUser.platformData.user.type === "software"){
         return(

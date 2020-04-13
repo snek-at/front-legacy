@@ -137,7 +137,7 @@ class SoftwareEngineer extends React.Component {
 
     if(globalState.fetchedUser && !this.state.sources){
       this.displaySources(globalState.fetchedUser.sources);
-      this.displayDoughnut(globalState.fetchedUser.platformData.languages.slices);
+      this.displayDoughnut(globalState.fetchedUser.platformData.language);
     }
 
     return (
@@ -148,7 +148,7 @@ class SoftwareEngineer extends React.Component {
             <MDBView>
               <img 
               className="img-fluid main-avatar"
-              src={globalState.fetchedUser && globalState.fetchedUser.platformData.user.avatarUrl}
+              src={globalState.fetchedUser && globalState.fetchedUser.platformData.profile.avatarUrl}
               />
               <MDBMask />
             </MDBView>
@@ -252,23 +252,23 @@ class SoftwareEngineer extends React.Component {
               )}
             </div>
             <div className="bg-light py-3 px-2">
-            {globalState.fetchedUser && globalState.fetchedUser.platformData.user.status &&
+            {globalState.fetchedUser && globalState.fetchedUser.platformData.profile.statusMessage &&
               <>
-              {globalState.fetchedUser.platformData.user.statusEmojiHTML &&
-                <div dangerouslySetInnerHTML={{__html: globalState.fetchedUser.platformData.user.statusEmojiHTML}} />
+              {globalState.fetchedUser.platformData.profile.statusEmojiHTML &&
+                <div dangerouslySetInnerHTML={{__html: globalState.fetchedUser.platformData.profile.statusEmojiHTML}} />
               }
                 <small className="px-1">
-                {globalState.fetchedUser.platformData.user.status}
+                {globalState.fetchedUser.platformData.profile.statusMessage}
                 </small>
               </>
             }
               <hr />
               <p>My organisations</p>
               {globalState.fetchedUser &&
-                <div className={globalState.fetchedUser.platformData.orgs.length >= 5 ? "orgs text-center" : "orgs"}>
-                  {globalState.fetchedUser.platformData.orgs.length > 0 ? (
+                <div className={globalState.fetchedUser.platformData.profile.organizations.length >= 5 ? "orgs text-center" : "orgs"}>
+                  {globalState.fetchedUser.platformData.profile.organizations.length > 0 ? (
                     <>
-                      {globalState.fetchedUser.platformData.orgs.map((org, i) => {
+                      {globalState.fetchedUser.platformData.profile.organizations.map((org, i) => {
                         return(
                           <MDBPopover
                             placement="top"
@@ -334,7 +334,7 @@ class SoftwareEngineer extends React.Component {
           </MDBCol>
           <MDBCol md="9" className="content p-0">
             <ProfileContent
-            projectCount={globalState.fetchedUser && globalState.fetchedUser.platformData.repos.length}
+            projectCount={globalState.fetchedUser && globalState.fetchedUser.platformData.profile.repositories.length}
             >
               <OverviewSoftware
               id={0}
@@ -342,7 +342,7 @@ class SoftwareEngineer extends React.Component {
               />
               <Projects
               id={1}
-              repoList={globalState.fetchedUser && globalState.fetchedUser.platformData.repos}
+              repoList={globalState.fetchedUser && globalState.fetchedUser.platformData.profile.repositories}
               />
             </ProfileContent>
           </MDBCol>

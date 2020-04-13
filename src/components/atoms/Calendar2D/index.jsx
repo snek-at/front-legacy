@@ -49,7 +49,7 @@ class Calender2D extends React.Component {
     if(this.props.platformData){
       // Add resize listener
       window.addEventListener("resize", this.updateDimensions);
-      let contributions = this.props.platformData.contribCalendar.currentYear;
+      let contributions = this.props.platformData.calendar.current;
 
       this.setState({
         width: this.myInput.current.offsetWidth,
@@ -156,7 +156,7 @@ class Calender2D extends React.Component {
             <svg className="calendar" height={(this.state.width / this.state.items) * 7}>
               {this.state.contributionsList &&
                 this.state.contributionsList.weeks.map((week, wkey) => {
-                  return week.contributionDays.map((day, dkey) => {
+                  return week.days.map((day, dkey) => {
                     if (wkey === 0) {
                       return (
                         <rect
@@ -164,7 +164,7 @@ class Calender2D extends React.Component {
                           y={
                             (this.state.width / this.state.items) * 7 +
                             (this.state.width / this.state.items) * dkey -
-                            week.contributionDays.length * (this.state.width / this.state.items)
+                            week.days.length * (this.state.width / this.state.items)
                           }
                           x={0}
                           width={this.state.width / this.state.items}

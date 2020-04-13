@@ -22,8 +22,8 @@ class App extends React.Component {
   state = {
     logged: false,
     username: undefined,
-    gitlab_servers: undefined,
     user: undefined,
+    fetchedUser: undefined,
   };
 
   constructor() {
@@ -39,17 +39,6 @@ class App extends React.Component {
      * New site access will lead to a anonymous login.
      */
     await this.session.begin();
-
-    /**
-     * Fetch Gitlab server:
-     * Get all available Gitlab server for registration.
-     */
-    this.fetchGitLabServers();
-    /**
-     * Fetch all user:
-     * Get all registered usernames.
-     */
-    this.getAllPageUrls();
   }
 
   /**
@@ -60,14 +49,15 @@ class App extends React.Component {
   /**
    * Authentication / Registration Tasks
    */
-
   login = async (username, password) => {
+    console.log("Call login");
     this.session
       .begin({
         username,
         password,
       })
       .then((res) => {
+        console.log("Login successful for user " + username, res.username);
         console.log(res);
         this.setState({
           loading: false,
@@ -76,19 +66,25 @@ class App extends React.Component {
         });
       })
       .catch((err) => {
+        console.log("Login failed for user " + username);
         console.error(err);
+        this.setState({
+          loading: false,
+          logged: false,
+          user: null,
+        });
       });
 
-    // console.log(this.session.tasks.user.whoami())
-
-    this.setState({});
+    console.log("Check for user login", this.session.tasks.user.whoami());
   };
 
   anonymousLogin = async () => {
+    console.log("Anonymous login called");
     await this.session.begin();
   };
 
   logout = () => {
+    console.log("Logout called");
     this.setState(
       {
         loading: false,
@@ -96,76 +92,118 @@ class App extends React.Component {
         user: undefined,
       },
       () => {
-        this.session.end().then(() => {
-          this.anonymousLogin();
-        });
+        this.session.end().then(() => this.anonymousLogin());
       }
     );
   };
 
-  registerUser = (values) => {
-    this.session.tasks.user.registration(values).then((res) => {
+  //> Register
+  registerUser = async (registrationData) => {
+    // Get data from source
+    await this.appendSourceObjects(registrationData.sources);
+    const devData = await this.getData();
+    registrationData.platform_data = JSON.stringify(devData);
+    // Create JSON string out of sources for backend use
+    registrationData.sources = JSON.stringify(registrationData.sources);
+    // Register the user in our engine
+    this.registerInEngine(registrationData);
+  };
+
+  registerInEngine = (registrationData) => {
+    this.session.tasks.user.registration(registrationData).then((res) => {
       console.log(res);
       if (res.message === "FAIL") {
         console.log("warn", "All fields have to be filled!");
       } else {
-        this.login(values.username, values.password);
+        // Set cache
+        this.session.tasks.user.cache(registrationData.platform_data);
+        // Login user
+        this.login(registrationData.username, registrationData.password);
       }
     });
+  };
+
+  appendSourceObjects = async (sourceList) => {
+    return this.intel.appendList(sourceList);
+  };
+
+  // Get user data from intel
+  getData = () => {
+    return this.intel.get();
   };
 
   /**
    * Data Tasks
    */
-
-  getData = async (username) => {
-    console.log("#########Data start");
+  fetchCacheData = async (username) => {
+    console.log("Get Data called");
     this.session.tasks.user
       .profile("/registration/" + username)
-      .then(({ data }) => {
-        console.log("#########Data", data);
+      .then(async ({ data }) => {
+        console.log("Got data for " + username);
+        console.log(data);
         if (data.profile.verified) {
+          console.log("user is verified");
           // Redirect and login
-          let platformData = JSON.parse(data.profile.platformData);
-          let sources = JSON.parse(data.profile.sources);
-          let cache = {};
+          let profile = data.profile;
+          let platformData = profile.platformData
+            ? JSON.parse(profile.platformData)
+            : null;
+          let user = platformData.user ? platformData.user : null;
+          let sources = profile.sources ? JSON.parse(profile.sources) : null;
+
+          // Reconstruct intel
+          /*this.intel.reducer.reload();
+          await this.appendSourceObjects(sources);
+          let devData = this.getData();
+          platformData.devData = devData;*/
+
+          console.log("USER", user);
           /**
            * ################
            * DUMMY DATA
            * Remove and replace with live data when ready
            * ################
            */
+          if (!user) {
+            user = {
+              type: undefined,
+            };
+          }
           // Change this to change from software to media
           let enableMediaEngineer = false;
           if (enableMediaEngineer) {
-            platformData.user.type = "media";
+            user.type = "media";
           } else {
-            platformData.user.type = "software";
+            user.type = "software";
           }
-          console.log("##### Platform Data", platformData);
+          console.log("Got platform data", platformData);
 
-          if (!platformData.user.settings) {
+          if (!user.settings) {
             // Settings
-            platformData.user.settings = {
+            user.settings = {
               showMap: true,
               showInstagramFeed: true,
-              instagramHideCaption: true,
               show3DDiagram: true,
+              instagramHideCaption: true,
               show2DDiagram: true,
               showCompanyPublic: true,
               showEmailPublic: true,
               showLocalRanking: true,
+              activeTheme: null,
             };
           }
-          console.log(platformData.user.type);
+          console.log(user.type);
           // If no type has been set, perform user data injection
-          if (!platformData.user.type) {
+          if (!user.type) {
             // Injecting platformData
             if (enableMediaEngineer) {
               // Set type to media to distinguish
-              platformData.user.type = "media";
+              user.type = "media";
+              // Define perks if not set
+              user.perks = user.perks ? user.perks : {};
               // Set media engineer platforms
-              platformData.user.platforms = {
+              user.perks.platforms = {
                 instagram: {
                   url: "https://www.instagram.com/aichnerchristian/",
                 },
@@ -177,45 +215,36 @@ class App extends React.Component {
                 },
               };
               // Portfolio map
-              platformData.user.mapData = [
+              user.perks.mapData = [
                 { name: "1", coordinates: [12.8506, 44.6086] },
                 { name: "2", coordinates: [13.8496928, 46.6114363] },
                 { name: "3", coordinates: [11.489387, 48.78345] },
               ];
               // Skills (like languages for programmers)
-              platformData.user.skills = [
-                { name: "Photography", color: "#563d7c", size: 54, share: 10 },
+              user.perks.skills = [
+                {
+                  name: "Photography",
+                  color: "#563d7c",
+                  size: 54,
+                  share: 10,
+                },
                 { name: "Video", color: "#263d1c", size: 54, share: 20 },
                 { name: "Web", color: "#763d2c", size: 54, share: 70 },
               ];
               // Instagram posts
-              platformData.user.instagram = [
+              user.perks.instagram = [
                 { url: "https://www.instagram.com/p/B9cOSWMJbXD/" },
                 { url: "https://www.instagram.com/p/B9TWGNaglUz/" },
               ];
             } else {
               // Add needed variables software engineer
-              platformData.user.type = "software";
+              user.type = "software";
             }
-            if (!platformData.user.settings) {
-              // Settings
-              platformData.user.settings = {
-                showMap: true,
-                showInstagramFeed: true,
-                show3DDiagram: true,
-                instagramHideCaption: true,
-                show2DDiagram: true,
-                showCompanyPublic: true,
-                showEmailPublic: true,
-                showLocalRanking: true,
-                activeTheme: null,
-              };
-            }
-            console.log(platformData);
             // Add needed variables for both software- and media engineer
-            platformData.user.first_name = "Max";
-            platformData.user.last_name = "Mustermann";
-            console.log("PD", platformData);
+            user.first_name = "Max";
+            user.last_name = "Mustermann";
+
+            console.log("Injected data to platform data", platformData);
           }
           /**
            * ################
@@ -224,8 +253,11 @@ class App extends React.Component {
            */
           this.setState({
             fetchedUser: {
-              platformData: platformData,
-              sources: sources,
+              platformData: {
+                ...platformData,
+                user
+              },
+              sources,
               username: data.profile.username,
               verified: data.profile.verified,
               accessories: {
@@ -238,54 +270,17 @@ class App extends React.Component {
               },
             },
           });
-          /*intel
-          .fill(sources)
-          .then(async () => {
-            intel.calendar();
-            intel.stats();
-            intel.repos();
-          })
-          .then(async () => {
-            this.setState({
-              logged: true,
-              contrib: intel.stats(),
-              contribCalendar: intel.calendar(),
-              contribTypes: intel.contribTypes(),
-              user: intel.user(),
-              orgs: intel.orgs(),
-              languages: intel.languages(),
-              repos: intel.repos(),
-            });
-            cache = {
-              logged: true,
-              contrib: intel.stats(),
-              contribCalendar: intel.calendar(),
-              contribTypes: intel.contribTypes(),
-              user: intel.user(),
-              orgs: intel.orgs(),
-              languages: intel.languages(),
-              repos: intel.repos(),
-            };
-            platformData = JSON.stringify(cache);
-            this.props.caching({
-              variables: { 
-              token: localStorage.getItem("jwt_snek"),
-              platformData
-            }
-            });
-          });*/
+          // Update cache
+          this.session.tasks.user.cache(JSON.stringify(platformData));
         } else {
+          console.error("User not verified.");
           this.setState({
             fetchedUser: false,
           });
         }
-        this.setState({
-          fetchedUser: false,
-        });
       })
       .catch((err) => {
-        //console.error(error);
-        console.error("Can not get user data.");
+        console.error("Can not get user data.", err);
         this.setState({
           fetchedUser: false,
         });
@@ -293,8 +288,6 @@ class App extends React.Component {
   };
 
   saveSettings = (state) => {
-    console.log("State", state);
-    console.log(this.state);
     /**
      * Use caching to save new, edited data.
      * This has to be updated whenever parameters are added or removed.
@@ -322,7 +315,6 @@ class App extends React.Component {
         activeTheme: state.activeTheme,
       };
     }
-    console.log(cache);
     let platformData = JSON.stringify(cache);
     this.session.tasks.user.cache(platformData).then(({ data }) => {
       let platformData = JSON.parse(platformData);
@@ -341,26 +333,23 @@ class App extends React.Component {
     });
   };
 
-  fetchGitLabServers = async () => {
-    this.session.tasks.general
+  fetchGitLabServers = () => {
+    console.log("Fetching GitLab servers");
+    return this.session.tasks.general
       .gitlabServer()
       .then(({ data }) => {
-        console.log(data);
-        this.setState({
-          gitlab_servers: data.page.supportedGitlabs,
-        });
+        return data.page.supportedGitlabs;
       })
-      .catch((error) => {
+      .catch((err) => {
         //console.error(error);
-        console.error("Can not get gitlab severs.", error);
-        this.setState({
-          gitlab_servers: false,
-        });
+        console.error("Can not get GitLab severs.", err);
+        return false;
       });
   };
 
-  getAllPageUrls = async () => {
-    this.session.tasks.general.allPageUrls().then((res) => {
+  getAllPageUrls = () => {
+    console.log("Get all page urls called");
+    return this.session.tasks.general.allPageUrls().then((res) => {
       let urls = [];
 
       res.data.pages.forEach((page) => {
@@ -370,13 +359,13 @@ class App extends React.Component {
         }
       });
 
-      this.setState({
-        all_usernames: urls,
-      });
+      return urls;
     });
   };
 
   render() {
+    console.log("Refreshing component");
+    console.log("App.js", this.state);
     return (
       <Router>
         <ScrollToTop>
@@ -384,6 +373,7 @@ class App extends React.Component {
             <Navbar
               username={this.state.username}
               logmeout={this.logout}
+              users={this.getAllPageUrls}
               globalState={this.state}
             />
             <ToastContainer
@@ -394,8 +384,8 @@ class App extends React.Component {
             <main
               className={
                 this.state.fetchedUser &&
+                this.state.fetchedUser.platformData.user &&
                 this.state.fetchedUser.platformData.user.settings &&
-                this.state.fetchedUser.platformData &&
                 this.state.fetchedUser.platformData.user.settings.activeTheme
                   ? "theme-" +
                     this.state.fetchedUser.platformData.user.settings
@@ -405,9 +395,12 @@ class App extends React.Component {
             >
               <Routes
                 logmein={this.login}
-                fetchProfileData={this.getData}
+                fetchCacheData={this.fetchCacheData}
                 globalState={this.state}
-                registerUser={this.registerUser}
+                registerUser={{
+                  register: this.registerUser,
+                  getGitLabServers: this.fetchGitLabServers,
+                }}
                 saveSettings={this.saveSettings}
               />
             </main>

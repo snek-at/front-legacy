@@ -44,7 +44,7 @@ class Routes extends React.Component {
           component={(props) => (
             <ProfilePage
               globalState={this.props.globalState}
-              fetchProfileData={this.props.fetchProfileData}
+              fetchCacheData={this.props.fetchCacheData}
               saveSettings={this.saveSettings}
               {...props}
             />

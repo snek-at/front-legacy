@@ -38,17 +38,17 @@ class Projects extends React.Component {
                   <p className="lead mb-1 float-left">
                   {repo.name.length > 25 ? ( repo.name.substring(0,25)+"..." ) : ( repo.name )}
                   </p>
-                  {repo.languagePie.slices.length > 0 &&
+                  {repo.languages.length > 0 &&
                   <small className="mb-1 float-right text-muted">
-                  <MDBIcon icon="square" className="pr-1" style={{color: repo.languagePie.slices[0].color}} />
-                  {repo.languagePie.slices[0].name}
+                  <MDBIcon icon="square" className="pr-1" style={{color: repo.languages[0].color}} />
+                  {repo.languages[0].name}
                   </small>
                   }
                 </div>
                 <div className="clearfix" />
                 <div>
                   <img src={repo.avatarUrl} alt={repo.name}/>
-                  <small>Owned by {repo.owner.login}</small>
+                  <small>Owned by {repo.ownerId}</small>
                 </div>
                 <div className="py-2">
                   <img 

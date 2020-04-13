@@ -39,26 +39,32 @@ class NavbarPage extends React.Component {
     filter: "",
   };
 
+  componentDidMount = () => {
+    /**
+     * Sets the state for usernames for search functionality.
+     * @todo: If more functionality has been added to the navbar, this should be split up further
+     */
+    this.getUsernameList();
+  };
+
   toggleCollapse = () => {
     this.setState({ isOpen: !this.state.isOpen });
-  }
+  };
 
   search = (event) => {
     let value = document.getElementById("selectSearchInput").value;
     // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
       let url = "search?q=" + value;
       window.open(url, "_self");
-    }
-    else{
+    } else {
       this.setState({
         filter: value,
-      })
+      });
     }
-  }
-  
+  };
 
   // getAllUsernames = async () => {
   //   snekGraphQL
@@ -78,73 +84,100 @@ class NavbarPage extends React.Component {
   //       usernames.push(page.urlPath.replace("/registration/", ""));
   //     }
   //   });
-  
+
   //   this.setState({
   //     usernames
   //   });
   // }
 
-  getValueOfSelectOne = value => {
-    window.open("/u/"+value, "_self");
-  }
+  getValueOfSelectOne = (value) => {
+    window.open("/u/" + value, "_self");
+  };
+
+  getUsernameList = async () => {
+    let usernames = await this.props.users();
+    this.setState({
+      usernames,
+    });
+  };
 
   render() {
-    const { globalState } = this.props;
-    console.log(globalState)
+    const { globalState, users } = this.props;
+
     return (
       <MDBNavbar color="light" light expand="md">
         <MDBContainer>
-            {this.props.location.pathname === "/" ? (
-              <MDBSmoothScroll 
-              to="home"
-              className="d-inline"
-              >
-                <MDBNavbarBrand className="flex-center">
-                  <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
-                  <span className="font-weight-bold">SNEK</span>
-                </MDBNavbarBrand>
-              </MDBSmoothScroll>
-            ) : (
-              <>
-              {(!globalState.loading && globalState.logged && globalState.user) ? (
-                <a href={"/u/"+this.props.username}>
+          {this.props.location.pathname === "/" ? (
+            <MDBSmoothScroll to="home" className="d-inline">
+              <MDBNavbarBrand className="flex-center">
+                <img
+                  src={SNEKLogo}
+                  alt="SNEK Logo"
+                  className="img-fluid mr-2"
+                />
+                <span className="font-weight-bold">SNEK</span>
+              </MDBNavbarBrand>
+            </MDBSmoothScroll>
+          ) : (
+            <>
+              {!globalState.loading &&
+              globalState.logged &&
+              globalState.user ? (
+                <a href={"/u/" + this.props.username}>
                   <MDBNavbarBrand className="flex-center">
-                    <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                    <img
+                      src={SNEKLogo}
+                      alt="SNEK Logo"
+                      className="img-fluid mr-2"
+                    />
                     <span className="font-weight-bold">SNEK</span>
                   </MDBNavbarBrand>
                 </a>
               ) : (
                 <Link to="/">
                   <MDBNavbarBrand className="flex-center">
-                    <img src={SNEKLogo} alt="SNEK Logo" className="img-fluid mr-2" />
+                    <img
+                      src={SNEKLogo}
+                      alt="SNEK Logo"
+                      className="img-fluid mr-2"
+                    />
                     <span className="font-weight-bold">SNEK</span>
                   </MDBNavbarBrand>
                 </Link>
               )}
-              </>
-            )}          
+            </>
+          )}
           <MDBNavbarToggler onClick={this.toggleCollapse} />
           <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
             <MDBNavbarNav left>
               <MDBNavItem>
-                <MDBSelect getValue={value=> this.getValueOfSelectOne(value)} onKeyUp={this.search} id="search">
-                  <MDBSelectInput selected="Find a user"/>
-                    <MDBSelectOptions search >
-                      {(globalState.all_usernames) ? (
-                        this.props.globalState.all_usernames.map((username, key) => {
-                          if (username.includes(this.state.filter)){
-                            return <MDBSelectOption>{username}</MDBSelectOption>
-                          }
-                        })
-                      ) : undefined}
-                      {/* {
-                      this.props.globalState.all_usernames.map((username, key) => {
-                        if (username.includes(this.state.filter)){
-                          let link = "u/" + username;
-                          return <MDBSelectOption>{username}</MDBSelectOption>
-                        }
-                      })} */}
-                    </MDBSelectOptions>
+                <MDBSelect
+                  getValue={(value) => this.getValueOfSelectOne(value)}
+                  onKeyUp={this.search}
+                  id="search"
+                >
+                  <MDBSelectInput selected="Find a user" />
+                  <MDBSelectOptions search>
+                    {this.state.usernames ? (
+                      this.state.usernames.length > 0 ? (
+                        <>
+                          {this.state.usernames.map((username, i) => {
+                            if(username.includes(this.state.filter)){
+                              return(
+                                <MDBSelectOption key={i}>{username}</MDBSelectOption>
+                              )
+                            }
+                          })}
+                        </>
+                      ) : (
+                        <>
+                          <span>No users found</span>
+                        </>
+                      )
+                    ) : (
+                      <span>Loading</span>
+                    )}
+                  </MDBSelectOptions>
                 </MDBSelect>
               </MDBNavItem>
             </MDBNavbarNav>
@@ -164,28 +197,39 @@ class NavbarPage extends React.Component {
               <MDBNavItem>
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
-              {(globalState.logged && !globalState.loading && globalState.fetchedUser) &&
-              <>
-              <div className="spacer" />
-              <MDBNavItem>
-                <MDBDropdown>
-                  <MDBDropdownToggle nav caret>
-                    <img
-                    src={globalState.fetchedUser.platformData.user.avatarUrl}
-                    className="z-depth-0"
-                    alt={globalState.fetchedUser.platformData.user.name} 
-                    />
-                  </MDBDropdownToggle>
-                  <MDBDropdownMenu className="dropdown-default">
-                    <MDBDropdownItem href="#!">My profile</MDBDropdownItem>
-                    <Link to="/" onClick={this.props.logmeout} className="dropdown-item">
-                    Sign Out
-                    </Link>
-                  </MDBDropdownMenu>
-                </MDBDropdown>
-              </MDBNavItem>
-              </>
-              }
+              {globalState.logged &&
+                !globalState.loading &&
+                globalState.fetchedUser && (
+                  <>
+                    <div className="spacer" />
+                    <MDBNavItem>
+                      <MDBDropdown>
+                        <MDBDropdownToggle nav caret>
+                          <img
+                            src={
+                              globalState.fetchedUser.platformData.user
+                                .avatarUrl
+                            }
+                            className="z-depth-0"
+                            alt={globalState.fetchedUser.platformData.user.name}
+                          />
+                        </MDBDropdownToggle>
+                        <MDBDropdownMenu className="dropdown-default">
+                          <MDBDropdownItem href="#!">
+                            My profile
+                          </MDBDropdownItem>
+                          <Link
+                            to="/"
+                            onClick={this.props.logmeout}
+                            className="dropdown-item"
+                          >
+                            Sign Out
+                          </Link>
+                        </MDBDropdownMenu>
+                      </MDBDropdown>
+                    </MDBNavItem>
+                  </>
+                )}
             </MDBNavbarNav>
           </MDBCollapse>
         </MDBContainer>
