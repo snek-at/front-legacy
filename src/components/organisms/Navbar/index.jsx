@@ -2,7 +2,7 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 // Router
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -27,24 +27,11 @@ import {
   MDBSelectOptions,
 } from "mdbreact";
 
-import axios from 'axios';
-
-//> Additional
-// Link
-import { Link } from "react-router-dom";
-
 //> Images
 import SNEKLogo from "../../../assets/navigation/logo.png";
 
 //> CSS
 import "./navbar.scss";
-
-// Get pages
-const GET_PAGES = (token) => `query pages { pages(token: "${token}") { urlPath } } `;
-
-const snekGraphQL = axios.create({
-  baseURL: 'https://engine.snek.at/api/graphiql',
-});
 
 class NavbarPage extends React.Component {
   state = {

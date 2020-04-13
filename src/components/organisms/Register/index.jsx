@@ -39,13 +39,6 @@ import { ReactComponent as SvgMedia } from '../../../assets/header/media.svg';
 //> CSS
 import "./register.scss";
 
-//> Intel
-import * as intel from "../../../intel";
-
-//> Auth
-import { githubProvider } from "../../../intel/OAuthGithub/providers/github";
-import RSA from "react-very-simple-oauth";
-
 class Register extends React.Component {
   state = {
     step: 0,
@@ -103,9 +96,9 @@ class Register extends React.Component {
   }
 
   connectGitHub = async () => {
-    const data = await RSA.acquireTokenAsync(githubProvider);
+    /*const data = await RSA.acquireTokenAsync(githubProvider);
     console.log(data);
-    this.pushToSourceList("github", data.username, "github.com", data.access_token);
+    this.pushToSourceList("github", data.username, "github.com", data.access_token);*/
   }
 
   pushToSourceList = (source, username, server, token) => {
@@ -339,7 +332,7 @@ class Register extends React.Component {
       }, () => {
         // Cache data
         let cache = {};
-        intel
+        /*intel
         .fill(this.state.sourceList)
         .then(() => {
           intel.calendar();
@@ -384,7 +377,7 @@ class Register extends React.Component {
               "platform_data": JSON.stringify(cache)
             };
             this.props.registerUser(values);
-        });
+        });*/
       });
     } else {
       this.setState({

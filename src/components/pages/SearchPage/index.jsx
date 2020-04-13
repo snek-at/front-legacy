@@ -17,16 +17,6 @@ import {
   MDBProgress,
 } from "mdbreact";
 
-import axios from "axios";
-
-// Get pages
-const GET_PAGES = (token) =>
-  `query pages { pages(token: "${token}") { urlPath } } `;
-
-const snekGraphQL = axios.create({
-  baseURL: "https://engine.snek.at/api/graphiql",
-});
-
 class Search extends React.Component {
   state = {
     pages: [],
