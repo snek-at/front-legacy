@@ -32,7 +32,7 @@ class Overview extends React.Component {
       <MDBTabPane tabId={this.props.id} role="tabpanel">
         {platformData &&
         <MDBRow className="text-center text-md-left mb-4">
-        {platformData.language.map((language, i) => {
+        {platformData.statistic.languages.map((language, i) => {
           if(i < 6){
             return(
               <MDBCol md="4" key={i}>

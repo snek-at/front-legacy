@@ -129,6 +129,7 @@ class App extends React.Component {
 
   // Get user data from intel
   getData = () => {
+    console.log(this.intel.get())
     return this.intel.get();
   };
 
@@ -141,7 +142,7 @@ class App extends React.Component {
       .profile("/registration/" + username)
       .then(async ({ data }) => {
         console.log("Got data for " + username);
-        console.log(data);
+        console.log("DATA ", data);
         if (data.profile.verified) {
           console.log("user is verified");
           // Redirect and login

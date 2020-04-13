@@ -52,10 +52,10 @@ class Calendar3D extends React.Component {
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
     let contribData = this.props.platformData.statistic.current;
-    let contributionCalendar = this.props.platformData.calendar.current;
+    let contributionCalendar = this.props.platformData.statistic.current.calendar;
 
     countTotal = contribData.contributions.total;
-    averageCount = contribData.contributions.total / 365;
+    averageCount = Math.round((contribData.contributions.total / 365 + Number.EPSILON) * 100) / 100
     datesTotal =
       moment(contributionCalendar.fromDate).format("MMM DD, YYYY") +
       " - " +
@@ -95,7 +95,7 @@ class Calendar3D extends React.Component {
   renderBottomStats() {
     let streakLongest, datesLongest, streakCurrent, datesCurrent;
     let contribData = this.props.platformData.statistic.current;
-    let contributionCalendar = this.props.platformData.calendar.current;
+    //let contributionCalendar = this.props.platformData.statistic.current.calendar;
 
     streakLongest = contribData.streak.longest.totalContributions;
     datesLongest =
@@ -146,7 +146,7 @@ class Calendar3D extends React.Component {
     let pixelView = new obelisk.PixelView(this.context, point);
 
     // Get contribs of the current year
-    let contributions = this.props.platformData.calendar.current;
+    let contributions = this.props.platformData.statistic.current.calendar;
 
     // Define basic variables
     let SIZE = 2 * Math.round((this.state.width / 80) / 2);

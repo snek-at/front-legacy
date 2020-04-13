@@ -89,7 +89,6 @@ class Search extends React.Component {
         charFilter: params.q,
         categoryFilter: params.type
       })
-      console.log(users)
     }
     if (params.type) {
     }

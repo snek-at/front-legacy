@@ -136,8 +136,8 @@ class SoftwareEngineer extends React.Component {
     if(globalState.loading && !globalState.fetchedUser) return <Redirect to="/"/>;
 
     if(globalState.fetchedUser && !this.state.sources){
-      this.displaySources(globalState.fetchedUser.sources);
-      this.displayDoughnut(globalState.fetchedUser.platformData.language);
+      this.displaySources(globalState.fetchedUser.platformData.profile.sources);
+      this.displayDoughnut(globalState.fetchedUser.platformData.statistic.languages);
     }
 
     return (
@@ -296,8 +296,7 @@ class SoftwareEngineer extends React.Component {
                             </MDBPopoverHeader>
                             <MDBPopoverBody>
                               <p className="my-2">
-                                Sed posuere consectetur est at lobortis. Aenean eu leo quam.
-                                Pellentesque ornare sem lacinia quam venenatis vestibulum.
+                                {org.description}
                               </p>
                               <a
                               href={org.url}

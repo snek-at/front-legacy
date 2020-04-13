@@ -48,7 +48,7 @@ class Projects extends React.Component {
                 <div className="clearfix" />
                 <div>
                   <img src={repo.avatarUrl} alt={repo.name}/>
-                  <small>Owned by {repo.ownerId}</small>
+                  <small>Owned by {repo.owner.username}</small>
                 </div>
                 <div className="py-2">
                   <img 

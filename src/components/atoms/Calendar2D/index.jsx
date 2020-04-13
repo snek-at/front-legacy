@@ -49,7 +49,7 @@ class Calender2D extends React.Component {
     if(this.props.platformData){
       // Add resize listener
       window.addEventListener("resize", this.updateDimensions);
-      let contributions = this.props.platformData.calendar.current;
+      let contributions = this.props.platformData.statistic.current.calendar;
 
       this.setState({
         width: this.myInput.current.offsetWidth,
