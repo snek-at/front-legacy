@@ -2,7 +2,7 @@
 // Contains all the functionality necessary to define React components
 import React from "react";
 // Router
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -27,10 +27,7 @@ import {
 import { Doughnut } from "react-chartjs-2";
 
 //> Components
-import {
-  SoftwareEngineer,
-  MediaEngineer,
-} from "../../organisms/profiles";
+import { SoftwareEngineer, MediaEngineer } from "../../organisms/profiles";
 
 //> CSS
 import "./profile.scss";
@@ -40,32 +37,32 @@ class ProfilePage extends React.Component {
 
   saveSettings = (state) => {
     this.props.saveSettings(state);
-  }
+  };
 
   componentDidMount = () => {
     console.log("Profile props on startup", this.props);
-    if(this.props.match){
-      if(this.props.match.params){
-        if(this.props.match.params.username){
+    if (this.props.match) {
+      if (this.props.match.params) {
+        if (this.props.match.params.username) {
           const username = this.props.match.params.username;
-          if(this.props.globalState.fetchedUser === undefined){
+          if (this.props.globalState.fetchedUser === undefined) {
             this.props.fetchCacheData(username);
           }
         }
       }
     }
-  }
+  };
 
-  render(){
+  render() {
     const { globalState } = this.props;
 
-    if(globalState.fetchedUser){
-      if(globalState.fetchedUser.platformData.user.type === "software"){
-        return(
+    if (globalState.fetchedUser) {
+      if (globalState.fetchedUser.platformData.user.type === "software") {
+        return (
           <SoftwareEngineer {...this.props} saveSettings={this.saveSettings} />
         );
-      } else if (globalState.fetchedUser.platformData.user.type === "media"){
-        return(
+      } else if (globalState.fetchedUser.platformData.user.type === "media") {
+        return (
           <MediaEngineer {...this.props} saveSettings={this.saveSettings} />
         );
       } else {
@@ -77,6 +74,34 @@ class ProfilePage extends React.Component {
           </div>
         );
       }
+    } else if (globalState.fetchedUser === null) {
+      // Can not get user data
+      return (
+        <div className="text-center my-5 py-5">
+          <MDBIcon icon="times-circle" size="3x" className="text-danger mb-3" />
+          <h2>Profile can not be fetched</h2>
+          <p className="lead">Please try again later</p>
+          <Link to="/">
+            <MDBBtn color="danger" size="lg">
+              Return to home
+            </MDBBtn>
+          </Link>
+        </div>
+      );
+    } else if (globalState.fetchedUser === false) {
+      // User is not verified
+      return (
+        <div className="text-center my-5 py-5">
+          <MDBIcon icon="times-circle" size="3x" className="text-danger mb-3" />
+          <h2>This user has not been verified.</h2>
+          <p className="lead">Please try again later</p>
+          <Link to="/">
+            <MDBBtn color="danger" size="lg">
+              Return to home
+            </MDBBtn>
+          </Link>
+        </div>
+      );
     } else {
       return (
         <div className="text-center my-5 py-5">
