@@ -38,7 +38,19 @@ class App extends React.Component {
      * Start a new session based on authentication history.
      * New site access will lead to a anonymous login.
      */
-    await this.session.begin();
+    const whoami = await this.session.begin();
+    if(whoami){
+      if(whoami.whoami.username){
+        if(whoami.whoami.username !== "cisco"){
+          console.log("Reached 3", whoami.whoami.username);
+          this.setState({
+            loading: false,
+            logged: true,
+            user: whoami.whoami.username,
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -129,7 +141,7 @@ class App extends React.Component {
 
   // Get user data from intel
   getData = () => {
-    console.log(this.intel.get())
+    console.log(this.intel.get());
     return this.intel.get();
   };
 
@@ -143,147 +155,154 @@ class App extends React.Component {
       .then(async ({ data }) => {
         console.log("Got data for " + username);
         console.log("DATA ", data);
-        if (data.profile.verified) {
-          console.log("user is verified");
-          // Redirect and login
-          let profile = data.profile;
-          let platformData = profile.platformData
-            ? JSON.parse(profile.platformData)
-            : null;
-          let user = platformData.user ? platformData.user : null;
-          let sources = profile.sources ? JSON.parse(profile.sources) : null;
+        if (!data.profile) {
+          console.log("Can not get profile");
+          this.setState({
+            fetchedUser: null,
+          });
+        } else {
+          if (data.profile.verified) {
+            console.log("user is verified");
+            // Redirect and login
+            let profile = data.profile;
+            let platformData = profile.platformData
+              ? JSON.parse(profile.platformData)
+              : null;
+            let user = platformData.user ? platformData.user : null;
+            let sources = profile.sources ? JSON.parse(profile.sources) : null;
 
-          // Reconstruct intel
-          /*this.intel.reducer.reload();
-          await this.appendSourceObjects(sources);
-          let devData = this.getData();
-          platformData.devData = devData;*/
+            // Reconstruct intel
+            /*this.intel.reducer.reload();
+            await this.appendSourceObjects(sources);
+            let devData = this.getData();
+            platformData.devData = devData;*/
 
-          console.log("USER", user);
-          /**
-           * ################
-           * DUMMY DATA
-           * Remove and replace with live data when ready
-           * ################
-           */
-          if (!user) {
-            user = {
-              type: undefined,
-            };
-          }
-          // Change this to change from software to media
-          let enableMediaEngineer = false;
-          if (enableMediaEngineer) {
-            user.type = "media";
-          } else {
-            user.type = "software";
-          }
-          console.log("Got platform data", platformData);
-
-          if (!user.settings) {
-            // Settings
-            user.settings = {
-              showMap: true,
-              showInstagramFeed: true,
-              show3DDiagram: true,
-              instagramHideCaption: true,
-              show2DDiagram: true,
-              showCompanyPublic: true,
-              showEmailPublic: true,
-              showLocalRanking: true,
-              activeTheme: null,
-            };
-          }
-          console.log(user.type);
-          // If no type has been set, perform user data injection
-          if (!user.type) {
-            // Injecting platformData
-            if (enableMediaEngineer) {
-              // Set type to media to distinguish
-              user.type = "media";
-              // Define perks if not set
-              user.perks = user.perks ? user.perks : {};
-              // Set media engineer platforms
-              user.perks.platforms = {
-                instagram: {
-                  url: "https://www.instagram.com/aichnerchristian/",
-                },
-                facebook: {
-                  url: "https://www.facebook.com/aichner.christian",
-                },
-                portfolio: {
-                  url: "https://www.aichner-christia.com/portfolio",
-                },
+            console.log("USER", user);
+            /**
+             * ################
+             * DUMMY DATA
+             * Remove and replace with live data when ready
+             * ################
+             */
+            if (!user) {
+              user = {
+                type: undefined,
               };
-              // Portfolio map
-              user.perks.mapData = [
-                { name: "1", coordinates: [12.8506, 44.6086] },
-                { name: "2", coordinates: [13.8496928, 46.6114363] },
-                { name: "3", coordinates: [11.489387, 48.78345] },
-              ];
-              // Skills (like languages for programmers)
-              user.perks.skills = [
-                {
-                  name: "Photography",
-                  color: "#563d7c",
-                  size: 54,
-                  share: 10,
-                },
-                { name: "Video", color: "#263d1c", size: 54, share: 20 },
-                { name: "Web", color: "#763d2c", size: 54, share: 70 },
-              ];
-              // Instagram posts
-              user.perks.instagram = [
-                { url: "https://www.instagram.com/p/B9cOSWMJbXD/" },
-                { url: "https://www.instagram.com/p/B9TWGNaglUz/" },
-              ];
+            }
+            // Change this to change from software to media
+            let enableMediaEngineer = false;
+            if (enableMediaEngineer) {
+              user.type = "media";
             } else {
-              // Add needed variables software engineer
               user.type = "software";
             }
-            // Add needed variables for both software- and media engineer
-            user.first_name = "Max";
-            user.last_name = "Mustermann";
+            console.log("Got platform data", platformData);
 
-            console.log("Injected data to platform data", platformData);
+            if (!user.settings) {
+              // Settings
+              user.settings = {
+                showMap: true,
+                showInstagramFeed: true,
+                show3DDiagram: true,
+                instagramHideCaption: true,
+                show2DDiagram: true,
+                showCompanyPublic: true,
+                showEmailPublic: true,
+                showLocalRanking: true,
+                activeTheme: null,
+              };
+            }
+            console.log(user.type);
+            // If no type has been set, perform user data injection
+            if (!user.type) {
+              // Injecting platformData
+              if (enableMediaEngineer) {
+                // Set type to media to distinguish
+                user.type = "media";
+                // Define perks if not set
+                user.perks = user.perks ? user.perks : {};
+                // Set media engineer platforms
+                user.perks.platforms = {
+                  instagram: {
+                    url: "https://www.instagram.com/aichnerchristian/",
+                  },
+                  facebook: {
+                    url: "https://www.facebook.com/aichner.christian",
+                  },
+                  portfolio: {
+                    url: "https://www.aichner-christia.com/portfolio",
+                  },
+                };
+                // Portfolio map
+                user.perks.mapData = [
+                  { name: "1", coordinates: [12.8506, 44.6086] },
+                  { name: "2", coordinates: [13.8496928, 46.6114363] },
+                  { name: "3", coordinates: [11.489387, 48.78345] },
+                ];
+                // Skills (like languages for programmers)
+                user.perks.skills = [
+                  {
+                    name: "Photography",
+                    color: "#563d7c",
+                    size: 54,
+                    share: 10,
+                  },
+                  { name: "Video", color: "#263d1c", size: 54, share: 20 },
+                  { name: "Web", color: "#763d2c", size: 54, share: 70 },
+                ];
+                // Instagram posts
+                user.perks.instagram = [
+                  { url: "https://www.instagram.com/p/B9cOSWMJbXD/" },
+                  { url: "https://www.instagram.com/p/B9TWGNaglUz/" },
+                ];
+              } else {
+                // Add needed variables software engineer
+                user.type = "software";
+              }
+              // Add needed variables for both software- and media engineer
+              user.first_name = "Max";
+              user.last_name = "Mustermann";
+
+              console.log("Injected data to platform data", platformData);
+            }
+            /**
+             * ################
+             * DUMMY DATA END
+             * ################
+             */
+            this.setState({
+              fetchedUser: {
+                platformData: {
+                  ...platformData,
+                  user,
+                },
+                sources,
+                selectedUser: data.profile.username,
+                verified: data.profile.verified,
+                accessories: {
+                  badges: data.profile.bids
+                    ? JSON.parse(data.profile.bids)
+                    : null,
+                  themes: data.profile.tids
+                    ? JSON.parse(data.profile.tids)
+                    : null,
+                },
+              },
+            });
+            // Update cache
+            this.session.tasks.user.cache(JSON.stringify(platformData));
+          } else {
+            console.error("User not verified.");
+            this.setState({
+              fetchedUser: false,
+            });
           }
-          /**
-           * ################
-           * DUMMY DATA END
-           * ################
-           */
-          this.setState({
-            fetchedUser: {
-              platformData: {
-                ...platformData,
-                user
-              },
-              sources,
-              selectedUser: data.profile.username,
-              verified: data.profile.verified,
-              accessories: {
-                badges: data.profile.bids
-                  ? JSON.parse(data.profile.bids)
-                  : null,
-                themes: data.profile.tids
-                  ? JSON.parse(data.profile.tids)
-                  : null,
-              },
-            },
-          });
-          // Update cache
-          this.session.tasks.user.cache(JSON.stringify(platformData));
-        } else {
-          console.error("User not verified.");
-          this.setState({
-            fetchedUser: false,
-          });
         }
       })
       .catch((err) => {
         console.error("Can not get user data.", err);
         this.setState({
-          fetchedUser: false,
+          fetchedUser: null,
         });
       });
   };
@@ -353,12 +372,13 @@ class App extends React.Component {
     return this.session.tasks.general.allPageUrls().then((res) => {
       let urls = [];
 
-      res.data.pages.forEach((page) => {
-        if (page.urlPath.includes("registration/")) {
-          let url = page.urlPath.split("/")[2];
-          urls.push(url);
-        }
-      });
+      res.data.pages &&
+        res.data.pages.forEach((page) => {
+          if (page.urlPath.includes("registration/")) {
+            let url = page.urlPath.split("/")[2];
+            urls.push(url);
+          }
+        });
 
       return urls;
     });
@@ -367,6 +387,8 @@ class App extends React.Component {
   render() {
     console.log("Refreshing component");
     console.log("App.js", this.state);
+    console.log("App.js props", this.props);
+
     return (
       <Router>
         <ScrollToTop>

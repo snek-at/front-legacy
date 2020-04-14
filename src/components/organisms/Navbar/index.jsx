@@ -162,10 +162,12 @@ class NavbarPage extends React.Component {
                       this.state.usernames.length > 0 ? (
                         <>
                           {this.state.usernames.map((username, i) => {
-                            if(username.includes(this.state.filter)){
-                              return(
-                                <MDBSelectOption key={i}>{username}</MDBSelectOption>
-                              )
+                            if (username.includes(this.state.filter)) {
+                              return (
+                                <MDBSelectOption key={i}>
+                                  {username}
+                                </MDBSelectOption>
+                              );
                             }
                           })}
                         </>
@@ -207,7 +209,7 @@ class NavbarPage extends React.Component {
                         <MDBDropdownToggle nav caret>
                           <img
                             src={
-                              globalState.fetchedUser.platformData.user
+                              globalState.fetchedUser.platformData.profile
                                 .avatarUrl
                             }
                             className="z-depth-0"
@@ -215,7 +217,7 @@ class NavbarPage extends React.Component {
                           />
                         </MDBDropdownToggle>
                         <MDBDropdownMenu className="dropdown-default">
-                          <MDBDropdownItem href="#!">
+                          <MDBDropdownItem href={"/u/" + this.props.username}>
                             My profile
                           </MDBDropdownItem>
                           <Link
