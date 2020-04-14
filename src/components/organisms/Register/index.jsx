@@ -8,6 +8,8 @@ import sha256 from "js-sha256";
 // Text animations
 import TextLoop from "react-text-loop";
 
+import RSA, { GithubProvider } from "snek-intel/lib/utils/oauth";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -111,9 +113,13 @@ class Register extends React.Component {
   };
 
   connectGitHub = async () => {
-    /*const data = await RSA.acquireTokenAsync(githubProvider);
-    console.log(data);
-    this.pushToSourceList("github", data.username, "https://api.github.com/graphql", data.access_token);*/
+    const data = await RSA.acquireTokenAsync(GithubProvider);
+    this.pushToSourceList(
+      "github",
+      data.username,
+      "https://api.github.com/graphql",
+      data.accessToken
+    );
   };
 
   pushToSourceList = (platformName, username, platformUrl, token) => {
@@ -124,7 +130,7 @@ class Register extends React.Component {
     sourceList.push({
       id: username.length + platformName.length + username + platformName,
       user: username,
-      authorization: token ? "token "+token : null,
+      authorization: token ? "token " + token : null,
       platform: {
         name: platformName,
         url: platformUrl
@@ -282,8 +288,6 @@ class Register extends React.Component {
       promoCode,
       code,
     } = this.state;
-
-    username = "kleberwald";
 
     // Error
     let errors = [];
