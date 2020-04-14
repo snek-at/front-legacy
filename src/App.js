@@ -21,7 +21,7 @@ import { Intel } from "snek-intel";
 class App extends React.Component {
   state = {
     logged: false,
-    username: undefined,
+    selectedUser: undefined,
     user: undefined,
     fetchedUser: undefined,
   };
@@ -259,7 +259,7 @@ class App extends React.Component {
                 user
               },
               sources,
-              username: data.profile.username,
+              selectedUser: data.profile.username,
               verified: data.profile.verified,
               accessories: {
                 badges: data.profile.bids
@@ -372,7 +372,7 @@ class App extends React.Component {
         <ScrollToTop>
           <div className="flyout">
             <Navbar
-              username={this.state.username}
+              username={this.state.user}
               logmeout={this.logout}
               users={this.getAllPageUrls}
               globalState={this.state}
