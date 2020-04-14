@@ -11,6 +11,17 @@
     margin-bottom: 1rem;
   }
 }
+.year-select{
+  .btn{
+    padding-left: .9rem;
+    padding-right: .9rem;
+    &.selected{
+      box-shadow: none;
+      background-color: #77bd43 !important;
+      color: white;
+    }
+  }
+}
 
 /** 
  * SPDX-License-Identifier: (EUPL-1.2)

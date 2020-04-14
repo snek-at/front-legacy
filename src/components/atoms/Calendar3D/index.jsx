@@ -39,6 +39,10 @@ class Calendar3D extends React.Component {
     }
   };
 
+  componentDidUpdate = () => {
+    this.renderIsometrics();
+  }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
   }
@@ -50,9 +54,14 @@ class Calendar3D extends React.Component {
   };
 
   renderTopStats() {
-    let countTotal, averageCount, datesTotal, maxCount, dateBest;
-    let contribData = this.props.platformData.statistic.current;
-    let contributionCalendar = this.props.platformData.statistic.current.calendar;
+    let countTotal, averageCount, datesTotal, maxCount, dateBest, contribData;
+    if(this.props.year){
+      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    } else {
+      contribData = this.props.platformData.statistic.current;
+    }
+    
+    let contributionCalendar = contribData.calendar;
 
     countTotal = contribData.contributions.total;
     averageCount = Math.round((contribData.contributions.total / 365 + Number.EPSILON) * 100) / 100
@@ -93,9 +102,14 @@ class Calendar3D extends React.Component {
   }
 
   renderBottomStats() {
-    let streakLongest, datesLongest, streakCurrent, datesCurrent;
-    let contribData = this.props.platformData.statistic.current;
-    //let contributionCalendar = this.props.platformData.statistic.current.calendar;
+    let streakLongest, datesLongest, streakCurrent, datesCurrent, contribData;
+    if(this.props.year){
+      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    } else {
+      contribData = this.props.platformData.statistic.current;
+    }
+    
+    let contributionCalendar = contribData.calendar;
 
     streakLongest = contribData.streak.longest.totalContributions;
     datesLongest =
@@ -135,7 +149,7 @@ class Calendar3D extends React.Component {
     return { __html: html };
   }
 
-  renderIsometrics = () => {
+  renderIsometrics = async () => {
     const obelisk = require("obelisk.js");
 
     // Create a canvas 2D point for pixel view world
@@ -144,9 +158,17 @@ class Calendar3D extends React.Component {
     // Create view instance to nest everything
     // Canvas could be either DOM or jQuery element
     let pixelView = new obelisk.PixelView(this.context, point);
+    pixelView.clear();
 
-    // Get contribs of the current year
-    let contributions = this.props.platformData.statistic.current.calendar;
+    // Get contributions of the selected year
+    let contribData;
+    if(this.props.year){
+      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    } else {
+      contribData = this.props.platformData.statistic.current;
+    }
+  
+    let contributions = contribData.calendar;
 
     // Define basic variables
     let SIZE = 2 * Math.round((this.state.width / 80) / 2);

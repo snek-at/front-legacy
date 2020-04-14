@@ -4,8 +4,8 @@ import React from "react";
 
 //> Additional
 // Used to display popovers
-import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
 // Used to display the time in a readable format
 import moment from "moment";
 
@@ -35,7 +35,7 @@ class Calender2D extends React.Component {
 
   updateDimensions = () => {
     this.setState({
-      width: this.myInput.current.offsetWidth
+      width: this.myInput.current.offsetWidth,
     });
   };
 
@@ -44,31 +44,49 @@ class Calender2D extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log(this.props);
+    this.setCalendar(this.props);
 
-    if(this.props.platformData){
-      // Add resize listener
-      window.addEventListener("resize", this.updateDimensions);
-      let contributions = this.props.platformData.statistic.current.calendar;
-
-      this.setState({
-        width: this.myInput.current.offsetWidth,
-        contributionsList: contributions
-      },() => this.countContribs());
-    }
-
+    // Add resize listener
+    window.addEventListener("resize", this.updateDimensions);
     // Color RGB cycling
     //let intervalID = window.setInterval(this.cycleHue, 70);
+  };
+
+  componentWillReceiveProps(nextProps) {
+    for (const index in nextProps) {
+      if (nextProps[index] !== this.props[index]) {
+        this.setCalendar(nextProps);
+      }
+    }
+  }
+
+  setCalendar = async (props) => {
+    if (props.platformData) {
+      // Get contribution data
+      let contribData;
+      if (props.year) {
+        contribData = props.platformData.statistic.years.find(
+          (element) => element.year === props.year
+        );
+      } else {
+        contribData = props.platformData.statistic.current;
+      }
+      let contributions = contribData.calendar;
+      this.setState({
+        width: this.myInput.current.offsetWidth,
+        contributionsList: contributions,
+      });
+    }
   };
 
   cycleHue = () => {
     if (this.state.hue > 365) {
       this.setState({
-        hue: 0
+        hue: 0,
       });
     }
     this.setState({
-      hue: this.state.hue + 1
+      hue: this.state.hue + 1,
     });
   };
 
@@ -117,24 +135,30 @@ class Calender2D extends React.Component {
   };
 
   displayDailyInfo = (day, wkey, dkey) => {
-    let cname = "item-"+wkey+"-"+dkey;
-    if(day.total > 0 && day.total !== 1) {
+    let cname = "item-" + wkey + "-" + dkey;
+    if (day.total > 0 && day.total !== 1) {
       tippy(`.${cname}`, {
-        content: `${day.total} contributions on ${moment(day.date).format("MMM DD, YYYY")}`
+        content: `${day.total} contributions on ${moment(day.date).format(
+          "MMM DD, YYYY"
+        )}`,
       });
-    } else if(day.total === 1){
+    } else if (day.total === 1) {
       tippy(`.${cname}`, {
-        content: `${day.total} contribution on ${moment(day.date).format("MMM DD, YYYY")}`
+        content: `${day.total} contribution on ${moment(day.date).format(
+          "MMM DD, YYYY"
+        )}`,
       });
     } else {
       tippy(`.${cname}`, {
-        content: `No contributions on ${moment(day.date).format("MMM DD, YYYY")}`
+        content: `No contributions on ${moment(day.date).format(
+          "MMM DD, YYYY"
+        )}`,
       });
     }
-  }
+  };
 
   render() {
-    if(this.props.platformData){
+    if (this.props.platformData) {
       return (
         <div id="calendar2d">
           <div className="text-right">
@@ -153,7 +177,10 @@ class Calender2D extends React.Component {
             })}
           </MDBRow>
           <div ref={this.myInput}>
-            <svg className="calendar" height={(this.state.width / this.state.items) * 7}>
+            <svg
+              className="calendar"
+              height={(this.state.width / this.state.items) * 7}
+            >
               {this.state.contributionsList &&
                 this.state.contributionsList.weeks.map((week, wkey) => {
                   return week.days.map((day, dkey) => {
@@ -164,13 +191,16 @@ class Calender2D extends React.Component {
                           y={
                             (this.state.width / this.state.items) * 7 +
                             (this.state.width / this.state.items) * dkey -
-                            week.days.length * (this.state.width / this.state.items)
+                            week.days.length *
+                              (this.state.width / this.state.items)
                           }
                           x={0}
                           width={this.state.width / this.state.items}
                           height={this.state.width / this.state.items}
-                          className={"item-"+wkey+"-"+dkey}
-                          onMouseOver={() => this.displayDailyInfo(day, wkey, dkey)}
+                          className={"item-" + wkey + "-" + dkey}
+                          onMouseOver={() =>
+                            this.displayDailyInfo(day, wkey, dkey)
+                          }
                           fill={changeHue(day.color, this.state.hue)}
                         ></rect>
                       );
@@ -182,8 +212,10 @@ class Calender2D extends React.Component {
                           x={(this.state.width / this.state.items) * wkey}
                           width={this.state.width / this.state.items}
                           height={this.state.width / this.state.items}
-                          className={"item-"+wkey+"-"+dkey}
-                          onMouseOver={() => this.displayDailyInfo(day, wkey, dkey)}
+                          className={"item-" + wkey + "-" + dkey}
+                          onMouseOver={() =>
+                            this.displayDailyInfo(day, wkey, dkey)
+                          }
                           fill={changeHue(day.color, this.state.hue)}
                         ></rect>
                       );
