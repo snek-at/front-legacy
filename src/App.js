@@ -39,16 +39,13 @@ class App extends React.Component {
      * New site access will lead to a anonymous login.
      */
     const whoami = await this.session.begin();
-    if(whoami){
-      if(whoami.whoami.username){
-        if(whoami.whoami.username !== "cisco"){
-          console.log("Reached 3", whoami.whoami.username);
-          this.setState({
-            loading: false,
-            logged: true,
-            user: whoami.whoami.username,
-          });
-        }
+    if (whoami && whoami.whoami && whoami.whoami.username) {
+      if (whoami.whoami.username !== "cisco") {
+        this.setState({
+          loading: false,
+          logged: true,
+          user: whoami.whoami.username,
+        });
       }
     }
   }
