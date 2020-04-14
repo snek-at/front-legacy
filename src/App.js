@@ -267,27 +267,38 @@ class App extends React.Component {
              * DUMMY DATA END
              * ################
              */
-            this.setState({
-              fetchedUser: {
-                platformData: {
-                  ...platformData,
-                  user,
-                },
-                sources,
-                selectedUser: data.profile.username,
-                verified: data.profile.verified,
-                accessories: {
-                  badges: data.profile.bids
-                    ? JSON.parse(data.profile.bids)
-                    : null,
-                  themes: data.profile.tids
-                    ? JSON.parse(data.profile.tids)
-                    : null,
-                },
+            let fetchedUser = {
+              platformData: {
+                ...platformData,
+                user
               },
+              sources,
+              selectedUser: data.profile.username,
+              verified: data.profile.verified,
+              accessories: {
+                badges: data.profile.bids
+                  ? JSON.parse(data.profile.bids)
+                  : null,
+                themes: data.profile.tids ? JSON.parse(data.profile.tids) : null
+              }
+            };
+
+            this.setState({
+              fetchedUser
             });
             // Update cache
-            this.session.tasks.user.cache(JSON.stringify(platformData));
+            this.intel.resetReducer();
+            this.intel.appendList(sources).then(() => {
+              platformData = { ...this.getData(), user };
+              this.session.tasks.user
+                .cache(JSON.stringify(platformData))
+                .then(() => {
+                  fetchedUser.platformData = platformData;
+                  this.setState({
+                    fetchedUser
+                  });
+                });
+            });
           } else {
             console.error("User not verified.");
             this.setState({
