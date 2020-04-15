@@ -103,7 +103,13 @@ class Calender2D extends React.Component {
     let month = new Array();
 
     // Get current month
-    let current = new Date().getMonth();
+    let current;
+    if (this.props.year){
+      current = 0;
+    } else {
+      current = new Date().getMonth();
+    }
+    console.log(current);
 
     // Have each month two times
     month[0] = "Jan";
