@@ -25,6 +25,7 @@ import {
   MDBSelectInput,
   MDBSelectOption,
   MDBSelectOptions,
+  MDBBtn,
 } from "mdbreact";
 
 //> Images
@@ -199,7 +200,7 @@ class NavbarPage extends React.Component {
               <MDBNavItem>
                 <MDBNavLink to="#!">Trends</MDBNavLink>
               </MDBNavItem>
-              {globalState.logged &&
+              {globalState.logged ? (
                 !globalState.loading &&
                 globalState.fetchedUser && (
                   <>
@@ -231,7 +232,18 @@ class NavbarPage extends React.Component {
                       </MDBDropdown>
                     </MDBNavItem>
                   </>
-                )}
+                )
+              ) : (
+                <>
+                  {this.props.location.pathname !== "/" && (
+                    <Link to="/">
+                      <MDBBtn color="green" size="md">
+                        Sign In
+                      </MDBBtn>
+                    </Link>
+                  )}
+                </>
+              )}
             </MDBNavbarNav>
           </MDBCollapse>
         </MDBContainer>
