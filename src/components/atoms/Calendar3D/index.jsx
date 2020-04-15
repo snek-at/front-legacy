@@ -25,46 +25,57 @@ class Calendar3D extends React.Component {
     this.myInput = React.createRef();
     this.state = {
       width: 0,
-      hue: 0
+      hue: 0,
     };
   }
 
   componentDidMount = () => {
-    if(this.props.platformData){
+    if (this.props.platformData) {
       // Add resize listener
       window.addEventListener("resize", this.updateDimensions);
-      this.setState({
-        width: this.myInput.current.offsetWidth
-      }, () => this.renderIsometrics());
+      this.setState(
+        {
+          width: this.myInput.current.offsetWidth,
+        },
+        () => this.renderIsometrics()
+      );
     }
   };
 
   componentDidUpdate = () => {
     this.renderIsometrics();
-  }
+  };
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
   updateDimensions = () => {
-    this.setState({
-      width: this.myInput.current.offsetWidth
-    }, () => this.renderIsometrics());
+    this.setState(
+      {
+        width: this.myInput.current.offsetWidth,
+      },
+      () => this.renderIsometrics()
+    );
   };
 
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest, contribData;
-    if(this.props.year){
-      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    if (this.props.year) {
+      contribData = this.props.platformData.statistic.years.find(
+        (element) => element.year === this.props.year
+      );
     } else {
       contribData = this.props.platformData.statistic.current;
     }
-    
+
     let contributionCalendar = contribData.calendar;
 
     countTotal = contribData.contributions.total;
-    averageCount = Math.round((contribData.contributions.total / 365 + Number.EPSILON) * 100) / 100
+    averageCount =
+      Math.round(
+        (contribData.contributions.total / 365 + Number.EPSILON) * 100
+      ) / 100;
     datesTotal =
       moment(contributionCalendar.fromDate).format("MMM DD, YYYY") +
       " - " +
@@ -103,24 +114,36 @@ class Calendar3D extends React.Component {
 
   renderBottomStats() {
     let streakLongest, datesLongest, streakCurrent, datesCurrent, contribData;
-    if(this.props.year){
-      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    if (this.props.year) {
+      contribData = this.props.platformData.statistic.years.find(
+        (element) => element.year === this.props.year
+      );
     } else {
       contribData = this.props.platformData.statistic.current;
     }
-    
+
     let contributionCalendar = contribData.calendar;
 
-    streakLongest = contribData.streak.longest.totalContributions;
-    datesLongest =
-      moment(contribData.streak.longest.startDate).format("MMM DD, YYYY") +
-      " - " +
-      moment(contribData.streak.longest.endDate).format("MMM DD, YYYY");
-    streakCurrent = contribData.streak.current.totalContributions;
-    datesCurrent =
-      moment(contribData.streak.current.startDate).format("MMM DD, YYYY") +
-      " - " +
-      moment(contribData.streak.current.endDate).format("MMM DD, YYYY");
+    if (contribData.streak.longest) {
+      streakLongest = contribData.streak.longest.totalContributions;
+      datesLongest =
+        moment(contribData.streak.longest.startDate).format("MMM DD, YYYY") +
+        " - " +
+        moment(contribData.streak.longest.endDate).format("MMM DD, YYYY");
+    } else {
+      streakLongest ="0"
+      datesLongest = ""
+    }
+    if (contribData.streak.current) {
+      streakCurrent = contribData.streak.current.totalContributions;
+      datesCurrent =
+        moment(contribData.streak.current.startDate).format("MMM DD, YYYY") +
+        " - " +
+        moment(contribData.streak.current.endDate).format("MMM DD, YYYY");
+    } else {
+      streakCurrent ="0"
+      datesCurrent = ""
+    }
 
     let html;
 
@@ -162,17 +185,19 @@ class Calendar3D extends React.Component {
 
     // Get contributions of the selected year
     let contribData;
-    if(this.props.year){
-      contribData = this.props.platformData.statistic.years.find(element => element.year === this.props.year);
+    if (this.props.year) {
+      contribData = this.props.platformData.statistic.years.find(
+        (element) => element.year === this.props.year
+      );
     } else {
       contribData = this.props.platformData.statistic.current;
     }
-  
+
     let contributions = contribData.calendar;
 
     // Define basic variables
-    let SIZE = 2 * Math.round((this.state.width / 80) / 2);
-    if(SIZE <= 8){
+    let SIZE = 2 * Math.round(this.state.width / 80 / 2);
+    if (SIZE <= 8) {
       SIZE = 8;
     }
     let MAXHEIGHT = 100;
@@ -224,17 +249,17 @@ class Calendar3D extends React.Component {
   render() {
     return (
       <div id="calendar3d">
-        {this.props.platformData && this.state.width > 500 &&
-        <>
-        <div dangerouslySetInnerHTML={this.renderTopStats()} />
-        <div dangerouslySetInnerHTML={this.renderBottomStats()} />
-        </>
-        }
+        {this.props.platformData && this.state.width > 500 && (
+          <>
+            <div dangerouslySetInnerHTML={this.renderTopStats()} />
+            <div dangerouslySetInnerHTML={this.renderBottomStats()} />
+          </>
+        )}
         <div ref={this.myInput}>
           <canvas
-          ref={(c) => (this.context = c)}
-          width={this.state.width}
-          height="350"
+            ref={(c) => (this.context = c)}
+            width={this.state.width}
+            height="350"
           ></canvas>
         </div>
       </div>
