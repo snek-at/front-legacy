@@ -23,10 +23,9 @@ import {
   MDBProgress,
   MDBIcon,
 } from "mdbreact";
-// Chart.js
-import { Doughnut } from "react-chartjs-2";
 
 //> Components
+import { LanguageDoughnut } from "../../../atoms";
 import { ProfileContent } from "../../../organisms";
 import { OverviewSoftware, Projects } from "../../../organisms/tabs";
 import { Settings } from "../../../molecules/modals";
@@ -41,8 +40,22 @@ class SoftwareEngineer extends React.Component {
 
   componentDidMount = () => {
     console.log("########## SOFTWARE ###########");
-    console.log(this.props.match);
+    console.log(this.state);
+
+    const { globalState } = this.props;
+
+    if (this.props.globalState.fetchedUser && !this.state.sources) {
+      this.displaySources(globalState.fetchedUser.platformData.profile.sources);
+    }
   };
+
+  componentWillReceiveProps(nextProps) {
+    for (const index in nextProps) {
+      if (nextProps[index] !== this.props[index]) {
+        console.log(index, this.props[index], "-->", nextProps[index]);
+      }
+    }
+  }
 
   displaySources = (sources) => {
     let res = sources.map((source, i) => {
@@ -62,63 +75,6 @@ class SoftwareEngineer extends React.Component {
     });
   };
 
-  _increaseBrightness = (hex, percent) => {
-    // strip the leading # if it's there
-    hex = hex.replace(/^\s*#|\s*$/g, "");
-
-    // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-    if (hex.length == 3) {
-      hex = hex.replace(/(.)/g, "$1$1");
-    }
-
-    var r = parseInt(hex.substr(0, 2), 16),
-      g = parseInt(hex.substr(2, 2), 16),
-      b = parseInt(hex.substr(4, 2), 16);
-
-    return (
-      "#" +
-      (0 | ((1 << 8) + r + ((256 - r) * percent) / 100))
-        .toString(16)
-        .substr(1) +
-      (0 | ((1 << 8) + g + ((256 - g) * percent) / 100))
-        .toString(16)
-        .substr(1) +
-      (0 | ((1 << 8) + b + ((256 - b) * percent) / 100)).toString(16).substr(1)
-    );
-  };
-
-  displayDoughnut = (languages) => {
-    let dataLabels = [];
-    let dataBackground = [];
-    let dataBackgroundHover = [];
-    let dataData = [];
-
-    languages.map((language, i) => {
-      dataLabels.push(language.name);
-      if (language.color) {
-        dataBackground.push(language.color);
-        dataBackgroundHover.push(this._increaseBrightness(language.color, 10));
-      } else {
-        dataBackground.push("#ffffff");
-        dataBackgroundHover.push(this._increaseBrightness("#ffffff", 10));
-      }
-      dataData.push(language.share);
-    });
-
-    this.setState({
-      dataDoughnut: {
-        labels: dataLabels,
-        datasets: [
-          {
-            data: dataData,
-            backgroundColor: dataBackground,
-            hoverBackgroundColor: dataBackgroundHover,
-          },
-        ],
-      },
-    });
-  };
-
   handleSettingsClose = () => {
     if (this.state.showSettings) {
       this.setState({
@@ -133,13 +89,6 @@ class SoftwareEngineer extends React.Component {
 
     if (globalState.loading && !globalState.fetchedUser)
       return <Redirect to="/" />;
-
-    if (globalState.fetchedUser && !this.state.sources) {
-      this.displaySources(globalState.fetchedUser.platformData.profile.sources);
-      this.displayDoughnut(
-        globalState.fetchedUser.platformData.statistic.languages
-      );
-    }
 
     return (
       <>
@@ -159,24 +108,24 @@ class SoftwareEngineer extends React.Component {
               <div className="bg-elegant py-3 px-3">
                 <h4 className="mb-0">
                   {globalState.fetchedUser &&
-                    globalState.fetchedUser.platformData.user.first_name &&
-                    globalState.fetchedUser.platformData.user.last_name && (
+                    globalState.fetchedUser.platformData.user.firstName &&
+                    globalState.fetchedUser.platformData.user.lastName && (
                       <>
-                        {globalState.fetchedUser.platformData.user.first_name +
+                        {globalState.fetchedUser.platformData.user.firstName +
                           " "}
-                        {globalState.fetchedUser.platformData.user.last_name}
+                        {globalState.fetchedUser.platformData.user.lastName}
                       </>
                     )}
                 </h4>
 
                 {globalState.fetchedUser &&
-                  globalState.fetchedUser.platformData.user.company && (
+                  globalState.fetchedUser.platformData.profile.company && (
                     <>
                       {globalState.fetchedUser &&
                         globalState.fetchedUser.platformData.user.settings
                           .showCompanyPublic && (
                           <small className="text-muted py-3">
-                            {globalState.fetchedUser.platformData.user.company}
+                            {globalState.fetchedUser.platformData.profile.company}
                           </small>
                         )}
                     </>
@@ -371,16 +320,13 @@ class SoftwareEngineer extends React.Component {
                 <hr />
                 <p>My top languages</p>
                 <div className="px-4">
-                  <Doughnut
-                    data={this.state.dataDoughnut}
-                    options={{
-                      responsive: true,
-                      legend: {
-                        display: false,
-                      },
-                    }}
-                    height="300"
-                  />
+                  {globalState.fetchedUser.platformData.statistic.languages && (
+                    <LanguageDoughnut
+                      data={
+                        globalState.fetchedUser.platformData.statistic.languages
+                      }
+                    />
+                  )}
                 </div>
               </div>
             </MDBCol>
