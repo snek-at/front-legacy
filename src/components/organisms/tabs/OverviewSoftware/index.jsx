@@ -234,6 +234,7 @@ class Overview extends React.Component {
                 return (
                   <MDBBtn
                     color="white"
+                    key={i}
                     size="md"
                     className={
                       year.year === this.state.selectedYear
