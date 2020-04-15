@@ -159,7 +159,6 @@ class App extends React.Component {
           });
         } else {
           if (data.profile.verified) {
-            console.log("user is verified");
             // Redirect and login
             let profile = data.profile;
             let platformData = profile.platformData
@@ -174,7 +173,6 @@ class App extends React.Component {
             let devData = this.getData();
             platformData.devData = devData;*/
 
-            console.log("USER", user);
             /**
              * ################
              * DUMMY DATA
@@ -186,6 +184,12 @@ class App extends React.Component {
                 type: undefined,
               };
             }
+            user.firstName = data.profile.firstName
+              ? data.profile.firstName
+              : "";
+            user.lastName = data.profile.lastName ? data.profile.lastName : "";
+            user.email = data.profile.email ? data.profile.email : "";
+            user.username = data.profile.username ? data.profile.username : "";
             // Change this to change from software to media
             let enableMediaEngineer = false;
             if (enableMediaEngineer) {
@@ -270,7 +274,7 @@ class App extends React.Component {
             let fetchedUser = {
               platformData: {
                 ...platformData,
-                user
+                user,
               },
               sources,
               selectedUser: data.profile.username,
@@ -279,26 +283,32 @@ class App extends React.Component {
                 badges: data.profile.bids
                   ? JSON.parse(data.profile.bids)
                   : null,
-                themes: data.profile.tids ? JSON.parse(data.profile.tids) : null
-              }
+                themes: data.profile.tids
+                  ? JSON.parse(data.profile.tids)
+                  : null,
+              },
             };
 
-            this.setState({
-              fetchedUser
-            });
-            // Update cache
-            this.intel.resetReducer();
-            this.intel.appendList(sources).then(() => {
-              platformData = { ...this.getData(), user };
-              this.session.tasks.user
-                .cache(JSON.stringify(platformData))
-                .then(() => {
-                  fetchedUser.platformData = platformData;
-                  this.setState({
-                    fetchedUser
-                  });
+            this.setState(
+              {
+                fetchedUser,
+              },
+              async () => {
+                // Update cache
+                this.intel.resetReducer();
+                this.intel.appendList(sources).then(() => {
+                  platformData = { ...this.getData(), user };
+                  this.session.tasks.user
+                    .cache(JSON.stringify(platformData))
+                    .then(() => {
+                      fetchedUser.platformData = platformData;
+                      this.setState({
+                        fetchedUser,
+                      });
+                    });
                 });
-            });
+              }
+            );
           } else {
             console.error("User not verified.");
             this.setState({
@@ -324,12 +334,12 @@ class App extends React.Component {
     let cache = this.state.fetchedUser.platformData;
     // Check for mandatory fields
     if (state.email) {
-      cache.user.first_name = state.first_name ? state.first_name : "";
-      cache.user.last_name = state.last_name ? state.last_name : "";
+      cache.user.firstName = state.first_name ? state.first_name : "";
+      cache.user.lastName = state.last_name ? state.last_name : "";
       cache.user.email = state.email ? state.email : cache.user.email;
-      cache.user.websiteUrl = state.website ? state.website : "";
-      cache.user.location = state.location ? state.location : "";
-      cache.user.company = state.company ? state.company : "";
+      cache.profile.websiteUrl = state.website ? state.website : "";
+      cache.profile.location = state.location ? state.location : "";
+      cache.profile.company = state.company ? state.company : "";
       cache.user.settings = {
         showTopLanguages: state.showTopLanguages,
         showLocalRanking: state.showLocalRanking,
@@ -343,21 +353,16 @@ class App extends React.Component {
         activeTheme: state.activeTheme,
       };
     }
+    console.log("Cache", cache);
     let platformData = JSON.stringify(cache);
     this.session.tasks.user.cache(platformData).then(({ data }) => {
-      let platformData = JSON.parse(platformData);
-
-      /**
-       * Check if pushed cache data is the same as retrieved data
-       */
-      if (data.cache.user.platformData === platformData) {
-        this.setState({
-          fetchedUser: {
-            ...this.state.fetchedUser,
-            platformData: JSON.parse(platformData),
-          },
-        });
-      }
+      console.log(data);
+      this.setState({
+        fetchedUser: {
+          ...this.state.fetchedUser,
+          platformData: JSON.parse(platformData),
+        },
+      });
     });
   };
 

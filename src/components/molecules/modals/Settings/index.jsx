@@ -52,18 +52,20 @@ class Settings extends React.Component {
     if(this.props.globalState){
       if(this.props.globalState.fetchedUser){
         if(this.props.globalState.fetchedUser.platformData){
-          if(this.props.globalState.fetchedUser.platformData.user){
-            let data = this.props.globalState.fetchedUser.platformData.user;
-            console.log(data);
-            let enterData = {
-              first_name: data.first_name ? data.first_name : "",
-              last_name: data.last_name ? data.last_name : "",
+          const platformData = this.props.globalState.fetchedUser.platformData;
+          console.log(platformData);
+          if(platformData.profile && platformData.user){
+            const profile = platformData.profile;
+            const data = platformData.user;
+            const enterData = {
+              first_name: data.firstName ? data.firstName : "",
+              last_name: data.lastName ? data.lastName : "",
               email: data.email ? data.email : "",
               showEmailPublic: data.settings.showEmailPublic,
-              company: data.company ? data.company : "",
+              company: profile.company ? profile.company : "",
               showCompanyPublic: data.settings.showCompanyPublic,
-              website: data.websiteUrl ? data.websiteUrl : "",
-              location: data.location ? data.location : "",
+              website: profile.websiteUrl ? profile.websiteUrl : "",
+              location: profile.location ? profile.location : "",
               showLocalRanking: data.settings.showLocalRanking,
               showTopLanguages: data.settings.showTopLanguages,
               show3DDiagram: data.settings.show3DDiagram,
@@ -209,7 +211,7 @@ class Settings extends React.Component {
               <MDBNav pills color="primary" className="flex-column">
                 {settingsTabs.map((tab, i) => {
                   return (
-                    <MDBNavItem>
+                    <MDBNavItem key={i}>
                       <MDBNavLink
                         link
                         to="#"
@@ -426,7 +428,7 @@ class Settings extends React.Component {
                                 }
                                 name += " Theme";
                                 return (
-                                  <MDBSelectOption value={tid}>
+                                  <MDBSelectOption key={i} value={tid}>
                                     {tid}
                                   </MDBSelectOption>
                                 );
