@@ -77,9 +77,9 @@ class Calendar3D extends React.Component {
         (contribData.contributions.total / 365 + Number.EPSILON) * 100
       ) / 100;
     datesTotal =
-      moment(contributionCalendar.fromDate).format("MMM DD, YYYY") +
+      moment(contributionCalendar.startDate).format("MMM DD, YYYY") +
       " - " +
-      moment(contributionCalendar.toDate).format("MMM DD, YYYY");
+      moment(contributionCalendar.endDate).format("MMM DD, YYYY");
     maxCount = contribData.busiestDay.total;
     dateBest = moment(contribData.busiestDay.date).format("MMM DD");
 
@@ -125,7 +125,7 @@ class Calendar3D extends React.Component {
     let contributionCalendar = contribData.calendar;
 
     if (contribData.streak.longest) {
-      streakLongest = contribData.streak.longest.totalContributions;
+      streakLongest = contribData.streak.longest.totalDays;
       datesLongest =
         moment(contribData.streak.longest.startDate).format("MMM DD, YYYY") +
         " - " +
@@ -134,8 +134,8 @@ class Calendar3D extends React.Component {
       streakLongest ="0"
       datesLongest = ""
     }
-    if (contribData.streak.current) {
-      streakCurrent = contribData.streak.current.totalContributions;
+    if (contribData.streak.current.id !== -1) {
+      streakCurrent = contribData.streak.current.totalDays;
       datesCurrent =
         moment(contribData.streak.current.startDate).format("MMM DD, YYYY") +
         " - " +
