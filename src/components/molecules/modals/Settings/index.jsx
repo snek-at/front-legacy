@@ -31,30 +31,30 @@ import "./settings.scss";
 
 //> Settings data
 const settingsTabs = [
-  {name: "Profile", icon: ""},
-  {name: "Customization", icon: ""},
-  {name: "Account", icon: ""},
-  {name: "Connections", icon: ""},
-  {name: "Blocked users", icon: ""},
-  {name: "Billing", icon: ""},
-  {name: "Security", icon: ""},
-]
+  { name: "Profile", icon: "" },
+  { name: "Customization", icon: "" },
+  { name: "Account", icon: "" },
+  { name: "Connections", icon: "" },
+  { name: "Blocked users", icon: "" },
+  { name: "Billing", icon: "" },
+  { name: "Security", icon: "" },
+];
 
 class Settings extends React.Component {
   state = {
     changeDetected: false,
     activeItemInnerPills: 0,
     checkSum: undefined,
-  }
+  };
 
   componentDidMount = () => {
     // Check for the current values
-    if(this.props.globalState){
-      if(this.props.globalState.fetchedUser){
-        if(this.props.globalState.fetchedUser.platformData){
+    if (this.props.globalState) {
+      if (this.props.globalState.fetchedUser) {
+        if (this.props.globalState.fetchedUser.platformData) {
           const platformData = this.props.globalState.fetchedUser.platformData;
           console.log(platformData);
-          if(platformData.profile && platformData.user){
+          if (platformData.profile && platformData.user) {
             const profile = platformData.profile;
             const data = platformData.user;
             const enterData = {
@@ -70,8 +70,8 @@ class Settings extends React.Component {
               showTopLanguages: data.settings.showTopLanguages,
               show3DDiagram: data.settings.show3DDiagram,
               show2DDiagram: data.settings.show2DDiagram,
-              activeTheme: data.settings.activeTheme,
-            }
+              activeTheme: data.settings.activeTheme ? data.settings.activeTheme : null,
+            };
             let dataString = this.stringToHash(JSON.stringify(enterData));
             this.setState({
               ...enterData,
@@ -89,7 +89,7 @@ class Settings extends React.Component {
     } else {
       this.initBlank();
     }
-  }
+  };
 
   initBlank = () => {
     this.setState({
@@ -107,37 +107,46 @@ class Settings extends React.Component {
       show2DDiagram: true,
       activeTheme: null,
     });
-  }
+  };
 
-  stringToHash = (string) => { 
-    let hash = 0; 
-    if (string.length == 0) return hash; 
-    for (let i = 0; i < string.length; i++) { 
-      let char = string.charCodeAt(i); 
-      hash = ((hash << 5) - hash) + char; 
-      hash = hash & hash; 
-    } 
-    return hash; 
-  } 
+  stringToHash = (string) => {
+    let hash = 0;
+    if (string.length == 0) return hash;
+    for (let i = 0; i < string.length; i++) {
+      let char = string.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash;
+    }
+    return hash;
+  };
 
   handleSelectChange = (val) => {
     console.log(val);
-    this.setState({
-      activeTheme: val[0]
-    }, () => this.getChange());
-  }
+    this.setState(
+      {
+        activeTheme: val[0],
+      },
+      () => this.getChange()
+    );
+  };
 
   handleCheckChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.checked
-    }, () => this.getChange());
-  }
+    this.setState(
+      {
+        [e.target.name]: e.target.checked,
+      },
+      () => this.getChange()
+    );
+  };
 
   handleTextChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    }, () => this.getChange());
-  }
+    this.setState(
+      {
+        [e.target.name]: e.target.value,
+      },
+      () => this.getChange()
+    );
+  };
 
   getChange = () => {
     let currentData = {
@@ -153,38 +162,38 @@ class Settings extends React.Component {
       showTopLanguages: this.state.showTopLanguages,
       show3DDiagram: this.state.show3DDiagram,
       show2DDiagram: this.state.show2DDiagram,
-      activeTheme: this.state.activeTheme,
-    }
+      activeTheme: this.state.activeTheme ? this.state.activeTheme : null,
+    };
     // Get hash of current data
     let currentHash = this.stringToHash(JSON.stringify(currentData));
 
-    if(this.state.changeDetected){
-      if(this.state.checksum === currentHash){
+    if (this.state.changeDetected) {
+      if (this.state.checksum === currentHash) {
         this.setState({
-          changeDetected: false
+          changeDetected: false,
         });
       }
     } else {
-      if(this.state.checksum !== currentHash){
+      if (this.state.checksum !== currentHash) {
         this.setState({
-          changeDetected: true
+          changeDetected: true,
         });
       }
     }
-  }
+  };
 
-  toggleInnerPills = tab => e => {
+  toggleInnerPills = (tab) => (e) => {
     if (this.state.activeItemInnerPills !== tab) {
       this.setState({
-        activeItemInnerPills: tab
+        activeItemInnerPills: tab,
       });
     }
   };
 
   save = () => {
     console.log(this.state);
-    this.props.saveSettings(this.state)
-  }
+    this.props.saveSettings(this.state);
+  };
 
   render() {
     return (
@@ -413,9 +422,7 @@ class Settings extends React.Component {
                             }
                           />
                           <MDBSelectOptions>
-                            <MDBSelectOption value="">
-                              Default
-                            </MDBSelectOption>
+                            <MDBSelectOption value="">Default</MDBSelectOption>
                             {this.props.globalState.fetchedUser.accessories.themes.tids.map(
                               (tid, i) => {
                                 let name = "Unnamed";
