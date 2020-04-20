@@ -1,6 +1,6 @@
 //> React
 // Contains all the functionality necessary to define React components
-import React from "react";
+import React, { lazy, Suspense } from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
@@ -15,11 +15,12 @@ import {
   MDBIcon,
 } from "mdbreact";
 
-//> Components
-import { Calendar3D, Calendar2D } from "../../../atoms";
-
 //> CSS
 import "./overviewsoftware.scss";
+
+//> Components
+const Calendar3D = lazy(() => import("../../../atoms/Calendar3D"));
+const Calendar2D = lazy(() => import("../../../atoms/Calendar2D"));
 
 class Overview extends React.Component {
   state = {
@@ -260,10 +261,20 @@ class Overview extends React.Component {
             </div>
           )}
         {platformData && platformData.user.settings.show3DDiagram && (
-          <Calendar3D platformData={platformData} year={this.state.selectedYear} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Calendar3D
+              platformData={platformData}
+              year={this.state.selectedYear}
+            />
+          </Suspense>
         )}
         {platformData && platformData.user.settings.show2DDiagram && (
-          <Calendar2D platformData={platformData} year={this.state.selectedYear} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Calendar2D
+              platformData={platformData}
+              year={this.state.selectedYear}
+            />
+          </Suspense>
         )}
       </MDBTabPane>
     );

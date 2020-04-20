@@ -1,6 +1,6 @@
 //> React
 // Contains all the functionality necessary to define React components
-import React from "react";
+import React, { lazy, Suspense } from "react";
 // Router
 import { Redirect } from "react-router-dom";
 
@@ -25,10 +25,13 @@ import {
 } from "mdbreact";
 
 //> Components
-import { LanguageDoughnut } from "../../../atoms";
-import { ProfileContent } from "../../../organisms";
-import { OverviewSoftware, Projects } from "../../../organisms/tabs";
-import { Settings } from "../../../molecules/modals";
+const LanguageDoughnut = lazy(() => import("../../../atoms/LanguageDoughnut"));
+const ProfileContent = lazy(() => import("../../../organisms/ProfileContent"));
+const Projects = lazy(() => import("../../../organisms/tabs/Projects"));
+const OverviewSoftware = lazy(() =>
+  import("../../../organisms/tabs/OverviewSoftware")
+);
+const Settings = lazy(() => import("../../../molecules/modals/Settings"));
 
 //> CSS
 // This file uses the SCSS of the Profile Page
@@ -125,7 +128,10 @@ class SoftwareEngineer extends React.Component {
                         globalState.fetchedUser.platformData.user.settings
                           .showCompanyPublic && (
                           <small className="text-muted py-3">
-                            {globalState.fetchedUser.platformData.profile.company}
+                            {
+                              globalState.fetchedUser.platformData.profile
+                                .company
+                            }
                           </small>
                         )}
                     </>
@@ -278,16 +284,23 @@ class SoftwareEngineer extends React.Component {
                                         size="lg"
                                       />
                                     )}
-                                    <div className="tag">
-                                      {org.members.length}
-                                    </div>
+                                    {org.members && (
+                                      <div className="tag">
+                                        {org.members.length}
+                                      </div>
+                                    )}
                                   </div>
                                 </MDBBtn>
                                 <div>
                                   <MDBPopoverHeader>
                                     {org.name}
                                     <br />
-                                    <small>{org.members.length} members</small>
+                                    <small>
+                                      {org.members
+                                        ? org.members.length
+                                        : "Unknown"}{" "}
+                                      members
+                                    </small>
                                   </MDBPopoverHeader>
                                   <MDBPopoverBody>
                                     <p className="my-2">{org.description}</p>
@@ -321,43 +334,50 @@ class SoftwareEngineer extends React.Component {
                 <p>My top languages</p>
                 <div className="px-4">
                   {globalState.fetchedUser.platformData.statistic.languages && (
-                    <LanguageDoughnut
-                      data={
-                        globalState.fetchedUser.platformData.statistic.languages
-                      }
-                    />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <LanguageDoughnut
+                        data={
+                          globalState.fetchedUser.platformData.statistic
+                            .languages
+                        }
+                      />
+                    </Suspense>
                   )}
                 </div>
               </div>
             </MDBCol>
             <MDBCol md="9" className="content p-0">
-              <ProfileContent
-                projectCount={
-                  globalState.fetchedUser &&
-                  globalState.fetchedUser.platformData.profile.repositories
-                    .length
-                }
-              >
-                <OverviewSoftware
-                  id={0}
-                  platformData={
-                    globalState.fetchedUser &&
-                    globalState.fetchedUser.platformData
-                  }
-                />
-                <Projects
-                  id={1}
-                  repoList={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ProfileContent
+                  projectCount={
                     globalState.fetchedUser &&
                     globalState.fetchedUser.platformData.profile.repositories
+                      .length
                   }
-                />
-              </ProfileContent>
+                >
+                  <OverviewSoftware
+                    id={0}
+                    platformData={
+                      globalState.fetchedUser &&
+                      globalState.fetchedUser.platformData
+                    }
+                  />
+                  <Projects
+                    id={1}
+                    repoList={
+                      globalState.fetchedUser &&
+                      globalState.fetchedUser.platformData.profile.repositories
+                    }
+                  />
+                </ProfileContent>
+              </Suspense>
             </MDBCol>
           </MDBRow>
         </MDBContainer>
         {this.state.showSettings && (
-          <Settings {...this.props} closeModal={this.handleSettingsClose} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Settings {...this.props} closeModal={this.handleSettingsClose} />
+          </Suspense>
         )}
       </>
     );
