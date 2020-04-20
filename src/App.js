@@ -449,3 +449,8 @@ class App extends React.Component {
 }
 
 export default App;
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © Simon Prast
+ */
