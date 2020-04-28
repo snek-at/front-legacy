@@ -11,6 +11,7 @@ import {
   MessagePage,
   RedirectPage,
   SearchPage,
+  CompanyPage,
 } from "./components/pages";
 
 class Routes extends React.Component {
@@ -48,6 +49,13 @@ class Routes extends React.Component {
               saveSettings={this.saveSettings}
               {...props}
             />
+          )}
+        />
+        <Route
+          exact
+          path="/c/:company"
+          component={(props) => (
+            <CompanyPage globalState={this.props.globalState} {...props} />
           )}
         />
         <Route

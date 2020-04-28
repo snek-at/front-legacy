@@ -7,20 +7,7 @@ import { Redirect, Link } from "react-router-dom";
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
   MDBBtn,
-  MDBAlert,
-  MDBBadge,
-  MDBView,
-  MDBMask,
-  MDBPopover,
-  MDBPopoverBody,
-  MDBPopoverHeader,
-  MDBProgress,
   MDBIcon,
 } from "mdbreact";
 // Chart.js
