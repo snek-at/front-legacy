@@ -40,21 +40,21 @@ const data = {
     name: "Werbeagentur Christian Aichner",
     description:
       "Advertisement Agency based in Villach-Landskron, Carinthia, Austria. Top Open Source agency in Carinthia.",
-    employees: 2,
-    email: "contact@aichner-christian.com",
-    localRelevance: true,
-    verified: true,
+    employees: 2, // Number of employees including founder (min. value: 1)
+    email: "contact@aichner-christian.com", // Company contact email
+    localRelevance: true, // Is the company present in local media and / or well known?
+    verified: true, // Verified badge
     growth: 2, // -2 strong decrease, -1 decrease, 0 stagnant, 1 growth, 2 fast growth
     revenueGrowth: {
-      comparedTo: "last year",
-      value: 87,
-      unit: "%",
+      comparedTo: "last year", // last year, last quarter, last month
+      value: 87, // Rate of growth
+      unit: "%", // Is the rate of growth in %, €, ...?
     },
     contributors: [
       {
-        url: "https://github.com/orgs/aichner/people",
-        value: 11,
-        platform: "github",
+        url: "https://github.com/orgs/aichner/people", // URL to people overview
+        value: 11, // Number of contributors
+        platform: "github", // Platform for displaying icon (https://mdbootstrap.com/docs/react/content/icons-list/)
       },
       {
         url: null,
@@ -75,8 +75,8 @@ const data = {
         city: "Villach-Landskron",
       },
     ],
-    isRecruiting: true,
-    isOpenSource: true,
+    isRecruiting: true, // Is the company actively searching for new employees?
+    isOpenSource: true, // Is the company developing open source or is some of its software open source?
     references: {
       github: "https://github.com/aichner",
     },
