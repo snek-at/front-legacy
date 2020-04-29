@@ -236,21 +236,23 @@ class CompanyPage extends React.Component {
                 </MDBCardBody>
                 <MDBCardFooter className="px-4 py-3">
                   <div className="stats d-flex">
-                    <span className="d-inline-block mr-4">
-                      <MDBIcon
-                        icon="angle-double-up"
-                        className="green-text font-weight-bold"
-                      />{" "}
-                      <span className="font-weight-bold green-text">
-                        +{data.company.revenueGrowth.value}
-                        {data.company.revenueGrowth.unit}
-                      </span>{" "}
-                      revenue
-                      <br />
-                      <small className="text-muted">
-                        compared to {data.company.revenueGrowth.comparedTo}
-                      </small>
-                    </span>
+                    {data.company.revenueGrowth && (
+                      <span className="d-inline-block mr-4">
+                        <MDBIcon
+                          icon="angle-double-up"
+                          className="green-text font-weight-bold"
+                        />{" "}
+                        <span className="font-weight-bold green-text">
+                          +{data.company.revenueGrowth.value}
+                          {data.company.revenueGrowth.unit}
+                        </span>{" "}
+                        revenue
+                        <br />
+                        <small className="text-muted">
+                          compared to {data.company.revenueGrowth.comparedTo}
+                        </small>
+                      </span>
+                    )}
                     <span className="d-inline-block mr-4">
                       <MDBIcon
                         icon="building"
@@ -259,7 +261,8 @@ class CompanyPage extends React.Component {
                       Sites
                       <br />
                       <small className="text-muted">
-                        {data.company.sites.length} location
+                        {data.company.sites ? data.company.sites.length : 0}{" "}
+                        location
                       </small>
                     </span>
                     <span className="d-inline-block mr-4">
@@ -284,10 +287,14 @@ class CompanyPage extends React.Component {
                                   >
                                     <MDBIcon
                                       fab
-                                      icon={contrib.platform}
+                                      icon={
+                                        contrib.platform
+                                          ? contrib.platform
+                                          : "question-circle"
+                                      }
                                       className={i !== 0 ? "mr-1 ml-2" : "mr-1"}
                                     />
-                                    {contrib.value}
+                                    {contrib.value ? contrib.value : 0}
                                   </a>
                                 );
                               } else {
@@ -295,10 +302,14 @@ class CompanyPage extends React.Component {
                                   <>
                                     <MDBIcon
                                       fab
-                                      icon={contrib.platform}
+                                      icon={
+                                        contrib.platform
+                                          ? contrib.platform
+                                          : "question-circle"
+                                      }
                                       className={i !== 0 ? "mr-1 ml-2" : "mr-1"}
                                     />
-                                    {contrib.value}
+                                    {contrib.value ? contrib.value : 0}
                                   </>
                                 );
                               }
