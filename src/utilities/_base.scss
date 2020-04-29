@@ -11,6 +11,9 @@
   box-shadow: none;
   border-radius: 0;
   text-transform: initial;
+  i{
+    margin-right: .3rem;
+  }
   &:hover {
     box-shadow: none;
   }
@@ -89,6 +92,11 @@
   color: #ea4aaa !important;
 }
 
+// Defaults
+.justify-content-space-between {
+  justify-content: space-between;
+  align-items: end;
+}
 .position-relative {
   position: relative !important;
 }
