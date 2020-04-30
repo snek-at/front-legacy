@@ -343,7 +343,38 @@ class CompanyPage extends React.Component {
             </MDBCol>
             <MDBCol lg="9">
               <MDBCard>
-                <MDBCardBody></MDBCardBody>
+                <MDBCardBody>
+                  {this.state.activeTab === 0 &&
+                  <div>
+                    Overview
+                  </div>
+                  }
+                  {this.state.activeTab === 1 &&
+                  <div>
+                    People
+                  </div>
+                  }
+                  {this.state.activeTab === 2 &&
+                  <div>
+                    Talks
+                  </div>
+                  }
+                  {this.state.activeTab === 3 &&
+                  <div>
+                    Locations
+                  </div>
+                  }
+                  {this.state.activeTab === 4 &&
+                  <div>
+                    Platforms
+                  </div>
+                  }
+                  {this.state.activeTab === 5 &&
+                  <div>
+                    About
+                  </div>
+                  }
+                </MDBCardBody>
               </MDBCard>
             </MDBCol>
           </MDBRow>
