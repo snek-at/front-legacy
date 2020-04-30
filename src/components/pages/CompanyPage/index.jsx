@@ -26,21 +26,65 @@ import {
   MDBIcon,
 } from "mdbreact";
 // Chart.js
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, HorizontalBar } from "react-chartjs-2";
 
 //> CSS
 import "./company.scss";
 
 //> Data
+// Base
+const googleMapsBaseURL = "https://www.google.at/maps/place/";
 // Configure tabs
 const tabs = ["Overview", "People", "Talks", "Locations", "Platforms", "About"];
 // Configure dummy data
 const data = {
+  employees: [
+    {
+      full_name: "Christian Aichner",
+      position: "CEO / Founder",
+      birthdate: "21.09.1998",
+      joined: "23.09.2017",
+      country: "Austria",
+      school: "HTL Villach",
+      study: "Mediatechnology",
+      tasks: [
+        "JavaScript",
+        "ReactJS",
+        "HTML",
+        "CSS",
+        "Leadership",
+        "Project Management",
+        "Corporate management",
+        "Graphics Design",
+        "Filmmaking",
+      ],
+    },
+    {
+      full_name: "Luca Allmaier",
+      position: "Social Media Manager",
+      birthdate: null,
+      joined: "01.05.2020",
+      country: "Austria",
+      school: "HTL Villach",
+      study: "Mediatechnology",
+      tasks: ["Graphics Design", "Social Media", "Customer retention"],
+    },
+    {
+      full_name: "Nico Kleber",
+      position: "Social flexing expert",
+      birthdate: null,
+      joined: "06.06.2019",
+      country: "Canada",
+      school: null,
+      study: null,
+      tasks: null,
+    },
+  ],
   company: {
     name: "Werbeagentur Christian Aichner",
     description:
       "Advertisement Agency based in Villach-Landskron, Carinthia, Austria. Top Open Source agency in Carinthia.",
-    employees: 2, // Number of employees including founder (min. value: 1)
+    employees: 3, // Number of employees including founder (min. value: 1)
     email: "contact@aichner-christian.com", // Company contact email
     localRelevance: true, // Is the company present in local media and / or well known?
     verified: true, // Verified badge
@@ -84,7 +128,25 @@ const data = {
 };
 
 class CompanyPage extends React.Component {
-  state = { activeTab: 0 };
+  state = {
+    activeTab: 0,
+    dataHorizontal: {
+      labels: ["Austria", "Canada"],
+      datasets: [
+        {
+          label: "Employees per country",
+          data: [2, 1],
+          fill: false,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+          ],
+          borderColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
+          borderWidth: 1,
+        },
+      ],
+    },
+  };
 
   getGrowth = (growth) => {
     switch (growth) {
@@ -344,36 +406,143 @@ class CompanyPage extends React.Component {
             <MDBCol lg="9">
               <MDBCard>
                 <MDBCardBody>
-                  {this.state.activeTab === 0 &&
-                  <div>
-                    Overview
-                  </div>
-                  }
-                  {this.state.activeTab === 1 &&
-                  <div>
-                    People
-                  </div>
-                  }
-                  {this.state.activeTab === 2 &&
-                  <div>
-                    Talks
-                  </div>
-                  }
-                  {this.state.activeTab === 3 &&
-                  <div>
-                    Locations
-                  </div>
-                  }
-                  {this.state.activeTab === 4 &&
-                  <div>
-                    Platforms
-                  </div>
-                  }
-                  {this.state.activeTab === 5 &&
-                  <div>
-                    About
-                  </div>
-                  }
+                  {this.state.activeTab === 0 && <div>Overview</div>}
+                  {this.state.activeTab === 1 && (
+                    <div>
+                      <MDBRow>
+                        <MDBCol md="6">
+                          <p className="lead">
+                            {data.company.employees} employees
+                          </p>
+                        </MDBCol>
+                        <MDBCol md="6">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search for employees"
+                          />
+                        </MDBCol>
+                      </MDBRow>
+                      <div className="charts my-4">
+                        <HorizontalBar
+                          data={this.state.dataHorizontal}
+                          options={{
+                            responsive: true,
+                            scales: {
+                              xAxes: [
+                                {
+                                  stacked: true,
+                                  ticks: {
+                                    min: 0,
+                                  },
+                                },
+                              ],
+                            },
+                          }}
+                          height="100"
+                        />
+                      </div>
+                      <MDBRow>
+                        {data.employees.map((employee, i) => {
+                          return (
+                            <MDBCol md="4">
+                              <MDBCard>
+                                <MDBCardBody>
+                                  <p className="font-weight-bold mb-0 d-inline-block clickable blue-text">
+                                    {employee.full_name}
+                                  </p>
+                                  <p className="text-muted">
+                                    {employee.position}
+                                  </p>
+                                  {employee.joined && (
+                                    <p className="mb-0">
+                                      <small>Joined {employee.joined}</small>
+                                    </p>
+                                  )}
+                                </MDBCardBody>
+                                <MDBCardFooter className="p-0">
+                                  <MDBBtn
+                                    color="green"
+                                    className="w-100 h-100 m-0"
+                                  >
+                                    Follow
+                                  </MDBBtn>
+                                </MDBCardFooter>
+                              </MDBCard>
+                            </MDBCol>
+                          );
+                        })}
+                      </MDBRow>
+                    </div>
+                  )}
+                  {this.state.activeTab === 2 && (
+                    <div>To be integrated together with talks tab</div>
+                  )}
+                  {this.state.activeTab === 3 && (
+                    <div>
+                      <MDBRow>
+                        <MDBCol md="6">
+                          <p className="lead">
+                            {data.company.sites.length}{" "}
+                            {data.company.sites.length > 1 ? "sites" : "site"}
+                          </p>
+                        </MDBCol>
+                        <MDBCol md="6">
+                          {data.company.sites.length > 1 && (
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Search for sites"
+                            />
+                          )}
+                        </MDBCol>
+                      </MDBRow>
+                      <MDBRow>
+                        {data.company.sites &&
+                          data.company.sites.map((site, i) => {
+                            return (
+                              <MDBCol md="5">
+                                <MDBCard>
+                                  <MDBCardBody>
+                                    <div className="d-flex justify-content-space-between">
+                                      <p className="font-weight-bold mb-1">
+                                        {site.country}
+                                      </p>
+                                      <MDBBadge color="indigo">
+                                        Main site
+                                      </MDBBadge>
+                                    </div>
+                                    <p>
+                                      {site.address}
+                                      <br />
+                                      {site.zip}, {site.city}
+                                    </p>
+                                  </MDBCardBody>
+                                  <MDBCardFooter className="p-0">
+                                    <a
+                                      href={`${googleMapsBaseURL}${site.address},+${site.zip},+${site.city}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <MDBBtn
+                                        color="white"
+                                        className="w-100 h-100 m-0"
+                                        size="lg"
+                                      >
+                                        <MDBIcon fab icon="google" />
+                                        Open on Google Maps
+                                      </MDBBtn>
+                                    </a>
+                                  </MDBCardFooter>
+                                </MDBCard>
+                              </MDBCol>
+                            );
+                          })}
+                      </MDBRow>
+                    </div>
+                  )}
+                  {this.state.activeTab === 4 && <div>Platforms</div>}
+                  {this.state.activeTab === 5 && <div>About</div>}
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
