@@ -58,6 +58,7 @@ class ProfileContent extends React.Component {
   };
 
   toggleHorizontal = (tab) => (e) => {
+    e.preventDefault();
     if (this.state.activeHorizontalItem !== tab) {
       this.setState({
         activeHorizontalItem: tab
