@@ -434,6 +434,7 @@ class CompanyPage extends React.Component {
                                   stacked: true,
                                   ticks: {
                                     min: 0,
+                                    stepSize: 1,
                                   },
                                 },
                               ],
