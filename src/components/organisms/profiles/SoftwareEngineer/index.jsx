@@ -28,6 +28,7 @@ import {
 const LanguageDoughnut = lazy(() => import("../../../atoms/LanguageDoughnut"));
 const ProfileContent = lazy(() => import("../../../organisms/ProfileContent"));
 const Projects = lazy(() => import("../../../organisms/tabs/Projects"));
+const Talks = lazy(() => import("../../../organisms/tabs/Talks"));
 const OverviewSoftware = lazy(() =>
   import("../../../organisms/tabs/OverviewSoftware")
 );
@@ -368,6 +369,9 @@ class SoftwareEngineer extends React.Component {
                       globalState.fetchedUser &&
                       globalState.fetchedUser.platformData.profile.repositories
                     }
+                  />
+                  <Talks
+                    id={5}
                   />
                 </ProfileContent>
               </Suspense>
