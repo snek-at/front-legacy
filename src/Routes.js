@@ -12,6 +12,7 @@ import {
   RedirectPage,
   SearchPage,
   CompanyPage,
+  TalkPage,
 } from "./components/pages";
 
 class Routes extends React.Component {
@@ -56,6 +57,16 @@ class Routes extends React.Component {
           path="/c/:company"
           component={(props) => (
             <CompanyPage globalState={this.props.globalState} {...props} />
+          )}
+        />
+        <Route
+          exact
+          path="/t/:talk"
+          component={(props) => (
+            <TalkPage
+              globalState={this.props.globalState}
+              {...props}
+            />
           )}
         />
         <Route

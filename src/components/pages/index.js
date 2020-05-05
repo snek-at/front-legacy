@@ -4,6 +4,7 @@ import MessagePage from "./MessagePage";
 import RedirectPage from "./RedirectPage";
 import SearchPage from "./SearchPage";
 import CompanyPage from "./CompanyPage";
+import TalkPage from "./TalkPage";
 
 export {
   HomePage,
@@ -12,6 +13,7 @@ export {
   RedirectPage,
   SearchPage,
   CompanyPage,
+  TalkPage,
 };
 
 /**
