@@ -137,9 +137,10 @@ class App extends React.Component {
   };
 
   // Get user data from intel
-  getData = () => {
-    console.log(this.intel.get());
-    return this.intel.get();
+  getData = async () => {
+    //console.log(this.intel.get());
+    let data = await this.intel.get()
+    return data;
   };
 
   /**
@@ -296,8 +297,8 @@ class App extends React.Component {
               async () => {
                 // Update cache
                 this.intel.resetReducer();
-                this.intel.appendList(sources).then(() => {
-                  platformData = { ...this.getData(), user };
+                this.intel.appendList(sources).then(async () => {
+                  platformData = { ...await this.getData(), user };
                   this.session.tasks.user
                     .cache(JSON.stringify(platformData))
                     .then(() => {
