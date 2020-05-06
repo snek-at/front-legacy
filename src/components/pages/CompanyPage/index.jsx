@@ -24,6 +24,8 @@ import {
   MDBProgress,
   MDBTooltip,
   MDBIcon,
+  MDBTimeline,
+  MDBTimelineStep,
 } from "mdbreact";
 // Chart.js
 import { Doughnut, HorizontalBar } from "react-chartjs-2";
@@ -35,9 +37,38 @@ import "./company.scss";
 // Base
 const googleMapsBaseURL = "https://www.google.at/maps/place/";
 // Configure tabs
-const tabs = ["Overview", "People", "Talks", "Locations", "Platforms", "About"];
+const tabs = [
+  "Overview",
+  "People",
+  "Talks",
+  "Locations",
+  "Platforms",
+  "Milestones",
+  "About",
+];
 // Configure dummy data
 const data = {
+  milestones: [
+    { date: "11.11.2017", name: "First employee", icon: "user-circle" },
+    { date: "20.09.2017", name: "Foundation", icon: "fire-alt" },
+  ],
+  platforms: [
+    {
+      name: "facebook",
+      url: "https://www.facebook.com/werbeagentur.aichner",
+      data: { followers: 323, avgLikes: 12 },
+    },
+    {
+      name: "instagram",
+      url: "https://www.instagram.com/aichnerchristian/",
+      data: { followers: 2713, avgLikes: 142 },
+    },
+    {
+      name: "linkedin",
+      url: "https://www.linkedin.com/company/19205978",
+      data: { followers: 2, avgLikes: 0 },
+    },
+  ],
   employees: [
     {
       full_name: "Christian Aichner",
@@ -85,6 +116,10 @@ const data = {
     description:
       "Advertisement Agency based in Villach-Landskron, Carinthia, Austria. Top Open Source agency in Carinthia.",
     employees: 3, // Number of employees including founder (min. value: 1)
+    vat: {
+      id: "ATU72504738",
+      verified: true,
+    },
     email: "contact@aichner-christian.com", // Company contact email
     localRelevance: true, // Is the company present in local media and / or well known?
     verified: true, // Verified badge
@@ -191,7 +226,13 @@ class CompanyPage extends React.Component {
                         a better ranking.
                       </p>
                     </div>
-                    <MDBBtn color="indigo">Start</MDBBtn>
+                    <div>
+                      <MDBBtn color="indigo" outline>
+                        <MDBIcon icon="eye" />
+                        View as public
+                      </MDBBtn>
+                      <MDBBtn color="indigo">Start</MDBBtn>
+                    </div>
                   </div>
                   <MDBProgress value={70} className="my-2" />
                 </MDBCardBody>
@@ -361,7 +402,7 @@ class CompanyPage extends React.Component {
                                 );
                               } else {
                                 return (
-                                  <>
+                                  <React.Fragment key={i}>
                                     <MDBIcon
                                       fab
                                       icon={
@@ -372,7 +413,7 @@ class CompanyPage extends React.Component {
                                       className={i !== 0 ? "mr-1 ml-2" : "mr-1"}
                                     />
                                     {contrib.value ? contrib.value : 0}
-                                  </>
+                                  </React.Fragment>
                                 );
                               }
                             })}
@@ -406,7 +447,39 @@ class CompanyPage extends React.Component {
             <MDBCol lg="9">
               <MDBCard>
                 <MDBCardBody>
-                  {this.state.activeTab === 0 && <div>Overview</div>}
+                  {this.state.activeTab === 0 && (
+                    <div>
+                      <h2 className="font-weight-bold">Overview</h2>
+                      <p className="text-muted">
+                        Charts to be added when data is available.
+                      </p>
+                      <MDBTimeline>
+                        {data.milestones.map((milestone, i) => {
+                          return (
+                            <MDBTimelineStep
+                              key={i}
+                              icon={milestone.icon}
+                              color={milestone.color}
+                              inverted={i % 2 ? true : false}
+                            >
+                              <h4 className="font-weight-bold">
+                                {milestone.name}
+                              </h4>
+                              <p className="text-muted mt-3">
+                                <MDBIcon icon="clock" aria-hidden="true" />{" "}
+                                {milestone.date}
+                              </p>
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit, sed do eiusmod tempor incididunt ut labore
+                              et dolore magna aliqua. Ut enim ad minim veniam,
+                              quis nostrud exercitation ullamco laboris nisi ut
+                              aliquip ex ea commodo consequat.
+                            </MDBTimelineStep>
+                          );
+                        })}
+                      </MDBTimeline>
+                    </div>
+                  )}
                   {this.state.activeTab === 1 && (
                     <div>
                       <MDBRow>
@@ -446,7 +519,7 @@ class CompanyPage extends React.Component {
                       <MDBRow>
                         {data.employees.map((employee, i) => {
                           return (
-                            <MDBCol md="4">
+                            <MDBCol md="4" key={i}>
                               <MDBCard>
                                 <MDBCardBody>
                                   <p className="font-weight-bold mb-0 d-inline-block clickable blue-text">
@@ -502,7 +575,7 @@ class CompanyPage extends React.Component {
                         {data.company.sites &&
                           data.company.sites.map((site, i) => {
                             return (
-                              <MDBCol md="5">
+                              <MDBCol md="5" key={i}>
                                 <MDBCard>
                                   <MDBCardBody>
                                     <div className="d-flex justify-content-space-between">
@@ -542,8 +615,95 @@ class CompanyPage extends React.Component {
                       </MDBRow>
                     </div>
                   )}
-                  {this.state.activeTab === 4 && <div>Platforms</div>}
-                  {this.state.activeTab === 5 && <div>About</div>}
+                  {this.state.activeTab === 4 && (
+                    <div>
+                      <MDBRow>
+                        {data.platforms.map((platform, i) => {
+                          return (
+                            <MDBCol md="4" key={i}>
+                              <a
+                                href={platform.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <MDBCard>
+                                  <MDBCardBody>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                      <MDBIcon
+                                        fab
+                                        icon={platform.name}
+                                        size="lg"
+                                      />
+                                      <p className="m-0 text-muted">
+                                        {platform.data.followers} followers
+                                        <br />
+                                        {platform.data.avgLikes} average likes
+                                        <br />
+                                        {(
+                                          (platform.data.avgLikes * 100) /
+                                          platform.data.followers
+                                        ).toFixed(2)}
+                                        % engagement
+                                      </p>
+                                    </div>
+                                  </MDBCardBody>
+                                </MDBCard>
+                              </a>
+                            </MDBCol>
+                          );
+                        })}
+                        <MDBCol md="4">
+                          <MDBBtn color="green">
+                            <MDBIcon icon="plus-circle" />
+                            Add platform
+                          </MDBBtn>
+                        </MDBCol>
+                      </MDBRow>
+                    </div>
+                  )}
+                  {this.state.activeTab === 5 && <div>Milestone tab</div>}
+                  {this.state.activeTab === 6 && (
+                    <div>
+                      <p className="lead font-weight-bold">
+                        {data.company.name}
+                      </p>
+                      <p>
+                        {data.company.sites[0].address}
+                        <br />
+                        {data.company.sites[0].zip} {data.company.sites[0].city}
+                      </p>
+                      <p>
+                        <strong>VAT identification number</strong>
+                        <br />
+                        {data.company.vat ? (
+                          <>
+                            {data.company.vat.id}
+                            {data.company.vat.verified ? (
+                              <>
+                                {" "}
+                                <span className="verified-badge">
+                                  <MDBBadge>Verified</MDBBadge>
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <span className="unverified-badge">
+                                  <MDBBadge>Not verified</MDBBadge>
+                                </span>
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <MDBBadge color="indigo" className="z-depth-0">
+                              Not eligible
+                            </MDBBadge>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>

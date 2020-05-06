@@ -1,6 +1,12 @@
 #company {
   padding: 4rem 0;
   background: darken(white, 3%);
+  .timeline {
+    padding: 0;
+    max-width: 100%;
+    overflow: visible;
+    margin: 0;
+  }
   .card {
     border: 1px lightgray solid;
     margin-bottom: 2rem;
@@ -9,6 +15,14 @@
         background: rgba(0, 200, 81, 0.1) !important;
         border: 1px #00c851 solid;
         color: darken(#00c851, 12%) !important;
+        box-shadow: none;
+      }
+    }
+    .unverified-badge {
+      .badge {
+        background: rgba(244, 67, 54, 0.1) !important;
+        border: 1px #f44336 solid;
+        color: darken(#f44336, 12%) !important;
         box-shadow: none;
       }
     }
