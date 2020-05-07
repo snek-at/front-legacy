@@ -28,12 +28,15 @@ import {
   MDBTimelineStep,
 } from "mdbreact";
 // Chart.js
-import { Doughnut, HorizontalBar } from "react-chartjs-2";
+import { Doughnut, HorizontalBar, Line } from "react-chartjs-2";
 
 //> CSS
 import "./company.scss";
 
 //> Data
+// Dummy data
+import data from "./dummy/data.js";
+import platformData from "./dummy/chart.json";
 // Base
 const googleMapsBaseURL = "https://www.google.at/maps/place/";
 // Configure tabs
@@ -46,118 +49,68 @@ const tabs = [
   "Milestones",
   "About",
 ];
-// Configure dummy data
-const data = {
-  milestones: [
-    { date: "11.11.2017", name: "First employee", icon: "user-circle" },
-    { date: "20.09.2017", name: "Foundation", icon: "fire-alt" },
-  ],
-  platforms: [
-    {
-      name: "facebook",
-      url: "https://www.facebook.com/werbeagentur.aichner",
-      data: { followers: 323, avgLikes: 12 },
-    },
-    {
-      name: "instagram",
-      url: "https://www.instagram.com/aichnerchristian/",
-      data: { followers: 2713, avgLikes: 142 },
-    },
-    {
-      name: "linkedin",
-      url: "https://www.linkedin.com/company/19205978",
-      data: { followers: 2, avgLikes: 0 },
-    },
-  ],
-  employees: [
-    {
-      full_name: "Christian Aichner",
-      position: "CEO / Founder",
-      birthdate: "21.09.1998",
-      joined: "23.09.2017",
-      country: "Austria",
-      school: "HTL Villach",
-      study: "Mediatechnology",
-      tasks: [
-        "JavaScript",
-        "ReactJS",
-        "HTML",
-        "CSS",
-        "Leadership",
-        "Project Management",
-        "Corporate management",
-        "Graphics Design",
-        "Filmmaking",
-      ],
-    },
-    {
-      full_name: "Luca Allmaier",
-      position: "Social Media Manager",
-      birthdate: null,
-      joined: "01.05.2020",
-      country: "Austria",
-      school: "HTL Villach",
-      study: "Mediatechnology",
-      tasks: ["Graphics Design", "Social Media", "Customer retention"],
-    },
-    {
-      full_name: "Nico Kleber",
-      position: "Social flexing expert",
-      birthdate: null,
-      joined: "06.06.2019",
-      country: "Canada",
-      school: null,
-      study: null,
-      tasks: null,
-    },
-  ],
-  company: {
-    name: "Werbeagentur Christian Aichner",
-    description:
-      "Advertisement Agency based in Villach-Landskron, Carinthia, Austria. Top Open Source agency in Carinthia.",
-    employees: 3, // Number of employees including founder (min. value: 1)
-    vat: {
-      id: "ATU72504738",
-      verified: true,
-    },
-    email: "contact@aichner-christian.com", // Company contact email
-    localRelevance: true, // Is the company present in local media and / or well known?
-    verified: true, // Verified badge
-    growth: 2, // -2 strong decrease, -1 decrease, 0 stagnant, 1 growth, 2 fast growth
-    revenueGrowth: {
-      comparedTo: "last year", // last year, last quarter, last month
-      value: 87, // Rate of growth
-      unit: "%", // Is the rate of growth in %, €, ...?
-    },
-    contributors: [
+// Line Contribution options
+const contribOptions = {
+  responsive: true,
+  legend: {
+    display: false,
+  },
+  scales: {
+    xAxes: [
       {
-        url: "https://github.com/orgs/aichner/people", // URL to people overview
-        value: 11, // Number of contributors
-        platform: "github", // Platform for displaying icon (https://mdbootstrap.com/docs/react/content/icons-list/)
-      },
-      {
-        url: null,
-        value: 13,
-        platform: "gitlab",
-      },
-      {
-        url: null,
-        value: 0,
-        platform: "bitbucket",
+        ticks: {
+          autoSkip: false,
+          maxRotation: 0,
+          minRotation: 0,
+        },
       },
     ],
-    sites: [
-      {
-        address: "Emailwerkstraße 29",
-        country: "Austria",
-        zip: "9523",
-        city: "Villach-Landskron",
+  },
+  plugins: contribPlugins,
+};
+const contribPlugins = {
+  zoom: {
+    pan: {
+      enabled: true,
+      mode: "x",
+      rangeMin: {
+        x: null,
+        y: null,
       },
-    ],
-    isRecruiting: true, // Is the company actively searching for new employees?
-    isOpenSource: true, // Is the company developing open source or is some of its software open source?
-    references: {
-      github: "https://github.com/aichner",
+      rangeMax: {
+        x: null,
+        y: null,
+      },
+      speed: 20,
+      threshold: 10,
+      onPan: function ({ chart }) {
+        console.log(`I'm panning!!!`);
+      },
+      onPanComplete: function ({ chart }) {
+        console.log(`I was panned!!!`);
+      },
+    },
+    zoom: {
+      enabled: true,
+      drag: true,
+      mode: "x",
+      rangeMin: {
+        x: null,
+        y: null,
+      },
+      rangeMax: {
+        x: null,
+        y: null,
+      },
+      speed: 0.1,
+      threshold: 2,
+      sensitivity: 3,
+      onZoom: function ({ chart }) {
+        console.log(`I'm zooming!!!`);
+      },
+      onZoomComplete: function ({ chart }) {
+        console.log(`I was zoomed!!!`);
+      },
     },
   },
 };
@@ -181,6 +134,54 @@ class CompanyPage extends React.Component {
         },
       ],
     },
+  };
+
+  componentDidMount = () => {
+    this.setState(
+      {
+        contrib: platformData.statistic.current,
+      },
+      () => this.setContentLib(platformData.statistic.current)
+    );
+  };
+
+  setContentLib = (period) => {
+    let labels = [];
+    let data = [];
+
+    period.calendar.weeks.map((week, w) => {
+      week.days.map((day, d) => {
+        if (
+          (w === 0 && d === 0) ||
+          (w === period.calendar.weeks.length - 1 && d === week.days.length - 1)
+        ) {
+          labels.push(day.date);
+        } else {
+          labels.push("");
+        }
+        data.push(day.total);
+      });
+    });
+
+    this.setState({
+      contribLine: {
+        labels,
+        datasets: [
+          {
+            label: "Contributions",
+            fill: true,
+            lineTension: 0,
+            backgroundColor: "rgba(119, 189, 67, .3)",
+            borderColor: "rgb(119, 189, 67)",
+            borderCapStyle: "butt",
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: "miter",
+            data,
+          },
+        ],
+      },
+    });
   };
 
   getGrowth = (growth) => {
@@ -450,9 +451,13 @@ class CompanyPage extends React.Component {
                   {this.state.activeTab === 0 && (
                     <div>
                       <h2 className="font-weight-bold">Overview</h2>
-                      <p className="text-muted">
-                        Charts to be added when data is available.
-                      </p>
+                      <div className="mb-5">
+                        <Line
+                          data={this.state.contribLine}
+                          options={contribOptions}
+                          height="130"
+                        />
+                      </div>
                       <MDBTimeline>
                         {data.milestones.map((milestone, i) => {
                           return (
@@ -465,15 +470,10 @@ class CompanyPage extends React.Component {
                               <h4 className="font-weight-bold">
                                 {milestone.name}
                               </h4>
-                              <p className="text-muted mt-3">
+                              <p className="text-muted mt-2 mb-0">
                                 <MDBIcon icon="clock" aria-hidden="true" />{" "}
                                 {milestone.date}
                               </p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit, sed do eiusmod tempor incididunt ut labore
-                              et dolore magna aliqua. Ut enim ad minim veniam,
-                              quis nostrud exercitation ullamco laboris nisi ut
-                              aliquip ex ea commodo consequat.
                             </MDBTimelineStep>
                           );
                         })}
