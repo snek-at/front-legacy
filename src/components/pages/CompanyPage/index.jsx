@@ -4,6 +4,8 @@ import React from "react";
 // Router
 import { Redirect, Link } from "react-router-dom";
 
+import * as zoom from "chartjs-plugin-zoom";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -24,105 +26,73 @@ import {
   MDBProgress,
   MDBTooltip,
   MDBIcon,
+  MDBTimeline,
+  MDBTimelineStep,
 } from "mdbreact";
 // Chart.js
-import { Doughnut, HorizontalBar } from "react-chartjs-2";
+import { Doughnut, HorizontalBar, Line } from "react-chartjs-2";
 
 //> CSS
 import "./company.scss";
 
 //> Data
+// Dummy data
+import data from "./dummy/data.js";
+import platformData from "./dummy/chart.json";
 // Base
 const googleMapsBaseURL = "https://www.google.at/maps/place/";
 // Configure tabs
-const tabs = ["Overview", "People", "Talks", "Locations", "Platforms", "About"];
-// Configure dummy data
-const data = {
-  employees: [
-    {
-      full_name: "Christian Aichner",
-      position: "CEO / Founder",
-      birthdate: "21.09.1998",
-      joined: "23.09.2017",
-      country: "Austria",
-      school: "HTL Villach",
-      study: "Mediatechnology",
-      tasks: [
-        "JavaScript",
-        "ReactJS",
-        "HTML",
-        "CSS",
-        "Leadership",
-        "Project Management",
-        "Corporate management",
-        "Graphics Design",
-        "Filmmaking",
-      ],
-    },
-    {
-      full_name: "Luca Allmaier",
-      position: "Social Media Manager",
-      birthdate: null,
-      joined: "01.05.2020",
-      country: "Austria",
-      school: "HTL Villach",
-      study: "Mediatechnology",
-      tasks: ["Graphics Design", "Social Media", "Customer retention"],
-    },
-    {
-      full_name: "Nico Kleber",
-      position: "Social flexing expert",
-      birthdate: null,
-      joined: "06.06.2019",
-      country: "Canada",
-      school: null,
-      study: null,
-      tasks: null,
-    },
-  ],
-  company: {
-    name: "Werbeagentur Christian Aichner",
-    description:
-      "Advertisement Agency based in Villach-Landskron, Carinthia, Austria. Top Open Source agency in Carinthia.",
-    employees: 3, // Number of employees including founder (min. value: 1)
-    email: "contact@aichner-christian.com", // Company contact email
-    localRelevance: true, // Is the company present in local media and / or well known?
-    verified: true, // Verified badge
-    growth: 2, // -2 strong decrease, -1 decrease, 0 stagnant, 1 growth, 2 fast growth
-    revenueGrowth: {
-      comparedTo: "last year", // last year, last quarter, last month
-      value: 87, // Rate of growth
-      unit: "%", // Is the rate of growth in %, €, ...?
-    },
-    contributors: [
+const tabs = [
+  "Overview",
+  "People",
+  "Talks",
+  "Locations",
+  "Platforms",
+  "Milestones",
+  "About",
+];
+// Line Contribution options
+const contribOptions = {
+  responsive: true,
+  legend: {
+    display: false,
+  },
+  scales: {
+    xAxes: [
       {
-        url: "https://github.com/orgs/aichner/people", // URL to people overview
-        value: 11, // Number of contributors
-        platform: "github", // Platform for displaying icon (https://mdbootstrap.com/docs/react/content/icons-list/)
-      },
-      {
-        url: null,
-        value: 13,
-        platform: "gitlab",
-      },
-      {
-        url: null,
-        value: 0,
-        platform: "bitbucket",
+        ticks: {
+          autoSkip: false,
+          maxRotation: 0,
+          minRotation: 0,
+        },
       },
     ],
-    sites: [
-      {
-        address: "Emailwerkstraße 29",
-        country: "Austria",
-        zip: "9523",
-        city: "Villach-Landskron",
+  },
+  plugins: contribPlugins,
+};
+const contribPlugins = {
+  zoom: {
+    zoom: {
+      enabled: true,
+      drag: true,
+      mode: "x",
+      rangeMin: {
+        x: null,
+        y: null,
       },
-    ],
-    isRecruiting: true, // Is the company actively searching for new employees?
-    isOpenSource: true, // Is the company developing open source or is some of its software open source?
-    references: {
-      github: "https://github.com/aichner",
+      rangeMax: {
+        x: null,
+        y: null,
+      },
+      speed: 0.1,
+      threshold: 2,
+      sensitivity: 3,
+      onZoom: function ({ chart }) {
+        console.log(`I'm zooming!!!`);
+      },
+      onZoomComplete: function ({ chart }) {
+        console.log(`I was zoomed!!!`);
+      },
     },
   },
 };
@@ -146,6 +116,54 @@ class CompanyPage extends React.Component {
         },
       ],
     },
+  };
+
+  componentDidMount = () => {
+    this.setState(
+      {
+        contrib: platformData.statistic.current,
+      },
+      () => this.setContentLib(platformData.statistic.current)
+    );
+  };
+
+  setContentLib = (period) => {
+    let labels = [];
+    let data = [];
+
+    period.calendar.weeks.map((week, w) => {
+      week.days.map((day, d) => {
+        if (
+          (w === 0 && d === 0) ||
+          (w === period.calendar.weeks.length - 1 && d === week.days.length - 1)
+        ) {
+          labels.push(day.date);
+        } else {
+          labels.push("");
+        }
+        data.push(day.total);
+      });
+    });
+
+    this.setState({
+      contribLine: {
+        labels,
+        datasets: [
+          {
+            label: "Contributions",
+            fill: true,
+            lineTension: 0,
+            backgroundColor: "rgba(119, 189, 67, .3)",
+            borderColor: "rgb(119, 189, 67)",
+            borderCapStyle: "butt",
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: "miter",
+            data,
+          },
+        ],
+      },
+    });
   };
 
   getGrowth = (growth) => {
@@ -191,7 +209,13 @@ class CompanyPage extends React.Component {
                         a better ranking.
                       </p>
                     </div>
-                    <MDBBtn color="indigo">Start</MDBBtn>
+                    <div>
+                      <MDBBtn color="indigo" outline>
+                        <MDBIcon icon="eye" />
+                        View as public
+                      </MDBBtn>
+                      <MDBBtn color="indigo">Start</MDBBtn>
+                    </div>
                   </div>
                   <MDBProgress value={70} className="my-2" />
                 </MDBCardBody>
@@ -361,7 +385,7 @@ class CompanyPage extends React.Component {
                                 );
                               } else {
                                 return (
-                                  <>
+                                  <React.Fragment key={i}>
                                     <MDBIcon
                                       fab
                                       icon={
@@ -372,7 +396,7 @@ class CompanyPage extends React.Component {
                                       className={i !== 0 ? "mr-1 ml-2" : "mr-1"}
                                     />
                                     {contrib.value ? contrib.value : 0}
-                                  </>
+                                  </React.Fragment>
                                 );
                               }
                             })}
@@ -406,7 +430,38 @@ class CompanyPage extends React.Component {
             <MDBCol lg="9">
               <MDBCard>
                 <MDBCardBody>
-                  {this.state.activeTab === 0 && <div>Overview</div>}
+                  {this.state.activeTab === 0 && (
+                    <div>
+                      <h2 className="font-weight-bold">Overview</h2>
+                      <div className="mb-5">
+                        <Line
+                          data={this.state.contribLine}
+                          options={this.state.contribLine && contribOptions}
+                          height="130"
+                        />
+                      </div>
+                      <MDBTimeline>
+                        {data.milestones.map((milestone, i) => {
+                          return (
+                            <MDBTimelineStep
+                              key={i}
+                              icon={milestone.icon}
+                              color={milestone.color}
+                              inverted={i % 2 ? true : false}
+                            >
+                              <h4 className="font-weight-bold">
+                                {milestone.name}
+                              </h4>
+                              <p className="text-muted mt-2 mb-0">
+                                <MDBIcon icon="clock" aria-hidden="true" />{" "}
+                                {milestone.date}
+                              </p>
+                            </MDBTimelineStep>
+                          );
+                        })}
+                      </MDBTimeline>
+                    </div>
+                  )}
                   {this.state.activeTab === 1 && (
                     <div>
                       <MDBRow>
@@ -446,7 +501,7 @@ class CompanyPage extends React.Component {
                       <MDBRow>
                         {data.employees.map((employee, i) => {
                           return (
-                            <MDBCol md="4">
+                            <MDBCol md="4" key={i}>
                               <MDBCard>
                                 <MDBCardBody>
                                   <p className="font-weight-bold mb-0 d-inline-block clickable blue-text">
@@ -502,7 +557,7 @@ class CompanyPage extends React.Component {
                         {data.company.sites &&
                           data.company.sites.map((site, i) => {
                             return (
-                              <MDBCol md="5">
+                              <MDBCol md="5" key={i}>
                                 <MDBCard>
                                   <MDBCardBody>
                                     <div className="d-flex justify-content-space-between">
@@ -542,8 +597,95 @@ class CompanyPage extends React.Component {
                       </MDBRow>
                     </div>
                   )}
-                  {this.state.activeTab === 4 && <div>Platforms</div>}
-                  {this.state.activeTab === 5 && <div>About</div>}
+                  {this.state.activeTab === 4 && (
+                    <div>
+                      <MDBRow>
+                        {data.platforms.map((platform, i) => {
+                          return (
+                            <MDBCol md="4" key={i}>
+                              <a
+                                href={platform.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <MDBCard>
+                                  <MDBCardBody>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                      <MDBIcon
+                                        fab
+                                        icon={platform.name}
+                                        size="lg"
+                                      />
+                                      <p className="m-0 text-muted">
+                                        {platform.data.followers} followers
+                                        <br />
+                                        {platform.data.avgLikes} average likes
+                                        <br />
+                                        {(
+                                          (platform.data.avgLikes * 100) /
+                                          platform.data.followers
+                                        ).toFixed(2)}
+                                        % engagement
+                                      </p>
+                                    </div>
+                                  </MDBCardBody>
+                                </MDBCard>
+                              </a>
+                            </MDBCol>
+                          );
+                        })}
+                        <MDBCol md="4">
+                          <MDBBtn color="green">
+                            <MDBIcon icon="plus-circle" />
+                            Add platform
+                          </MDBBtn>
+                        </MDBCol>
+                      </MDBRow>
+                    </div>
+                  )}
+                  {this.state.activeTab === 5 && <div>Milestone tab</div>}
+                  {this.state.activeTab === 6 && (
+                    <div>
+                      <p className="lead font-weight-bold">
+                        {data.company.name}
+                      </p>
+                      <p>
+                        {data.company.sites[0].address}
+                        <br />
+                        {data.company.sites[0].zip} {data.company.sites[0].city}
+                      </p>
+                      <p>
+                        <strong>VAT identification number</strong>
+                        <br />
+                        {data.company.vat ? (
+                          <>
+                            {data.company.vat.id}
+                            {data.company.vat.verified ? (
+                              <>
+                                {" "}
+                                <span className="verified-badge">
+                                  <MDBBadge>Verified</MDBBadge>
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                <span className="unverified-badge">
+                                  <MDBBadge>Not verified</MDBBadge>
+                                </span>
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <MDBBadge color="indigo" className="z-depth-0">
+                              Not eligible
+                            </MDBBadge>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
