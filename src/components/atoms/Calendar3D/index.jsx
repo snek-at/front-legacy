@@ -131,8 +131,8 @@ class Calendar3D extends React.Component {
         " - " +
         moment(contribData.streak.longest.endDate).format("MMM DD, YYYY");
     } else {
-      streakLongest ="0"
-      datesLongest = ""
+      streakLongest = "0";
+      datesLongest = "";
     }
     if (contribData.streak.current.id !== -1) {
       streakCurrent = contribData.streak.current.totalDays;
@@ -141,8 +141,8 @@ class Calendar3D extends React.Component {
         " - " +
         moment(contribData.streak.current.endDate).format("MMM DD, YYYY");
     } else {
-      streakCurrent ="0"
-      datesCurrent = ""
+      streakCurrent = "0";
+      datesCurrent = "";
     }
 
     let html;
@@ -235,13 +235,39 @@ class Calendar3D extends React.Component {
         let color = new obelisk.CubeColor().getByHorizontalColor(
           parseInt("0x" + fill.replace("#", ""))
         );
-        let dimension = new obelisk.CubeDimension(SIZE, SIZE, cubeHeight);
-        // Build cube with dimension and color instance
-        let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
-        var cube = new obelisk.Cube(dimension, color, false);
 
-        // Render cube primitive into view
-        pixelView.renderObject(cube, p3d);
+        // ANIMATION TOGGLE for kleberbaum to play with
+        const animated = false;
+
+        if (animated) {
+          var animHeight = 3;
+
+          function draw() {
+            let dimension = new obelisk.CubeDimension(SIZE, SIZE, animHeight);
+            let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
+            let cube = new obelisk.Cube(dimension, color, false);
+
+            // Render cube primitive into view
+            pixelView.renderObject(cube, p3d);
+            if (animHeight < cubeHeight) {
+              if (parseInt((MAXHEIGHT / maxCount) * day.total) > 0) {
+                animHeight += 1;
+              } else {
+                animHeight = 1;
+              }
+            }
+            // Animations
+            requestAnimationFrame(draw);
+          }
+          draw();
+        } else {
+          let dimension = new obelisk.CubeDimension(SIZE, SIZE, cubeHeight);
+          let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
+          let cube = new obelisk.Cube(dimension, color, false);
+
+          // Render cube primitive into view
+          pixelView.renderObject(cube, p3d);
+        }
       });
     });
   };
