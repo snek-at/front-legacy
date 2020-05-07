@@ -84,7 +84,10 @@ class ProfileContent extends React.Component {
                   <MDBNavItem key={key}>
                     <MDBNavLink
                       to="#"
-                      onClick={() => this.handleTabChange(key)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        this.handleTabChange(key);
+                      }}
                       className={
                         this.state.activeTab === key ? "seriouslyActive" : ""
                       }
