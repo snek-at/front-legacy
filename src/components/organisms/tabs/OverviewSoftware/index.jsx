@@ -21,6 +21,7 @@ import "./overviewsoftware.scss";
 //> Components
 const Calendar3D = lazy(() => import("../../../atoms/Calendar3D"));
 const Calendar2D = lazy(() => import("../../../atoms/Calendar2D"));
+const ContribRadar = lazy(() => import("../../../atoms/ContribRadar"));
 
 class Overview extends React.Component {
   state = {
@@ -275,6 +276,14 @@ class Overview extends React.Component {
               year={this.state.selectedYear}
             />
           </Suspense>
+        )}
+        {platformData && !platformData.user.settings.showContribDiagram && (
+          <div className="mt-5">
+            <ContribRadar
+              statistic={platformData.statistic}
+              year={this.state.selectedYear}
+            />
+          </div>
         )}
       </MDBTabPane>
     );
