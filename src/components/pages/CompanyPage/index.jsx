@@ -4,6 +4,8 @@ import React from "react";
 // Router
 import { Redirect, Link } from "react-router-dom";
 
+import * as zoom from "chartjs-plugin-zoom";
+
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -70,26 +72,6 @@ const contribOptions = {
 };
 const contribPlugins = {
   zoom: {
-    pan: {
-      enabled: true,
-      mode: "x",
-      rangeMin: {
-        x: null,
-        y: null,
-      },
-      rangeMax: {
-        x: null,
-        y: null,
-      },
-      speed: 20,
-      threshold: 10,
-      onPan: function ({ chart }) {
-        console.log(`I'm panning!!!`);
-      },
-      onPanComplete: function ({ chart }) {
-        console.log(`I was panned!!!`);
-      },
-    },
     zoom: {
       enabled: true,
       drag: true,
@@ -454,7 +436,7 @@ class CompanyPage extends React.Component {
                       <div className="mb-5">
                         <Line
                           data={this.state.contribLine}
-                          options={contribOptions}
+                          options={this.state.contribLine && contribOptions}
                           height="130"
                         />
                       </div>
