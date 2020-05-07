@@ -3,6 +3,7 @@ import Calendar3D from "./Calendar3D";
 import Calendar2D from "./Calendar2D";
 import LanguageDoughnut from "./LanguageDoughnut";
 import ContribRadar from "./ContribRadar";
+import AsyncComponent from "./AsyncComponent";
 
 export {
   ScrollToTop,
@@ -10,6 +11,7 @@ export {
   Calendar2D,
   LanguageDoughnut,
   ContribRadar,
+  AsyncComponent,
 }
 
 /**

@@ -19,7 +19,11 @@ import {
 import "./overviewsoftware.scss";
 
 //> Components
-import { Calendar2D, Calendar3D, ContribRadar } from "../../../atoms";
+import { Calendar2D, ContribRadar, AsyncComponent } from "../../../atoms";
+
+const Calendar3D = AsyncComponent(() => {
+  return import("../../../atoms/Calendar3D");
+});
 
 class Overview extends React.Component {
   state = {

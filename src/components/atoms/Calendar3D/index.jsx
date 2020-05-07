@@ -36,6 +36,7 @@ class Calendar3D extends React.Component {
       this.setState(
         {
           width: this.myInput.current.offsetWidth,
+          loading: true,
         },
         () => this.renderIsometrics()
       );
@@ -270,9 +271,15 @@ class Calendar3D extends React.Component {
         }
       });
     });
+    if (this.state.loading) {
+      this.setState({
+        loading: false,
+      });
+    }
   };
 
   render() {
+    console.log(this.state.loading);
     return (
       <div id="calendar3d">
         {this.props.platformData && this.state.width > 500 && (
