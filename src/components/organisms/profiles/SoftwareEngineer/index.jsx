@@ -24,14 +24,10 @@ import {
   MDBIcon,
 } from "mdbreact";
 
+import { ProfileContent } from "../../../organisms";
+
 //> Components
 const LanguageDoughnut = lazy(() => import("../../../atoms/LanguageDoughnut"));
-const ProfileContent = lazy(() => import("../../../organisms/ProfileContent"));
-const Projects = lazy(() => import("../../../organisms/tabs/Projects"));
-const Talks = lazy(() => import("../../../organisms/tabs/Talks"));
-const OverviewSoftware = lazy(() =>
-  import("../../../organisms/tabs/OverviewSoftware")
-);
 const Settings = lazy(() => import("../../../molecules/modals/Settings"));
 
 //> CSS
@@ -40,6 +36,7 @@ const Settings = lazy(() => import("../../../molecules/modals/Settings"));
 class SoftwareEngineer extends React.Component {
   state = {
     showSettings: false,
+    activeTab: 0,
   };
 
   componentDidMount = () => {
@@ -85,6 +82,12 @@ class SoftwareEngineer extends React.Component {
         showSettings: false,
       });
     }
+  };
+
+  handleTabChange = (id) => {
+    this.setState({
+      activeTab: id,
+    });
   };
 
   render() {
@@ -348,33 +351,14 @@ class SoftwareEngineer extends React.Component {
               </div>
             </MDBCol>
             <MDBCol md="9" className="content p-0">
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProfileContent
-                  projectCount={
-                    globalState.fetchedUser &&
-                    globalState.fetchedUser.platformData.profile.repositories
-                      .length
-                  }
-                >
-                  <OverviewSoftware
-                    id={0}
-                    platformData={
-                      globalState.fetchedUser &&
-                      globalState.fetchedUser.platformData
-                    }
-                  />
-                  <Projects
-                    id={1}
-                    repoList={
-                      globalState.fetchedUser &&
-                      globalState.fetchedUser.platformData.profile.repositories
-                    }
-                  />
-                  <Talks
-                    id={5}
-                  />
-                </ProfileContent>
-              </Suspense>
+              <ProfileContent
+                globalState={globalState}
+                projectCount={
+                  globalState.fetchedUser &&
+                  globalState.fetchedUser.platformData.profile.repositories
+                    .length
+                }
+              />
             </MDBCol>
           </MDBRow>
         </MDBContainer>

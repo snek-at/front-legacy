@@ -19,9 +19,7 @@ import {
 import "./overviewsoftware.scss";
 
 //> Components
-const Calendar3D = lazy(() => import("../../../atoms/Calendar3D"));
-const Calendar2D = lazy(() => import("../../../atoms/Calendar2D"));
-const ContribRadar = lazy(() => import("../../../atoms/ContribRadar"));
+import { Calendar2D, Calendar3D, ContribRadar } from "../../../atoms";
 
 class Overview extends React.Component {
   state = {
@@ -31,7 +29,7 @@ class Overview extends React.Component {
   render() {
     const { platformData } = this.props;
     return (
-      <MDBTabPane tabId={this.props.id} role="tabpanel">
+      <>
         {platformData && (
           <MDBRow className="text-center text-md-left mb-4">
             {platformData.statistic.languages.map((language, i) => {
@@ -262,20 +260,16 @@ class Overview extends React.Component {
             </div>
           )}
         {platformData && platformData.user.settings.show3DDiagram && (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Calendar3D
-              platformData={platformData}
-              year={this.state.selectedYear}
-            />
-          </Suspense>
+          <Calendar3D
+            platformData={platformData}
+            year={this.state.selectedYear}
+          />
         )}
         {platformData && platformData.user.settings.show2DDiagram && (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Calendar2D
-              platformData={platformData}
-              year={this.state.selectedYear}
-            />
-          </Suspense>
+          <Calendar2D
+            platformData={platformData}
+            year={this.state.selectedYear}
+          />
         )}
         {platformData && !platformData.user.settings.showContribDiagram && (
           <div className="mt-5">
@@ -285,7 +279,7 @@ class Overview extends React.Component {
             />
           </div>
         )}
-      </MDBTabPane>
+      </>
     );
   }
 }

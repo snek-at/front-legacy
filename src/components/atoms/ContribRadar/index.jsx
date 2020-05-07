@@ -27,6 +27,7 @@ class ChartsPage extends React.Component {
           fontSize: 14,
         },
         ticks: {
+          display: false,
           beginAtZero: true,
           max: 100,
           min: 0,
