@@ -4,8 +4,6 @@ import React from "react";
 // Router
 import { Redirect, Link } from "react-router-dom";
 
-import * as zoom from "chartjs-plugin-zoom";
-
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
@@ -67,33 +65,6 @@ const contribOptions = {
         },
       },
     ],
-  },
-  plugins: contribPlugins,
-};
-const contribPlugins = {
-  zoom: {
-    zoom: {
-      enabled: true,
-      drag: true,
-      mode: "x",
-      rangeMin: {
-        x: null,
-        y: null,
-      },
-      rangeMax: {
-        x: null,
-        y: null,
-      },
-      speed: 0.1,
-      threshold: 2,
-      sensitivity: 3,
-      onZoom: function ({ chart }) {
-        console.log(`I'm zooming!!!`);
-      },
-      onZoomComplete: function ({ chart }) {
-        console.log(`I was zoomed!!!`);
-      },
-    },
   },
 };
 
