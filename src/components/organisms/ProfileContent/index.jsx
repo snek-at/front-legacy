@@ -19,7 +19,7 @@ import { Projects, Talks, OverviewSoftware } from "../../organisms/tabs";
 
 class ProfileContent extends React.Component {
   state = {
-    activeTab: 0,
+    activeTab: this.props.globalState.activeTab,
     tabitems: [
       {
         title: "Overview",
@@ -53,7 +53,8 @@ class ProfileContent extends React.Component {
       {
         title: "Talks",
         visible: true,
-        pill: "0",
+        notification: false,
+        pill: this.props.talksCount ? this.props.talksCount : false,
         notification: false,
       },
     ],
@@ -64,6 +65,8 @@ class ProfileContent extends React.Component {
   };
 
   handleTabChange = (id) => {
+    this.props.globalState.activeTab = id;
+    
     this.setState({
       activeTab: id,
     });
@@ -130,7 +133,11 @@ class ProfileContent extends React.Component {
                 }
               />
             )}
-            {this.state.activeTab === 5 && <Talks />}
+            {this.state.activeTab === 5 && (
+            <Talks 
+              {...this.props}
+            />
+            )}
           </div>
         ) : (
           <p>Loading</p>

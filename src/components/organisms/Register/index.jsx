@@ -96,7 +96,7 @@ class Register extends React.Component {
 
     if (username.trim() && server.trim()) {
       if (server !== "Choose your organisation") {
-        this._connectGitLab(username, server);
+        this._connectGitLab(username, "https://" + server);
       }
     }
   };

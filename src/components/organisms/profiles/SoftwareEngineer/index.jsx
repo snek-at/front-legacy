@@ -21,7 +21,7 @@ import {
   MDBPopoverBody,
   MDBPopoverHeader,
   MDBProgress,
-  MDBIcon,
+  MDBIcon
 } from "mdbreact";
 
 import { ProfileContent } from "../../../organisms";
@@ -36,7 +36,7 @@ const Settings = lazy(() => import("../../../molecules/modals/Settings"));
 class SoftwareEngineer extends React.Component {
   state = {
     showSettings: false,
-    activeTab: 0,
+    activeTab: 0
   };
 
   componentDidMount = () => {
@@ -58,7 +58,7 @@ class SoftwareEngineer extends React.Component {
     }
   }
 
-  displaySources = (sources) => {
+  displaySources = sources => {
     let res = sources.map((source, i) => {
       switch (source.source) {
         case "github":
@@ -72,27 +72,27 @@ class SoftwareEngineer extends React.Component {
       }
     });
     this.setState({
-      sources: res,
+      sources: res
     });
   };
 
   handleSettingsClose = () => {
     if (this.state.showSettings) {
       this.setState({
-        showSettings: false,
+        showSettings: false
       });
     }
   };
 
-  handleTabChange = (id) => {
+  handleTabChange = id => {
     this.setState({
-      activeTab: id,
+      activeTab: id
     });
   };
 
   render() {
     const { globalState } = this.props;
-    console.log(globalState);
+    console.log(globalState, "xxxx");
 
     if (globalState.loading && !globalState.fetchedUser)
       return <Redirect to="/" />;
@@ -242,7 +242,7 @@ class SoftwareEngineer extends React.Component {
                           dangerouslySetInnerHTML={{
                             __html:
                               globalState.fetchedUser.platformData.profile
-                                .statusEmojiHTML,
+                                .statusEmojiHTML
                           }}
                         />
                       )}
@@ -352,11 +352,16 @@ class SoftwareEngineer extends React.Component {
             </MDBCol>
             <MDBCol md="9" className="content p-0">
               <ProfileContent
+                {...this.props}
                 globalState={globalState}
                 projectCount={
                   globalState.fetchedUser &&
                   globalState.fetchedUser.platformData.profile.repositories
                     .length
+                }
+                talksCount={
+                  globalState.fetchedUser &&
+                  globalState.fetchedUser.platformData.talks.length
                 }
               />
             </MDBCol>

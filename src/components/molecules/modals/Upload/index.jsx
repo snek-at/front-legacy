@@ -22,43 +22,18 @@ class Upload extends React.Component {
     error: [],
   }
 
-  // TODO: Rewrite if functionality is in intel
-  getDisplayUrl = async (url) => {
-    const proxy = "https://cors.snek.at/";
-
-    fetch(proxy + url, {
-      method: 'GET',
-    }).then(async response => {
-      let text = await response.text();
-      let soup = new JSSoup(text);
-      let tag = soup.findAll("a")[1];
-
-      return tag;
-    })
-  }
-
   onDrop = async (files) => {
     if (files.length > 0) {
       this.setState({
         error: [],
         loading: true,
       });
-
-      const data = new FormData();
-      data.append('file', files[0]);
-      const req = "https://api.anonfiles.com/upload";
-      const proxy = "https://cors.snek.at/";
-
-      fetch(proxy + req, {
-        method: 'POST',
-        body: data,
-      }).then(async response => {
-        let json = await response.json();
-        
-        this.getDisplayUrl(json.data.file.url.short).then(() => {
-          this.setState({loading: false})
+      this.props.uploadTalk(files[0]).then(() => {
+        this.setState({
+          loading: false,
         });
-      })
+        this.props.closeModal();
+      });
     }
     else {
       this.setState({error: ["Only PDF files can be uploaded!"]});

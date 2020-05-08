@@ -20,7 +20,7 @@
     "react-simple-maps": "^2.0.0",
     "react-text-loop": "^2.3.0",
     "react-typed": "^1.2.0",
-    "snek-intel": "file:../intel_review",
+    "snek-intel": "file:../intel",
     "tippy.js": "^5.1.4",
     "typescript": "^3.8.3"
   },

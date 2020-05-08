@@ -48,6 +48,8 @@ class Routes extends React.Component {
               globalState={this.props.globalState}
               fetchCacheData={this.props.fetchCacheData}
               saveSettings={this.saveSettings}
+              uploadTalk={this.props.uploadTalk}
+              deleteTalk={this.props.deleteTalk}
               {...props}
             />
           )}
@@ -61,10 +63,11 @@ class Routes extends React.Component {
         />
         <Route
           exact
-          path="/t/:talk"
+          path="/t/:username/:talk"
           component={(props) => (
             <TalkPage
               globalState={this.props.globalState}
+              getTalk={this.props.getTalk}
               {...props}
             />
           )}

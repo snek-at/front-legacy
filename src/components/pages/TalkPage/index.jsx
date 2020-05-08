@@ -24,44 +24,47 @@ import {
 //> CSS
 import "./talk.scss";
 
-//> Data
-// Configure dummy data 
-let talk1 = {
-  name: "PP_21022020_SNEK.pdf",
-  location: "snek",
-  display: "https://docs.google.com/viewer?embedded=true&url=https://github.com/snek-at/tonic/raw/b1ecb4fca757497c07fb4d241902fa67c64bf39f/slides/PP_21022020_SNEK.pdf",
-  download: "https://github.com/snek-at/tonic/raw/b1ecb4fca757497c07fb4d241902fa67c64bf39f/slides/PP_21022020_SNEK.pdf",
-  url: "https://github.com/snek-at/tonic/blob/b1ecb4fca757497c07fb4d241902fa67c64bf39f/slides/PP_21022020_SNEK.pdf",
-  path: "slides/PP_21022020_SNEK.pdf",
-  repository: {
-    name: "front",
-    fullName: "snek-at/front",
-    readme: "https://raw.githubusercontent.com/snek-at/front/master/README.md",
-    url: "https://github.com/snek-at",
-    avatarUrl: "https://avatars1.githubusercontent.com/u/55870326?v=4",
-    owner: "snek-at",
-    description: "This repository includes an library for Arduino for the TLE5012 Magnetic Angle Sensor with SSC interface.",
-  },
-  social: {
-    likes: 17,
-    date: new Date().toLocaleDateString("en-US", {
-      "year": "numeric",
-      "month": "numeric",
-      "day": "numeric",
-    }),
-  },
-}
-
 class TalkPage extends React.Component {
+  state = {
+    talk: undefined,
+  }
+
+  componentWillMount = async () =>{
+    if (this.props.match) {
+      if (this.props.match.params) {
+        if (this.props.match.params.talk && this.props.match.params.username) {
+          const uid = this.props.match.params.talk;
+          const username = this.props.match.params.username;
+          if (this.props.globalState.fetchedUser === undefined || this.state.talk === undefined) {
+            let talk = await this.props.getTalk(uid, username);
+            talk.social = {
+              likes: 17,
+              date: new Date().toLocaleDateString("en-US", {
+                "year": "numeric",
+                "month": "numeric",
+                "day": "numeric",
+              }),
+            }
+            this.setState({talk});
+          }
+        }
+      }
+    }
+  }
+
   render() {
+    const talk = this.state.talk;
+
     return (
       <div id="talk">
+        {talk && (
+          <>
         <MDBContainer>
           <MDBRow>
             <MDBCol lg="12">
-              {talk1.location === "snek" && (
+              {talk.location === "snek" && (
                 <a
-                href={talk1.url}
+                href={talk.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 >
@@ -76,7 +79,7 @@ class TalkPage extends React.Component {
             <MDBCol lg="12">
               <MDBCard>
                 <MDBCardBody>
-                  <embed src={talk1.display} width="100%" height="620px"></embed>
+                  <embed src={talk.displayUrl} width="100%" height="620px"></embed>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -86,7 +89,7 @@ class TalkPage extends React.Component {
                   <MDBRow className="d-flex align-items-center">
                     <MDBCol lg="2">
                       <img
-                        src={talk1.repository.avatarUrl}
+                        src={talk.repository.avatarUrl}
                         alt="logo"
                         className="img-fluid"
                       />
@@ -95,9 +98,9 @@ class TalkPage extends React.Component {
                       <div className="d-flex justify-content-space-between">
                         <div>
                           <p className="lead font-weight-bold mb-1">
-                            Owned by {talk1.repository.owner}
+                            Owned by {talk.repository.owner.username}
                           </p>
-                          {talk1.repository.owner && (
+                          {talk.repository.owner && (
                             <div className="verified-badge mb-1">
                               <MDBBadge color="success">
                                 <MDBIcon icon="check-circle" />
@@ -106,7 +109,7 @@ class TalkPage extends React.Component {
                             </div>
                           )}
                           <p className="text-muted mb-1">
-                            {talk1.repository.description}
+                            {talk.repository.description}
                           </p>
                         </div>
                         <div className="d-flex">
@@ -125,9 +128,9 @@ class TalkPage extends React.Component {
                         </div>
                       </div>
                       <div>
-                        {talk1.location === "github" && (
+                        {talk.location === "github" && (
                           <a
-                          href={talk1.url}
+                          href={talk.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           >
@@ -137,9 +140,9 @@ class TalkPage extends React.Component {
                             </MDBBadge>
                           </a>
                         )}
-                        {talk1.location === "snek" && (
+                        {talk.location === "snek" && (
                           <a
-                          href={talk1.url}
+                          href={talk.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           >
@@ -155,24 +158,24 @@ class TalkPage extends React.Component {
                 </MDBCardBody>
                 <MDBCardFooter className="px-4 py-3">
                   <div className="stats d-flex">
-                    {talk1.social && (
+                    {talk.social && (
                       <span className="d-inline-block mr-4">
                         <MDBIcon
                           icon="thumbs-up"
                           className="green-text font-weight-bold"
                         />{" "}
                         <span className="font-weight-bold green-text">
-                          {talk1.social.likes}
+                          {talk.social.likes}
                         </span>{" "}
                         likes
                         <br />
                         <small className="text-muted">
-                          published on {talk1.social.date}
+                          published on {talk.social.date}
                         </small>
                       </span>
                     )}
-                    {talk1.download && (
-                      <a href={talk1.download}>
+                    {talk.download && (
+                      <a href={talk.downloadUrl}>
                         <span className="d-inline-block mr-4">
                           <MDBIcon
                             icon="file-download"
@@ -186,13 +189,13 @@ class TalkPage extends React.Component {
                 </MDBCardFooter>
               </MDBCard>
             </MDBCol>
-            <MDBCol lg="12">
+            {/* <MDBCol lg="12">
               <MDBCard>
                 <MDBCardBody>
                   {talk1.repository.readme}
                 </MDBCardBody>
               </MDBCard>
-            </MDBCol>
+            </MDBCol> */}
           </MDBRow>
         </MDBContainer>
         <MDBContainer>
@@ -295,6 +298,8 @@ class TalkPage extends React.Component {
             </MDBPageItem>
           </MDBPagination>
         </MDBContainer>
+        </>
+        )}
       </div>
     );
   }
