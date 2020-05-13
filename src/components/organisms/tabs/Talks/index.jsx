@@ -5,7 +5,6 @@ import React from "react";
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
-  MDBTabPane,
   MDBRow,
   MDBCol,
   MDBIcon,
@@ -36,10 +35,21 @@ class Talks extends React.Component {
     }
   }
 
+  updateIframe = (talk) => {
+    let iframe;
+    
+    if (talk.interval.loaded === false) {
+      if (iframe = document.getElementById(talk.uid)) {
+        iframe = document.getElementById(talk.uid);
+        iframe.src = talk.displayUrl;
+      }
+    }  
+  }
+
   render() {
-    console.log(this.props, "yyy");
     const { globalState } = this.props;
     const talkList = globalState.fetchedUser.platformData.talks;
+
     if (talkList) {
       talkList.map((talk) => {
         talk.social = {
@@ -50,10 +60,14 @@ class Talks extends React.Component {
             "day": "numeric",
           }),
         }
+        talk.interval = {
+          timeoutID: setInterval(() => this.updateIframe(talk), 4000),
+          loaded: false,
+        };
         return talk;
       })
     }
-    console.log(talkList, "xxx");
+
     return (
       <>
         <MDBRow>
@@ -102,7 +116,15 @@ class Talks extends React.Component {
                   <MDBCardBody className="lead">
                     <div className="thumbnail-container">
                       <div className="thumbnail">
-                        <iframe src={talk.displayUrl} frameBorder="0" />
+                        <iframe 
+                        id={talk.uid} 
+                        src={talk.displayUrl} 
+                        onLoad={() => {
+                          clearInterval(talk.interval.timeoutId);
+                          this.props.globalState.fetchedUser.platformData.talks[i].interval.loaded = true;
+                        }} 
+                        hidden={talk.interval.loaded}
+                        frameBorder="0" />
                       </div>
                     </div>
                   </MDBCardBody>
