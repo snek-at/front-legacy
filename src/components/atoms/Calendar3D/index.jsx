@@ -54,14 +54,14 @@ class Calendar3D extends React.Component {
   componentWillReceiveProps = (nextProps) => {
     console.log(this.props.year);
     console.log(nextProps.year);
-  }
+  };
 
   updateDimensions = () => {
     this.setState(
       {
         width: this.myInput.current.offsetWidth,
       },
-      () => this.renderIsometrics()
+      () => this.checkCache()
     );
   };
 
@@ -178,110 +178,112 @@ class Calendar3D extends React.Component {
     return { __html: html };
   }
 
-  renderIsometrics = async () => {
-    const obelisk = require("obelisk.js");
+  renderIsometrics = () => {
+    if (this.context) {
+      const obelisk = require("obelisk.js");
 
-    // Create a canvas 2D point for pixel view world
-    let point = new obelisk.Point(70, 70);
+      // Create a canvas 2D point for pixel view world
+      let point = new obelisk.Point(70, 70);
 
-    // Create view instance to nest everything
-    // Canvas could be either DOM or jQuery element
-    let pixelView = new obelisk.PixelView(this.context, point);
-    pixelView.clear();
+      // Create view instance to nest everything
+      // Canvas could be either DOM or jQuery element
+      let pixelView = new obelisk.PixelView(this.context, point);
+      pixelView.clear();
 
-    // Get contributions of the selected year
-    let contribData;
-    if (this.props.year) {
-      contribData = this.props.platformData.statistic.years.find(
-        (element) => element.year === this.props.year
-      );
-    } else {
-      contribData = this.props.platformData.statistic.current;
-    }
-
-    let contributions = contribData.calendar;
-
-    // Define basic variables
-    let SIZE = 2 * Math.round(this.state.width / 80 / 2);
-    if (SIZE <= 8) {
-      SIZE = 8;
-    }
-    let MAXHEIGHT = 100;
-    let x = 0;
-    let y = 0;
-    let maxCount = 0; // Max number of contributions / day in the last year
-
-    let values = [];
-
-    contributions.weeks.map((week, wkey) => {
-      values[wkey] = [];
-      week.days.map((day, dkey) => {
-        // Get max number of contributions
-        if (day.total > maxCount) {
-          maxCount = day.total;
-        }
-        values[wkey][dkey] = day;
-      });
-    });
-
-    values.map((week, wi) => {
-      week.map((day, di) => {
-        // Normalize the values to achieve even distribution
-        let cubeHeight = 3;
-        if (maxCount > 0) {
-          cubeHeight += parseInt((MAXHEIGHT / maxCount) * day.total);
-        }
-
-        // Offsets
-        let x = wi;
-        let y = di;
-
-        // Create cube dimension and color instance
-        let fill = day.color;
-        let color = new obelisk.CubeColor().getByHorizontalColor(
-          parseInt("0x" + fill.replace("#", ""))
+      // Get contributions of the selected year
+      let contribData;
+      if (this.props.year) {
+        contribData = this.props.platformData.statistic.years.find(
+          (element) => element.year === this.props.year
         );
+      } else {
+        contribData = this.props.platformData.statistic.current;
+      }
 
-        // ANIMATION TOGGLE for kleberbaum to play with
-        const animated = false;
+      let contributions = contribData.calendar;
 
-        if (animated) {
-          var animHeight = 3;
+      // Define basic variables
+      let SIZE = 2 * Math.round(this.state.width / 80 / 2);
+      if (SIZE <= 8) {
+        SIZE = 8;
+      }
+      let MAXHEIGHT = 100;
+      let x = 0;
+      let y = 0;
+      let maxCount = 0; // Max number of contributions / day in the last year
 
-          function draw() {
-            let dimension = new obelisk.CubeDimension(SIZE, SIZE, animHeight);
+      let values = [];
+
+      contributions.weeks.map((week, wkey) => {
+        values[wkey] = [];
+        week.days.map((day, dkey) => {
+          // Get max number of contributions
+          if (day.total > maxCount) {
+            maxCount = day.total;
+          }
+          values[wkey][dkey] = day;
+        });
+      });
+
+      values.map((week, wi) => {
+        week.map((day, di) => {
+          // Normalize the values to achieve even distribution
+          let cubeHeight = 3;
+          if (maxCount > 0) {
+            cubeHeight += parseInt((MAXHEIGHT / maxCount) * day.total);
+          }
+
+          // Offsets
+          let x = wi;
+          let y = di;
+
+          // Create cube dimension and color instance
+          let fill = day.color;
+          let color = new obelisk.CubeColor().getByHorizontalColor(
+            parseInt("0x" + fill.replace("#", ""))
+          );
+
+          // ANIMATION TOGGLE for kleberbaum to play with
+          const animated = false;
+
+          if (animated) {
+            var animHeight = 3;
+
+            function draw() {
+              let dimension = new obelisk.CubeDimension(SIZE, SIZE, animHeight);
+              let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
+              let cube = new obelisk.Cube(dimension, color, false);
+
+              // Render cube primitive into view
+              pixelView.renderObject(cube, p3d);
+              if (animHeight < cubeHeight) {
+                if (parseInt((MAXHEIGHT / maxCount) * day.total) > 0) {
+                  animHeight += 1;
+                } else {
+                  animHeight = 1;
+                }
+              }
+              // Animations
+              requestAnimationFrame(draw);
+            }
+            draw();
+          } else {
+            let dimension = new obelisk.CubeDimension(SIZE, SIZE, cubeHeight);
             let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
             let cube = new obelisk.Cube(dimension, color, false);
 
             // Render cube primitive into view
             pixelView.renderObject(cube, p3d);
-            if (animHeight < cubeHeight) {
-              if (parseInt((MAXHEIGHT / maxCount) * day.total) > 0) {
-                animHeight += 1;
-              } else {
-                animHeight = 1;
-              }
-            }
-            // Animations
-            requestAnimationFrame(draw);
+
+            this.cacheChart();
           }
-          draw();
-        } else {
-          let dimension = new obelisk.CubeDimension(SIZE, SIZE, cubeHeight);
-          let p3d = new obelisk.Point3D(SIZE * x, SIZE * y, 0);
-          let cube = new obelisk.Cube(dimension, color, false);
-
-          // Render cube primitive into view
-          pixelView.renderObject(cube, p3d);
-
-          this.cacheChart();
-        }
+        });
       });
-    });
-    if (this.state.loading) {
-      this.setState({
-        loading: false,
-      });
+      if (this.state.loading) {
+        this.setState({
+          loading: false,
+        });
+      }
     }
   };
 
@@ -305,34 +307,36 @@ class Calendar3D extends React.Component {
     const cache = localStorage.getItem("3dChart");
     if (cache) {
       const cacheObject = JSON.parse(cache);
-      if (cacheObject.timestamp > new Date().getTime() - 36000000) {
-        this.renderCache();
+      if (cacheObject.timestamp > new Date().getTime() - 3600000) {
+        //this.renderCache();
+        window.setTimeout(() => this.renderIsometrics(), 0);
       } else {
-        this.renderIsometrics();
+        window.setTimeout(() => this.renderIsometrics(), 0);
       }
     } else {
-      this.renderIsometrics();
+      window.setTimeout(() => this.renderIsometrics(), 0);
     }
   };
 
   renderCache = () => {
     const data = localStorage.getItem("3dChart");
     const dataObject = JSON.parse(data);
+    const context = this.context.getContext("2d");
     let img = new Image();
+
     img.src = dataObject.data;
 
-    /*if (this.context) {
-      console.log(this.context);
-      console.log(img);
-      img.onload = function () {
-        this.context.drawImage(img, 0, 0);
+    if (context !== null) {
+      img.onload = () => {
+        console.log(context);
+        context.drawImage(img, 0, 0);
       };
-    }*/
-    if (!this.state.cache) {
+    }
+    /*if (!this.state.cache) {
       this.setState({
         cache: img.src,
       });
-    }
+    }*/
   };
 
   render() {
