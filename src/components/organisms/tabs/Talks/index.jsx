@@ -39,7 +39,7 @@ class Talks extends React.Component {
     let iframe;
     
     if (talk.interval.loaded === false) {
-      if (iframe = document.getElementById(talk.uid)) {
+      if (document.getElementById(talk.uid)) {
         iframe = document.getElementById(talk.uid);
         iframe.src = talk.displayUrl;
       }
@@ -123,7 +123,6 @@ class Talks extends React.Component {
                           clearInterval(talk.interval.timeoutId);
                           this.props.globalState.fetchedUser.platformData.talks[i].interval.loaded = true;
                         }} 
-                        hidden={talk.interval.loaded}
                         frameBorder="0" />
                       </div>
                     </div>
