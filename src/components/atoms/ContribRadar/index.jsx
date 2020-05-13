@@ -11,141 +11,141 @@ import { Radar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 
 class ChartsPage extends React.Component {
-	state = {
-		dataRadarOptions: {
-			responsive: true,
-			elements: {
-				line: {
-					tension: 0,
-				},
-			},
-			legend: {
-				display: false,
-			},
-			scale: {
-				pointLabels: {
-					fontSize: 14,
-				},
-				ticks: {
-					display: false,
-					beginAtZero: true,
-					max: 100,
-					min: 0,
-					stepSize: 20,
-				},
-			},
-			scales: {
-				yAxes: [
-					{
-						gridLines: {
-							display: false,
-							drawBorder: false,
-						},
-						ticks: {
-							display: false,
-						},
-					},
-				],
-				xAxes: [
-					{
-						gridLines: {
-							display: false,
-							drawBorder: false,
-						},
-						ticks: {
-							beginAtZero: true,
-							display: false,
-						},
-					},
-				],
-			},
-		},
-	};
+  state = {
+    dataRadarOptions: {
+      responsive: true,
+      elements: {
+        line: {
+          tension: 0,
+        },
+      },
+      legend: {
+        display: false,
+      },
+      scale: {
+        pointLabels: {
+          fontSize: 14,
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+          max: 100,
+          min: 0,
+          stepSize: 20,
+        },
+      },
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              display: false,
+            },
+          },
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              beginAtZero: true,
+              display: false,
+            },
+          },
+        ],
+      },
+    },
+  };
 
-	componentDidMount = () => {
-		// First render chart with current year
-		this.calculateSources(null);
-	};
+  componentDidMount = () => {
+    // First render chart with current year
+    this.calculateSources(null);
+  };
 
-	componentWillReceiveProps(nextProps) {
-		// Update chart
-		this.calculateSources(nextProps.year);
-	}
+  componentWillReceiveProps(nextProps) {
+    // Update chart
+    this.calculateSources(nextProps.year);
+  }
 
-	fillChart = (results) => {
-		this.setState({
-			dataRadar: {
-				labels: ["Code review", "Issues", "Pull request", "Commits"],
-				datasets: results,
-			},
-		});
-	};
+  fillChart = (results) => {
+    this.setState({
+      dataRadar: {
+        labels: ["Code review", "Issues", "Pull request", "Commits"],
+        datasets: results,
+      },
+    });
+  };
 
-	calculateSources = (nextPropsYear) => {
-		const { statistic } = this.props;
-		let totalReviews = 0,
-			totalIssues = 0,
-			totalRequests = 0,
-			totalCommits = 0,
-			totalSources = 1,
-			year,
-			results = [];
+  calculateSources = (nextPropsYear) => {
+    const { statistic } = this.props;
+    let totalReviews = 0,
+      totalIssues = 0,
+      totalRequests = 0,
+      totalCommits = 0,
+      totalSources = 1,
+      year,
+      results = [];
 
-		if (nextPropsYear === null) {
-			year = this.props.year;
-		} else {
-			year = nextPropsYear;
-		}
+    if (nextPropsYear === null) {
+      year = this.props.year;
+    } else {
+      year = nextPropsYear;
+    }
 
-		if (year) {
-			let selectedYear = statistic.years.find(
-				(element) => element.year === year
-			);
-			totalIssues = selectedYear.contributions.issue.share;
-			totalRequests = selectedYear.contributions.pullRequest.share;
-			totalCommits = selectedYear.contributions.commit.share;
-			totalReviews = selectedYear.contributions.pullRequestReview.share;
-		} else {
-			let contributions = statistic.current.contributions;
-			totalIssues = contributions.issue.share;
-			totalRequests = contributions.pullRequest.share;
-			totalCommits = contributions.commit.share;
-			totalReviews = contributions.pullRequestReview.share;
-		}
+    if (year) {
+      let selectedYear = statistic.years.find(
+        (element) => element.year === year
+      );
+      totalIssues = selectedYear.contributions.issue.share;
+      totalRequests = selectedYear.contributions.pullRequest.share;
+      totalCommits = selectedYear.contributions.commit.share;
+      totalReviews = selectedYear.contributions.pullRequestReview.share;
+    } else {
+      let contributions = statistic.current.contributions;
+      totalIssues = contributions.issue.share;
+      totalRequests = contributions.pullRequest.share;
+      totalCommits = contributions.commit.share;
+      totalReviews = contributions.pullRequestReview.share;
+    }
 
-		let values = [totalReviews, totalIssues, totalRequests, totalCommits];
+    let values = [totalReviews, totalIssues, totalRequests, totalCommits];
 
-		results.push({
-			label: "GitHub",
-			backgroundColor: "rgba(123, 201, 111,.4)",
-			borderColor: "rgba(123, 201, 111)",
-			data: values,
-		});
+    results.push({
+      label: "GitHub",
+      backgroundColor: "rgba(123, 201, 111,.4)",
+      borderColor: "rgba(123, 201, 111)",
+      data: values,
+    });
 
-		// Calculate averages
-		let avgReviews, avgIssues, avgRequests, avgCommits;
+    // Calculate averages
+    let avgReviews, avgIssues, avgRequests, avgCommits;
 
-		avgReviews = parseInt(totalReviews) / parseInt(totalSources);
-		avgIssues = parseInt(totalIssues) / parseInt(totalSources);
-		avgRequests = parseInt(totalRequests) / parseInt(totalSources);
-		avgCommits = parseInt(totalCommits) / parseInt(totalSources);
+    avgReviews = parseInt(totalReviews) / parseInt(totalSources);
+    avgIssues = parseInt(totalIssues) / parseInt(totalSources);
+    avgRequests = parseInt(totalRequests) / parseInt(totalSources);
+    avgCommits = parseInt(totalCommits) / parseInt(totalSources);
 
-		this.fillChart(results);
-	};
+    this.fillChart(results);
+  };
 
-	render() {
-		if (this.state.dataRadar) {
-			return (
-				<Radar
-					data={this.state.dataRadar}
-					options={this.state.dataRadarOptions}
-					height={100}
-				/>
-			);
-		} else {
-			return null;
-		}
-	}
+  render() {
+    if (this.state.dataRadar) {
+      return (
+        <Radar
+          data={this.state.dataRadar}
+          options={this.state.dataRadarOptions}
+          height={100}
+        />
+      );
+    } else {
+      return null;
+    }
+  }
 }
 
 export default ChartsPage;
