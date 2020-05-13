@@ -6,16 +6,6 @@ import React from "react";
 // Used to display the time in a readable format
 import moment from "moment";
 
-//> MDB
-// "Material Design for Bootstrap" is a great UI design framework
-import {
-  MDBBtn,
-  MDBIcon,
-  MDBModalBody,
-  MDBModalHeader,
-  MDBModalFooter,
-} from "mdbreact";
-
 //> CSS
 import "./calendar3d.scss";
 
