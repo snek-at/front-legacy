@@ -38,13 +38,13 @@ class Calendar3D extends React.Component {
           width: this.myInput.current.offsetWidth,
           loading: true,
         },
-        () => this.renderIsometrics()
+        () => this.checkCache()
       );
     }
   };
 
   componentDidUpdate = () => {
-    this.renderIsometrics();
+    this.checkCache();
   };
 
   componentWillUnmount() {
@@ -174,6 +174,7 @@ class Calendar3D extends React.Component {
   }
 
   renderIsometrics = async () => {
+    console.log("Rendering");
     const obelisk = require("obelisk.js");
 
     // Create a canvas 2D point for pixel view world
@@ -268,6 +269,8 @@ class Calendar3D extends React.Component {
 
           // Render cube primitive into view
           pixelView.renderObject(cube, p3d);
+
+          this.cacheChart();
         }
       });
     });
@@ -278,8 +281,64 @@ class Calendar3D extends React.Component {
     }
   };
 
+  cacheChart = async () => {
+    if (!localStorage.getItem("3dChart")) {
+      window.setTimeout(
+        () =>
+          localStorage.setItem(
+            "3dChart",
+            JSON.stringify({
+              data: this.context.toDataURL(),
+              timestamp: new Date().getTime(),
+            })
+          ),
+        0
+      );
+    }
+  };
+
+  checkCache = () => {
+    console.log("Reached checkCache");
+    const cache = localStorage.getItem("3dChart");
+    if (cache) {
+      console.log(cache);
+      const cacheObject = JSON.parse(cache);
+      console.log(cacheObject);
+      console.log(cacheObject.timestamp, new Date().getTime());
+      if (cacheObject.timestamp > new Date().getTime() - 36000000) {
+        this.renderCache();
+      } else {
+        console.log("Case 2");
+        this.renderIsometrics();
+      }
+    } else {
+      console.log("Case 1");
+      this.renderIsometrics();
+    }
+  };
+
+  renderCache = () => {
+    const data = localStorage.getItem("3dChart");
+    const dataObject = JSON.parse(data);
+    let img = new Image();
+    img.src = dataObject.data;
+
+    /*if (this.context) {
+      console.log(this.context);
+      console.log(img);
+      img.onload = function () {
+        this.context.drawImage(img, 0, 0);
+      };
+    }*/
+    if (!this.state.cache) {
+      this.setState({
+        cache: img.src,
+      });
+    }
+  };
+
   render() {
-    console.log(this.state.loading);
+    console.log("Reached 3D Chart");
     return (
       <div id="calendar3d">
         {this.props.platformData && this.state.width > 500 && (
@@ -295,6 +354,7 @@ class Calendar3D extends React.Component {
             height="350"
           ></canvas>
         </div>
+        {this.state.cache && <img src={this.state.cache} alt="" />}
       </div>
     );
   }
