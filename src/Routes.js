@@ -28,8 +28,9 @@ class Routes extends React.Component {
           path="/"
           component={(props) => (
             <HomePage
-              logmein={this.props.logmein}
+              login={this.props.login}
               globalState={this.props.globalState}
+              globalFunctions={this.props.globalFunctions}
               registerUser={this.props.registerUser}
               {...props}
             />

@@ -42,8 +42,9 @@ class Calendar3D extends React.Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log(this.props.year);
-    console.log(nextProps.year);
+    // Use caching for year change
+    //console.log(this.props.year);
+    //console.log(nextProps.year);
   };
 
   updateDimensions = () => {
@@ -318,7 +319,6 @@ class Calendar3D extends React.Component {
 
     if (context !== null) {
       img.onload = () => {
-        console.log(context);
         context.drawImage(img, 0, 0);
       };
     }
@@ -330,7 +330,6 @@ class Calendar3D extends React.Component {
   };
 
   render() {
-    console.log("Reached 3D Chart");
     return (
       <div id="calendar3d">
         {this.props.platformData && this.state.width > 500 && (

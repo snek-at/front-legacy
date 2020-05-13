@@ -27,7 +27,6 @@ class ProfilePage extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log("Profile props on startup", this.props);
     if (this.props.match) {
       if (this.props.match.params) {
         if (this.props.match.params.username) {

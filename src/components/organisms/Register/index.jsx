@@ -133,8 +133,8 @@ class Register extends React.Component {
       authorization: token ? "token " + token : null,
       platform: {
         name: platformName,
-        url: platformUrl
-      }
+        url: platformUrl,
+      },
     });
 
     if (platformName === "github") {
@@ -276,6 +276,7 @@ class Register extends React.Component {
 
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
   handleSubmit = async () => {
+    console.log("Handle submit");
     // CHANGE TO CONST
     let {
       password1,
@@ -403,16 +404,11 @@ class Register extends React.Component {
     }
   };
 
-  logMeIn = (event) => {
-    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
-    if (event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.login();
-    }
-  };
+  login = async (event) => {
+    // Prevent page from reloading
+    event.preventDefault();
+    event.stopPropagation();
 
-  login = () => {
     let errors = [];
 
     if (this.state.login_username === "") {
@@ -428,23 +424,32 @@ class Register extends React.Component {
       });
     }
 
-    console.log(errors);
-
+    // Check if there are any errors
     if (errors.length > 0) {
       this.setState({
         errors,
       });
     } else {
-      this.props.logmein(
+      // Proceed to login
+      const result = await this.props.login(
         this.state.login_username,
         sha256(this.state.login_password)
       );
+      console.log(result);
+      if (result) {
+        this.props.handleLogin(result);
+      } else {
+        // Login fail
+        //handleLogin(false);
+        this.setState({
+          loginFail: true,
+        });
+      }
     }
   };
 
   render() {
-    const { gitlabServers, globalState } = this.props;
-    console.log(this.state, globalState);
+    const { globalState } = this.props;
 
     return (
       <div className="text-center" id="register">
@@ -914,40 +919,46 @@ class Register extends React.Component {
               </small>
             </div>
             <p className="lead">Login to SNEK</p>
-            <input
-              type="text"
-              className={
-                this.testForError(20)
-                  ? "form-control my-2 error"
-                  : "form-control my-2"
-              }
-              placeholder="Username"
-              name="username"
-              onChange={(e) =>
-                this.handleChangeManual("login_username", e.target.value, 20)
-              }
-              value={this.state.login_username}
-            />
-            <input
-              type="password"
-              className={
-                this.testForError(21)
-                  ? "form-control my-2 error"
-                  : "form-control my-2"
-              }
-              placeholder="Password"
-              name="password"
-              onChange={(e) =>
-                this.handleChangeManual("login_password", e.target.value, 21)
-              }
-              onKeyDown={this.logMeIn}
-              value={this.state.login_password}
-            />
-            {globalState.user === false && <p>Login fehlerhaft</p>}
-            <MDBBtn color="green" className="mb-0" onClick={this.login}>
-              Login
-              <MDBIcon icon="angle-right" className="pl-1" />
-            </MDBBtn>
+            {this.state.loginFail && (
+              <MDBAlert color="danger" className="mt-3 mb-3">
+                Can not perform login. Please check your username and password.
+              </MDBAlert>
+            )}
+            <form onSubmit={this.login}>
+              <input
+                type="text"
+                className={
+                  this.testForError(20)
+                    ? "form-control my-2 error"
+                    : "form-control my-2"
+                }
+                placeholder="Username"
+                name="username"
+                onChange={(e) =>
+                  this.handleChangeManual("login_username", e.target.value, 20)
+                }
+                value={this.state.login_username}
+              />
+              <input
+                type="password"
+                className={
+                  this.testForError(21)
+                    ? "form-control my-2 error"
+                    : "form-control my-2"
+                }
+                placeholder="Password"
+                name="password"
+                onChange={(e) =>
+                  this.handleChangeManual("login_password", e.target.value, 21)
+                }
+                value={this.state.login_password}
+              />
+              {globalState.user === false && <p>Login fehlerhaft</p>}
+              <MDBBtn color="green" className="mb-0" type="submit">
+                Login
+                <MDBIcon icon="angle-right" className="pl-1" />
+              </MDBBtn>
+            </form>
           </>
         )}
         {this.state.modalGitLab && (

@@ -102,8 +102,6 @@ class HomePage extends React.Component {
   render() {
     const { globalState } = this.props;
 
-    console.log(globalState);
-
     if(!globalState.loading && globalState.logged){
       return(
         <Redirect to={"/u/"+globalState.user} />
@@ -164,9 +162,9 @@ class HomePage extends React.Component {
             <MDBCol md="6">
               <MDBCard className="px-3 py-4">
                 <Register 
-                logmein={this.props.logmein}
-                gitlabServers={globalState.gitlab_servers}
+                login={this.props.login}
                 registerUser={this.props.registerUser}
+                handleLogin={this.props.globalFunctions.handleLogin}
                 globalState={globalState}
                 />
               </MDBCard>

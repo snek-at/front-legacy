@@ -34,14 +34,20 @@ class App extends React.Component {
     this.session = this.intel.snekclient.session;
   }
 
-  async componentDidMount() {
+  componentDidMount = () => {
+    this.begin();
+  };
+
+  begin = async () => {
     /**
      * Begin Session:
      * Start a new session based on authentication history.
      * New site access will lead to a anonymous login.
      */
     const whoami = await this.session.begin();
+    console.log("STATE MAP: Begin - LOC App.js:", whoami);
     if (whoami && whoami.whoami && whoami.whoami.username) {
+      // Check if the username is not the anonymous user
       if (whoami.whoami.username !== "cisco") {
         this.setState({
           loading: false,
@@ -50,7 +56,17 @@ class App extends React.Component {
         });
       }
     }
-  }
+  };
+
+  componentDidUpdate = () => {
+    console.log("STATE MAP: Updated - LOC App.js");
+  };
+
+  componentWillReceiveProps = (nextProps) => {
+    console.log("STATE MAP: Props - LOC App.js");
+    console.log(this.props);
+    console.log(nextProps);
+  };
 
   /**
    * Props functions
@@ -61,32 +77,33 @@ class App extends React.Component {
    * Authentication / Registration Tasks
    */
   login = async (username, password) => {
-    console.log("Call login");
-    this.session
+    return this.session
       .begin({
         username,
         password,
       })
       .then((res) => {
-        console.log("Login successful for user " + username, res.username);
-        console.log(res);
-        this.setState({
-          loading: false,
-          logged: true,
-          user: res.username,
-        });
+        return res.username;
       })
       .catch((err) => {
-        console.log("Login failed for user " + username);
-        console.error(err);
-        this.setState({
-          loading: false,
-          logged: false,
-          user: null,
-        });
+        return false;
       });
+  };
 
-    console.log("Check for user login", this.session.tasks.user.whoami());
+  handleLogin = (username) => {
+    if (!username) {
+      this.setState({
+        loading: false,
+        logged: false,
+        user: null,
+      });
+    } else {
+      this.setState({
+        loading: false,
+        logged: true,
+        user: username,
+      });
+    }
   };
 
   anonymousLogin = async () => {
@@ -118,20 +135,20 @@ class App extends React.Component {
     const devData = await this.getData();
     let organizations = devData.profile.organizations.map((org) => {
       return org.name;
-    })
+    });
     await this.intel.generateTalks(registrationData.sources, organizations);
     devData.talks = await this.getAllTalks();
     registrationData.platform_data = JSON.stringify(devData);
     // Create JSON string out of sources for backend use
     registrationData.sources = JSON.stringify(registrationData.sources);
-    console.log(registrationData, "REG");
+    //console.log(registrationData, "REG");
     // Register the user in our engine
     this.registerInEngine(registrationData);
   };
 
   registerInEngine = (registrationData) => {
     this.session.tasks.user.registration(registrationData).then((res) => {
-      console.log(res);
+      //console.log(res);
       if (res.message === "FAIL") {
         console.log("warn", "All fields have to be filled!");
       } else {
@@ -150,7 +167,7 @@ class App extends React.Component {
   // Get user data from intel
   getData = async () => {
     //console.log(this.intel.get());
-    let data = await this.intel.get()
+    let data = await this.intel.get();
     return data;
   };
 
@@ -178,7 +195,7 @@ class App extends React.Component {
               : null;
             let user = platformData.user ? platformData.user : null;
             let sources = profile.sources ? JSON.parse(profile.sources) : null;
-            
+
             // Reconstruct intel
             /*this.intel.reducer.reload();
             await this.appendSourceObjects(sources);
@@ -310,9 +327,11 @@ class App extends React.Component {
                 this.intel.resetReducer();
                 this.intel.appendList(sources).then(async () => {
                   //platformData.talks = [];
-                  let organizations = platformData.profile.organizations.map((org) => {
-                    return org.name;
-                  })
+                  let organizations = platformData.profile.organizations.map(
+                    (org) => {
+                      return org.name;
+                    }
+                  );
                   await this.intel.generateTalks(sources, organizations);
                   let talks = await this.getAllTalks();
                   for (const i in talks) {
@@ -323,11 +342,11 @@ class App extends React.Component {
                       }
                     }
                     if (state) {
-                      platformData.talks.push(talks[i])
+                      platformData.talks.push(talks[i]);
                     }
                   }
                   talks = platformData.talks;
-                  platformData = { ...await this.getData(), user, talks };
+                  platformData = { ...(await this.getData()), user, talks };
                   this.session.tasks.user
                     .cache(JSON.stringify(platformData))
                     .then(() => {
@@ -429,26 +448,27 @@ class App extends React.Component {
 
   getAllTalks = async () => {
     return this.intel.getTalks();
-  }
+  };
 
   uploadTalk = async (file) => {
     await this.intel.appendTalk(file);
     let talks = await this.getAllTalks();
-    
+
     talks[talks.length - 1].repository = {
       avatarUrl: this.state.fetchedUser.platformData.profile.avatarUrl,
       owner: {
         username: this.state.user,
       },
-    }
-    
+    };
+
     this.state.fetchedUser.platformData.talks.push(talks[talks.length - 1]);
-    this.session.tasks.user
-    .cache(JSON.stringify(this.state.fetchedUser.platformData));
-  }
+    this.session.tasks.user.cache(
+      JSON.stringify(this.state.fetchedUser.platformData)
+    );
+  };
 
   deleteTalk = async (talk) => {
-    let talks = this.state.fetchedUser.platformData.talks
+    let talks = this.state.fetchedUser.platformData.talks;
     for (const index in talks) {
       if (talk.uid === talks[index].uid) {
         talks.splice(index, 1);
@@ -465,9 +485,10 @@ class App extends React.Component {
       },
     });
 
-    this.session.tasks.user
-    .cache(JSON.stringify(this.state.fetchedUser.platformData));
-  }
+    this.session.tasks.user.cache(
+      JSON.stringify(this.state.fetchedUser.platformData)
+    );
+  };
 
   getTalk = async (uid, username) => {
     return this.session.tasks.user
@@ -482,17 +503,15 @@ class App extends React.Component {
           let talks = JSON.parse(data.profile.platformData).talks;
           talks = talks.filter((talk) => {
             return talk.uid === uid;
-          })
+          });
 
           return talks[0];
         }
-      })
-  }
+      });
+  };
 
   render() {
-    console.log("Refreshing component");
-    console.log("App.js", this.state);
-    console.log("App.js props", this.props);
+    console.log("STATE MAP: Render - LOC App.js");
 
     return (
       <Router>
@@ -522,9 +541,12 @@ class App extends React.Component {
               }
             >
               <Routes
-                logmein={this.login}
+                login={this.login}
                 fetchCacheData={this.fetchCacheData}
                 globalState={this.state}
+                globalFunctions={{
+                  handleLogin: this.handleLogin,
+                }}
                 registerUser={{
                   register: this.registerUser,
                   getGitLabServers: this.fetchGitLabServers,

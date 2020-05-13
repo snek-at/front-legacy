@@ -28,14 +28,10 @@ class Search extends React.Component {
   };
 
   componentDidMount() {
-    console.log("######GLOBAL STATE", this.props.globalState);
-    console.log("match", this.props.match);
-
     /**
      * Check global state due to duplicate site call
      */
     if(this.props.globalState.all_usernames){
-      console.log(this.props.globalState)
       this.filterAllUsernames();
     }
   }
@@ -45,7 +41,6 @@ class Search extends React.Component {
    */
   getParams(location) {
     const searchParams = new URLSearchParams(location.search);
-    console.log(location.search, searchParams)
     return {
       q: searchParams.get("q"),
       type: searchParams.get("type") || "",
@@ -57,7 +52,6 @@ class Search extends React.Component {
   componentWillMount = () => {
     // this.getRequest();
     // this.getAllPages();
-    console.log("####### SEARCH WILL MOUNT");
     //this.props.getAllPageUrls();
   };
 
@@ -77,9 +71,7 @@ class Search extends React.Component {
   //?q="Software"&type=user,software,media,talks
   filterAllUsernames() {
     let params = this.getParams(window.location);
-    console.log("##### PARAMS", params)
     let { globalState } = this.props;
-    console.log(globalState)
     if (params.q) {
       let users = globalState.all_usernames.filter(username => {
         return username.includes(params.q);
