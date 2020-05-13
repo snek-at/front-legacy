@@ -437,7 +437,12 @@ class Register extends React.Component {
       );
       console.log(result);
       if (result) {
-        this.props.handleLogin(result);
+        this.setState(
+          {
+            loginFail: false,
+          },
+          () => this.props.handleLogin(result)
+        );
       } else {
         // Login fail
         //handleLogin(false);
