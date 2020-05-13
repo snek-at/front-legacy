@@ -51,6 +51,11 @@ class Calendar3D extends React.Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    console.log(this.props.year);
+    console.log(nextProps.year);
+  }
+
   updateDimensions = () => {
     this.setState(
       {
@@ -174,7 +179,6 @@ class Calendar3D extends React.Component {
   }
 
   renderIsometrics = async () => {
-    console.log("Rendering");
     const obelisk = require("obelisk.js");
 
     // Create a canvas 2D point for pixel view world
@@ -298,21 +302,15 @@ class Calendar3D extends React.Component {
   };
 
   checkCache = () => {
-    console.log("Reached checkCache");
     const cache = localStorage.getItem("3dChart");
     if (cache) {
-      console.log(cache);
       const cacheObject = JSON.parse(cache);
-      console.log(cacheObject);
-      console.log(cacheObject.timestamp, new Date().getTime());
       if (cacheObject.timestamp > new Date().getTime() - 36000000) {
         this.renderCache();
       } else {
-        console.log("Case 2");
         this.renderIsometrics();
       }
     } else {
-      console.log("Case 1");
       this.renderIsometrics();
     }
   };
