@@ -91,6 +91,7 @@ class App extends React.Component {
   };
 
   handleLogin = (username) => {
+    console.log("HANDLE LOGIN ", username)
     if (!username) {
       this.setState({
         loading: false,
@@ -102,6 +103,8 @@ class App extends React.Component {
         loading: false,
         logged: true,
         user: username,
+        selectedUser: username,
+        fetchedUser: undefined
       });
     }
   };
@@ -123,6 +126,7 @@ class App extends React.Component {
         selectedUser: undefined,
       },
       () => {
+        console.log(this.state)
         this.session.end().then(() => this.anonymousLogin());
       }
     );
@@ -133,10 +137,7 @@ class App extends React.Component {
     // Get data from source
     await this.appendSourceObjects(registrationData.sources);
     const devData = await this.getData();
-    let organizations = devData.profile.organizations.map((org) => {
-      return org.name;
-    });
-    await this.intel.generateTalks(registrationData.sources, organizations);
+    await this.intel.generateTalks(registrationData.sources);
     devData.talks = await this.getAllTalks();
     registrationData.platform_data = JSON.stringify(devData);
     // Create JSON string out of sources for backend use
@@ -306,7 +307,6 @@ class App extends React.Component {
                 user,
               },
               sources,
-              selectedUser: data.profile.username,
               verified: data.profile.verified,
               accessories: {
                 badges: data.profile.bids
@@ -321,18 +321,16 @@ class App extends React.Component {
             this.setState(
               {
                 fetchedUser,
+                selectedUser: data.profile.username
               },
               async () => {
                 // Update cache
-                this.intel.resetReducer();
-                this.intel.appendList(sources).then(async () => {
+                console.log("APPPEND", fetchedUser.sources)
+                //this.intel.resetReducer()
+                
+                this.appendSourceObjects(sources).then(async () => {
                   //platformData.talks = [];
-                  let organizations = platformData.profile.organizations.map(
-                    (org) => {
-                      return org.name;
-                    }
-                  );
-                  await this.intel.generateTalks(sources, organizations);
+                  await this.intel.generateTalks(sources);
                   let talks = await this.getAllTalks();
                   for (const i in talks) {
                     let state = true;
@@ -346,16 +344,21 @@ class App extends React.Component {
                     }
                   }
                   talks = platformData.talks;
+                  this.getData().then((res) => {console.log("PLATFORM DATA 0", res)})
                   platformData = { ...(await this.getData()), user, talks };
-                  this.session.tasks.user
+                  console.log("PLATFORM DATA", platformData)
+                  console.log("PLATFORM DATA 2", await this.getData())
+                  if(this.state.selectedUser === this.state.user){
+                    this.session.tasks.user
                     .cache(JSON.stringify(platformData))
                     .then(() => {
                       fetchedUser.platformData = platformData;
-                      this.setState({
-                        fetchedUser,
-                      });
+                        this.setState({
+                          fetchedUser,
+                        });
                     });
-                });
+                  }
+                }).then(() => this.intel.resetReducer());
               }
             );
           } else {
