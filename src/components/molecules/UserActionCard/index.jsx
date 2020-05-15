@@ -150,6 +150,23 @@ class UserActionCard extends React.Component {
         {activeItem === 2 && (
           <RegisterForm globalFunctions={globalFunctions} goTo={this.goTo} />
         )}
+        {activeItem === 3 && (
+          <>
+            <div className="text-left mb-4">
+              <small
+                className="text-muted clickable"
+                onClick={() => this.goTo(0)}
+              >
+                <MDBIcon icon="angle-left" className="mr-1" />
+                Back
+              </small>
+            </div>
+            <MDBAlert color="danger">
+              <MDBIcon icon="times-circle" className="mr-2" />
+              Media Engineer profiles are not yet supported
+            </MDBAlert>
+          </>
+        )}
       </div>
     );
   }
