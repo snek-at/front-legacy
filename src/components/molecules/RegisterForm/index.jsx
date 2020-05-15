@@ -30,6 +30,7 @@ import {
   MDBModalHeader,
   MDBModalFooter,
   MDBSelect,
+  MDBProgress,
   MDBSelectInput,
   MDBSelectOptions,
   MDBSelectOption,
@@ -112,14 +113,21 @@ class RegisterForm extends React.Component {
     );
   };
 
-  connectGitHub = async () => {
-    const data = await RSA.acquireTokenAsync(GithubProvider);
+  connectGitHub = () => {
+    this.setState(
+      {
+        loadingGitHub: true,
+      },
+      async () => {
+        const data = await RSA.acquireTokenAsync(GithubProvider);
 
-    this.pushToSourceList(
-      "github",
-      data.username,
-      "https://api.github.com/graphql",
-      data.accessToken
+        this.pushToSourceList(
+          "github",
+          data.username,
+          "https://api.github.com/graphql",
+          data.accessToken
+        );
+      }
     );
   };
 
@@ -143,6 +151,7 @@ class RegisterForm extends React.Component {
         username,
         hasGitHub: true,
         sourceList,
+        loadingGitHub: false,
       });
     } else {
       // Set the new list of user information
@@ -584,6 +593,7 @@ class RegisterForm extends React.Component {
             </div>
             <div>
               <MDBListGroup>
+                {this.state.loadingGitHub && <MDBProgress material preloader />}
                 {this.state.usernames.map((source, i) => {
                   return (
                     <MDBListGroupItem
