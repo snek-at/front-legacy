@@ -27,14 +27,21 @@
     box-shadow: none;
   }
 
-  // Button types
+  //> Button types
+  // Button green
   &.btn-green {
     background-color: #77bd43 !important;
     &:hover {
       background-color: darken(#77bd43, 5%) !important;
     }
   }
+  // Button WhatsApp
+  &.btn-wa {
+    background-color: #25d366 !important;
+    color: white !important;
+  }
 }
+
 //> Cards
 .card {
   box-shadow: none;
@@ -63,31 +70,7 @@
     background-color: lighten($snekDark, 30%) !important;
   }
 }
-.snek-blue {
-  background-color: $snekBlue !important;
-  &.darken-1 {
-    background-color: darken($snekBlue, 10%) !important;
-  }
-  &.darken-2 {
-    background-color: darken($snekBlue, 20%) !important;
-  }
-  &.darken-3 {
-    background-color: darken($snekBlue, 30%) !important;
-  }
-  &.lighten-1 {
-    background-color: lighten($snekBlue, 10%) !important;
-  }
-  &.lighten-2 {
-    background-color: lighten($snekBlue, 20%) !important;
-  }
-  &.lighten-3 {
-    background-color: lighten($snekBlue, 30%) !important;
-  }
-}
 
-.blue-text {
-  color: $snekBlue !important;
-}
 .pink-text {
   color: #ea4aaa !important;
 }

@@ -41,5 +41,6 @@
     "precached",
     "renamer",
     "webfonts"
-  ]
+  ],
+  "editor.rulers": [80,120],
 }

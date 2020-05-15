@@ -1,439 +1,211 @@
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
-
-import { toast, ToastContainer } from "mdbreact";
 // DOM bindings for React Router
 import { BrowserRouter as Router } from "react-router-dom";
 
+//> TEMP TEMP TEMP TEMP TEMP TEMP DELETE THIS SHIT MAN
+import sha256 from "js-sha256";
+
 //> Components
-import { Navbar, Footer } from "./components/organisms";
+// Navbar and Footer
+import { Navbar, Footer } from "./components/molecules";
+// Starts the page on top when reloaded or redirected
 import { ScrollToTop } from "./components/atoms";
 
 //> Routes
-import Routes from "./Routes";
-
-import sha256 from "js-sha256";
+//import Routes from "./Routes";
 
 //> Intel
 import { Intel } from "snek-intel";
-import { longStackSupport } from "q";
 
 class App extends React.Component {
   state = {
-    logged: false,
-    selectedUser: undefined,
-    user: undefined,
+    loggedUser: undefined,
     fetchedUser: undefined,
-    activeTab: 0,
   };
-
-  constructor() {
-    super();
-    this.intel = new Intel();
-    this.session = this.intel.snekclient.session;
-  }
 
   componentDidMount = () => {
+    // Create new intel instance
+    this.intel = new Intel();
+    // Create new session link for easy access
+    this.session = this.intel.snekclient.session;
+    // Begin session
     this.begin();
+
+    // TEMP
+    this.login("Aichnerc", sha256("test123"));
   };
 
+  //> Authentication methods
+  /**
+   * Begin Session
+   * @description Start a new session based on authentication history.
+   *              New site access will lead to a anonymous login.
+   */
   begin = async () => {
-    /**
-     * Begin Session:
-     * Start a new session based on authentication history.
-     * New site access will lead to a anonymous login.
-     */
     const whoami = await this.session.begin();
-    console.log("STATE MAP: Begin - LOC App.js:", whoami);
-    if (whoami && whoami.whoami && whoami.whoami.username) {
-      // Check if the username is not the anonymous user
-      if (whoami.whoami.username !== "cisco") {
-        this.setState({
-          loading: false,
-          logged: true,
-          user: whoami.whoami.username,
-        });
+
+    // Check if whoami is not empty
+    if (whoami?.whoami?.username) {
+      const username = whoami.whoami.username;
+
+      // Check if whoami user is not anonymous user
+      if (username !== process.env.REACT_APP_ANONYMOUS_USER) {
+        // Get loggedUser object
+        const loggedUser = {
+          username,
+          avatarUrl:
+            "https://avatars2.githubusercontent.com/u/21159914?u=afab4659183999f1adc85089bb713aefbf085b94",
+        };
+
+        // Real user is logged in
+        this.handleLogin(loggedUser);
       }
     }
   };
 
-  componentDidUpdate = () => {
-    console.log("STATE MAP: Updated - LOC App.js");
-  };
-
-  componentWillReceiveProps = (nextProps) => {
-    console.log("STATE MAP: Props - LOC App.js");
-    console.log(this.props);
-    console.log(nextProps);
-  };
-
   /**
-   * Props functions
-   * #DA: See Documentation "Data Management States"
-   */
-
-  /**
-   * Authentication / Registration Tasks
+   * Authenticate
+   * @description Logs in user
    */
   login = async (username, password) => {
+    console.log(username, password);
     return this.session
       .begin({
         username,
         password,
       })
       .then((res) => {
-        return res.username;
+        return {
+          username: res.username,
+          avatarUrl:
+            "https://avatars2.githubusercontent.com/u/21159914?u=afab4659183999f1adc85089bb713aefbf085b94",
+        };
       })
       .catch((err) => {
+        console.error("LOGIN", err);
         return false;
       });
   };
 
-  handleLogin = (username) => {
-    console.log("HANDLE LOGIN ", username)
-    if (!username) {
+  /**
+   * Handle login
+   * @description Handles states for login
+   */
+  handleLogin = (loggedUser) => {
+    if (loggedUser) {
       this.setState({
-        loading: false,
-        logged: false,
-        user: null,
-      });
-    } else {
-      this.setState({
-        loading: false,
-        logged: true,
-        user: username,
-        selectedUser: username,
-        fetchedUser: undefined
+        loggedUser,
       });
     }
   };
 
-  anonymousLogin = async () => {
-    console.log("Anonymous login called");
-    await this.session.begin();
-  };
-
+  /**
+   * Logout user
+   * @description Handles the logging out of active users
+   */
   logout = () => {
-    console.log("Logout called");
     this.setState(
       {
-        loading: false,
-        logged: false,
+        loggedUser: undefined,
         fetchedUser: undefined,
-        user: undefined,
-        activeTab: 0,
-        selectedUser: undefined,
       },
-      () => {
-        console.log(this.state)
-        this.session.end().then(() => this.anonymousLogin());
-      }
+      () => this.session.end().then(() => this.begin())
     );
   };
 
-  //> Register
+  /**
+   * Register user
+   * @description Handles the registration of users
+   */
   registerUser = async (registrationData) => {
     // Get data from source
-    await this.appendSourceObjects(registrationData.sources);
-    const devData = await this.getData();
-    await this.intel.generateTalks(registrationData.sources);
-    devData.talks = await this.getAllTalks();
-    registrationData.platform_data = JSON.stringify(devData);
-    // Create JSON string out of sources for backend use
-    registrationData.sources = JSON.stringify(registrationData.sources);
-    //console.log(registrationData, "REG");
-    // Register the user in our engine
-    this.registerInEngine(registrationData);
+    let intelData;
+
+    this.appendSourceObjects(registrationData.sources)
+      .then(async () => {
+        intelData = await this.getData();
+        this.intel
+          .generateTalks(registrationData.sources)
+          .then(async () => {
+            intelData.talks = await this.getAllTalks();
+
+            // Save Object to platformData as JSON
+            registrationData.platform_data = JSON.stringify(intelData);
+            // Create JSON string out of sources for backend use
+            registrationData.sources = JSON.stringify(registrationData.sources);
+
+            // Register the user in our SNEK engine
+            this.session.tasks.user
+              .registration(registrationData)
+              .then((res) => {
+                if (res.message === "FAIL") {
+                  console.log("warn", "All fields have to be filled!");
+                } else {
+                  // Set cache
+                  this.session.tasks.user.cache(registrationData.platform_data);
+                  // Login user
+                  this.login(
+                    registrationData.username,
+                    registrationData.password
+                  );
+                }
+              })
+              .catch((err) => {
+                console.error("REGISTRATION IN ENGINE", err);
+              });
+          })
+          .catch((err) => {
+            console.error("GENERATE TALKS", err);
+          });
+      })
+      .catch((err) => {
+        console.error("APPEND SOURCE OBJECTS", err);
+      });
   };
 
-  registerInEngine = (registrationData) => {
-    this.session.tasks.user.registration(registrationData).then((res) => {
-      //console.log(res);
-      if (res.message === "FAIL") {
-        console.log("warn", "All fields have to be filled!");
-      } else {
-        // Set cache
-        this.session.tasks.user.cache(registrationData.platform_data);
-        // Login user
-        this.login(registrationData.username, registrationData.password);
-      }
-    });
-  };
-
+  /**
+   * Append Source Objects
+   * @description Hands source list over to intel
+   */
   appendSourceObjects = async (sourceList) => {
     return this.intel.appendList(sourceList);
   };
 
-  // Get user data from intel
+  /**
+   * Get intel data
+   * @description Retrieves data from current applied source list
+   */
   getData = async () => {
-    //console.log(this.intel.get());
-    let data = await this.intel.get();
+    const data = await this.intel.get();
+
+    console.log("GET DATA", data);
+
     return data;
   };
 
   /**
-   * Data Tasks
+   * Fetch GitLab Servers
+   * @description Retrieves a list of available GitLab servers
    */
-  fetchCacheData = async (username) => {
-    console.log("Get Data called");
-    this.session.tasks.user
-      .profile("/registration/" + username)
-      .then(async ({ data }) => {
-        console.log("Got data for " + username);
-        console.log("DATA ", data);
-        if (!data.profile) {
-          console.log("Can not get profile");
-          this.setState({
-            fetchedUser: null,
-          });
-        } else {
-          if (data.profile.verified) {
-            // Redirect and login
-            let profile = data.profile;
-            let platformData = profile.platformData
-              ? JSON.parse(profile.platformData)
-              : null;
-            let user = platformData.user ? platformData.user : null;
-            let sources = profile.sources ? JSON.parse(profile.sources) : null;
-
-            // Reconstruct intel
-            /*this.intel.reducer.reload();
-            await this.appendSourceObjects(sources);
-            let devData = this.getData();
-            platformData.devData = devData;*/
-
-            /**
-             * ################
-             * DUMMY DATA
-             * Remove and replace with live data when ready
-             * ################
-             */
-            if (!user) {
-              user = {
-                type: undefined,
-              };
-            }
-            user.firstName = data.profile.firstName
-              ? data.profile.firstName
-              : "";
-            user.lastName = data.profile.lastName ? data.profile.lastName : "";
-            user.email = data.profile.email ? data.profile.email : "";
-            user.username = data.profile.username ? data.profile.username : "";
-            // Change this to change from software to media
-            let enableMediaEngineer = false;
-            if (enableMediaEngineer) {
-              user.type = "media";
-            } else {
-              user.type = "software";
-            }
-            console.log("Got platform data", platformData);
-
-            if (!user.settings) {
-              // Settings
-              user.settings = {
-                showMap: true,
-                showInstagramFeed: true,
-                show3DDiagram: true,
-                instagramHideCaption: true,
-                show2DDiagram: true,
-                showCompanyPublic: true,
-                showEmailPublic: true,
-                showLocalRanking: true,
-                activeTheme: null,
-              };
-            }
-            console.log(user.type);
-            // If no type has been set, perform user data injection
-            if (!user.type) {
-              // Injecting platformData
-              if (enableMediaEngineer) {
-                // Set type to media to distinguish
-                user.type = "media";
-                // Define perks if not set
-                user.perks = user.perks ? user.perks : {};
-                // Set media engineer platforms
-                user.perks.platforms = {
-                  instagram: {
-                    url: "https://www.instagram.com/aichnerchristian/",
-                  },
-                  facebook: {
-                    url: "https://www.facebook.com/aichner.christian",
-                  },
-                  portfolio: {
-                    url: "https://www.aichner-christia.com/portfolio",
-                  },
-                };
-                // Portfolio map
-                user.perks.mapData = [
-                  { name: "1", coordinates: [12.8506, 44.6086] },
-                  { name: "2", coordinates: [13.8496928, 46.6114363] },
-                  { name: "3", coordinates: [11.489387, 48.78345] },
-                ];
-                // Skills (like languages for programmers)
-                user.perks.skills = [
-                  {
-                    name: "Photography",
-                    color: "#563d7c",
-                    size: 54,
-                    share: 10,
-                  },
-                  { name: "Video", color: "#263d1c", size: 54, share: 20 },
-                  { name: "Web", color: "#763d2c", size: 54, share: 70 },
-                ];
-                // Instagram posts
-                user.perks.instagram = [
-                  { url: "https://www.instagram.com/p/B9cOSWMJbXD/" },
-                  { url: "https://www.instagram.com/p/B9TWGNaglUz/" },
-                ];
-              } else {
-                // Add needed variables software engineer
-                user.type = "software";
-              }
-              // Add needed variables for both software- and media engineer
-              user.first_name = "Max";
-              user.last_name = "Mustermann";
-
-              console.log("Injected data to platform data", platformData);
-            }
-            /**
-             * ################
-             * DUMMY DATA END
-             * ################
-             */
-            let fetchedUser = {
-              platformData: {
-                ...platformData,
-                user,
-              },
-              sources,
-              verified: data.profile.verified,
-              accessories: {
-                badges: data.profile.bids
-                  ? JSON.parse(data.profile.bids)
-                  : null,
-                themes: data.profile.tids
-                  ? JSON.parse(data.profile.tids)
-                  : null,
-              },
-            };
-
-            this.setState(
-              {
-                fetchedUser,
-                selectedUser: data.profile.username
-              },
-              async () => {
-                // Update cache
-                console.log("APPPEND", fetchedUser.sources)
-                //this.intel.resetReducer()
-                
-                this.appendSourceObjects(sources).then(async () => {
-                  //platformData.talks = [];
-                  await this.intel.generateTalks(sources);
-                  let talks = await this.getAllTalks();
-                  for (const i in talks) {
-                    let state = true;
-                    for (const i2 in platformData.talks) {
-                      if (talks[i].url === platformData.talks[i2].url) {
-                        state = false;
-                      }
-                    }
-                    if (state) {
-                      platformData.talks.push(talks[i]);
-                    }
-                  }
-                  talks = platformData.talks;
-                  this.getData().then((res) => {console.log("PLATFORM DATA 0", res)})
-                  platformData = { ...(await this.getData()), user, talks };
-                  console.log("PLATFORM DATA", platformData)
-                  console.log("PLATFORM DATA 2", await this.getData())
-                  if(this.state.selectedUser === this.state.user){
-                    this.session.tasks.user
-                    .cache(JSON.stringify(platformData))
-                    .then(() => {
-                      fetchedUser.platformData = platformData;
-                        this.setState({
-                          fetchedUser,
-                        });
-                    });
-                  }
-                }).then(() => this.intel.resetReducer());
-              }
-            );
-          } else {
-            console.error("User not verified.");
-            this.setState({
-              fetchedUser: false,
-            });
-          }
-        }
-      })
-      .catch((err) => {
-        console.error("Can not get user data.", err);
-        this.setState({
-          fetchedUser: null,
-        });
-      });
-  };
-
-  saveSettings = (state) => {
-    /**
-     * Use caching to save new, edited data.
-     * This has to be updated whenever parameters are added or removed.
-     */
-    // Fill platformData to be used and edited locally
-    let cache = this.state.fetchedUser.platformData;
-    // Check for mandatory fields
-    if (state.email) {
-      cache.user.firstName = state.first_name ? state.first_name : "";
-      cache.user.lastName = state.last_name ? state.last_name : "";
-      cache.user.email = state.email ? state.email : cache.user.email;
-      cache.profile.websiteUrl = state.website ? state.website : "";
-      cache.profile.location = state.location ? state.location : "";
-      cache.profile.company = state.company ? state.company : "";
-      cache.user.settings = {
-        showTopLanguages: state.showTopLanguages,
-        showLocalRanking: state.showLocalRanking,
-        show3DDiagram: state.show3DDiagram,
-        show2DDiagram: state.show2DDiagram,
-        showEmailPublic: state.showEmailPublic,
-        showCompanyPublic: state.showCompanyPublic,
-        showMap: state.showMap,
-        showInstagramFeed: state.showInstagramFeed,
-        instagramHideCaption: state.instagramHideCaption,
-        activeTheme: state.activeTheme,
-      };
-    }
-    console.log("Cache", cache);
-    let platformData = JSON.stringify(cache);
-    this.session.tasks.user.cache(platformData).then(({ data }) => {
-      console.log(data);
-      this.setState({
-        fetchedUser: {
-          ...this.state.fetchedUser,
-          platformData: JSON.parse(platformData),
-        },
-      });
-    });
-  };
-
   fetchGitLabServers = () => {
-    console.log("Fetching GitLab servers");
     return this.session.tasks.general
       .gitlabServer()
       .then(({ data }) => {
         return data.page.supportedGitlabs;
       })
       .catch((err) => {
-        //console.error(error);
-        console.error("Can not get GitLab severs.", err);
+        console.error("GET GITLAB SERVERS", err);
         return false;
       });
   };
 
+  /**
+   * Get all users
+   * @description Retrieves a list of all users
+   */
   getAllPageUrls = () => {
-    console.log("Get all page urls called");
     return this.session.tasks.general.allPageUrls().then((res) => {
       let urls = [];
 
@@ -449,12 +221,21 @@ class App extends React.Component {
     });
   };
 
+  /**
+   * Get all talks
+   * @description Retrieves a list of all currently available talks
+   */
   getAllTalks = async () => {
     return this.intel.getTalks();
   };
 
+  /**
+   * Upload talk
+   * @description Uploads a talk to intel
+   */
   uploadTalk = async (file) => {
     await this.intel.appendTalk(file);
+
     let talks = await this.getAllTalks();
 
     talks[talks.length - 1].repository = {
@@ -470,8 +251,13 @@ class App extends React.Component {
     );
   };
 
+  /**
+   * Delete talk
+   * @description Deletes a talk
+   */
   deleteTalk = async (talk) => {
     let talks = this.state.fetchedUser.platformData.talks;
+
     for (const index in talks) {
       if (talk.uid === talks[index].uid) {
         talks.splice(index, 1);
@@ -493,72 +279,204 @@ class App extends React.Component {
     );
   };
 
+  /**
+   * Get talk
+   * @description Get a talk
+   */
   getTalk = async (uid, username) => {
     return this.session.tasks.user
       .profile("/registration/" + username)
       .then(async ({ data }) => {
         console.log(data, "xxxxx");
-        if (!data.profile) {
-          this.setState({
-            fetchedUser: null,
-          });
-        } else {
+        if (data.profile) {
           let talks = JSON.parse(data.profile.platformData).talks;
           talks = talks.filter((talk) => {
             return talk.uid === uid;
           });
 
           return talks[0];
+        } else {
+          console.error("GET TALK", "Can not get talk " + uid);
+        }
+      })
+      .catch((err) => {
+        console.error("GET TALK", err);
+      });
+  };
+
+  /**
+   * Save settings
+   * @description Saves the user settings
+   */
+  saveSettings = (state) => {
+    // Fill platformData to be used and edited locally
+    let cache = this.state.fetchedUser.platformData;
+
+    // Check for mandatory fields
+    if (state.email) {
+      cache.user.firstName = state.first_name ? state.first_name : "";
+      cache.user.lastName = state.last_name ? state.last_name : "";
+      cache.user.email = state.email ? state.email : cache.user.email;
+      cache.profile.websiteUrl = state.website ? state.website : "";
+      cache.profile.location = state.location ? state.location : "";
+      cache.profile.company = state.company ? state.company : "";
+      cache.user.settings = {
+        showTopLanguages: state.showTopLanguages,
+        showLocalRanking: state.showLocalRanking,
+        show3DDiagram: state.show3DDiagram,
+        show2DDiagram: state.show2DDiagram,
+        showEmailPublic: state.showEmailPublic,
+        showCompanyPublic: state.showCompanyPublic,
+        activeTheme: state.activeTheme,
+      };
+    }
+    const platformData = JSON.stringify(cache);
+
+    this.session.tasks.user.cache(platformData).then(({ data }) => {
+      console.log(data);
+      this.setState({
+        fetchedUser: {
+          ...this.state.fetchedUser,
+          platformData: JSON.parse(platformData),
+        },
+      });
+    });
+  };
+
+  /**
+   * Fetch Cache Data
+   * @description Retrieves current cache data and updates it
+   */
+  fetchCacheData = async (username) => {
+    this.session.tasks.user
+      .profile("/registration/" + username)
+      .then(async ({ data }) => {
+        console.log("CACHE DATA", data);
+        // Check if cache is empty
+        if (!data.profile) {
+          this.setState(
+            {
+              fetchedUser: false,
+            },
+            () => console.error("CACHE NOT LOADED")
+          );
+        } else {
+          // Split profile to chunks
+          const profile = data.profile;
+          let platformData = profile.platformData
+            ? JSON.parse(profile.platformData)
+            : {};
+          let user = platformData.user ? platformData.user : null;
+          const sources = profile.sources ? JSON.parse(profile.sources) : null;
+
+          // Check if data is valid
+          if (!user || !sources) {
+            console.error("USER OR SOURCES IS EMPTY", user, sources);
+          } else {
+            // Set settings for first time fetching
+            if (!user.settings) {
+              user.settings = {
+                show3DDiagram: true,
+                show2DDiagram: true,
+                showCompanyPublic: true,
+                showEmailPublic: true,
+                showLocalRanking: true,
+                activeTheme: null,
+              };
+            }
+
+            // Build fetchedUser object
+            let fetchedUser = {
+              platformData: {
+                ...platformData,
+                user,
+              },
+              sources,
+              verified: data.profile.verified,
+              accessories: {
+                badges: data.profile.bids
+                  ? JSON.parse(data.profile.bids)
+                  : null,
+                themes: data.profile.tids
+                  ? JSON.parse(data.profile.tids)
+                  : null,
+              },
+            };
+
+            console.log(fetchedUser);
+
+            // Update visible data
+            this.setState(
+              {
+                fetchedUser,
+              },
+              async () => {
+                if (this.state.loggedUser.username === user.username) {
+                  this.appendSourceObjects(sources)
+                    .then(async () => {
+                      await this.intel.generateTalks(sources);
+
+                      let talks = await this.getAllTalks();
+
+                      // Fix duplicates
+                      for (const i in talks) {
+                        let state = true;
+
+                        for (const i2 in platformData.talks) {
+                          if (talks[i].url === platformData.talks[i2].url) {
+                            state = false;
+                          }
+                        }
+                        if (state) {
+                          platformData.talks.push(talks[i]);
+                        }
+                      }
+
+                      talks = platformData.talks;
+
+                      //await this.getData().then((res) => console.log(res));
+                      platformData = { ...(await this.getData()), user, talks };
+
+                      console.log("PLATTFORM DATA AFTER FETCH", platformData);
+
+                      // Override cache
+                      this.session.tasks.user
+                        .cache(JSON.stringify(platformData))
+                        .then(() => {
+                          fetchedUser.platformData = platformData;
+                          this.setState({
+                            fetchedUser,
+                          });
+                        });
+                    })
+                    .then(() => {
+                      console.log("RESET REDUCER");
+                      this.intel.resetReducer();
+                    });
+                }
+              }
+            );
+          }
         }
       });
   };
 
   render() {
-    console.log("STATE MAP: Render - LOC App.js");
-
+    console.log("STATE", this.state);
+    if (this.state.loggedUser) {
+      if (!this.state.fetchedUser) {
+        this.fetchCacheData(this.state.loggedUser.username).then(() =>
+          console.log("CACHE FINISHED")
+        );
+      }
+    }
     return (
       <Router>
         <ScrollToTop>
           <div className="flyout">
-            <Navbar
-              username={this.state.user}
-              logmeout={this.logout}
-              users={this.getAllPageUrls}
-              globalState={this.state}
-            />
-            <ToastContainer
-              hideProgressBar={false}
-              newestOnTop={true}
-              autoClose={3000}
-            />
-            <main
-              className={
-                this.state.fetchedUser &&
-                this.state.fetchedUser.platformData.user &&
-                this.state.fetchedUser.platformData.user.settings &&
-                this.state.fetchedUser.platformData.user.settings.activeTheme
-                  ? "theme-" +
-                    this.state.fetchedUser.platformData.user.settings
-                      .activeTheme
-                  : undefined
-              }
-            >
-              <Routes
-                login={this.login}
-                fetchCacheData={this.fetchCacheData}
-                globalState={this.state}
-                globalFunctions={{
-                  handleLogin: this.handleLogin,
-                }}
-                registerUser={{
-                  register: this.registerUser,
-                  getGitLabServers: this.fetchGitLabServers,
-                }}
-                saveSettings={this.saveSettings}
-                uploadTalk={this.uploadTalk}
-                getTalk={this.getTalk}
-                deleteTalk={this.deleteTalk}
-              />
+            {/**<Navbar />*/}
+            <main>
+              <h2>Routes</h2>
             </main>
             <Footer />
           </div>
@@ -569,8 +487,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-/**
- * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © Simon Prast
- */
