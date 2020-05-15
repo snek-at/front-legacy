@@ -4,7 +4,8 @@ import React from "react";
 // DOM bindings for React Router
 import { BrowserRouter as Router } from "react-router-dom";
 
-//> TEMP TEMP TEMP TEMP TEMP TEMP DELETE THIS SHIT MAN
+//> Additional
+// SHA Hashing algorithm
 import sha256 from "js-sha256";
 
 //> Components
@@ -14,7 +15,7 @@ import { Navbar, Footer } from "./components/molecules";
 import { ScrollToTop } from "./components/atoms";
 
 //> Routes
-//import Routes from "./Routes";
+import Routes from "./Routes";
 
 //> Intel
 import { Intel } from "snek-intel";
@@ -23,6 +24,8 @@ class App extends React.Component {
   state = {
     loggedUser: undefined,
     fetchedUser: undefined,
+    loading: true,
+    caching: false,
   };
 
   componentDidMount = () => {
@@ -32,9 +35,6 @@ class App extends React.Component {
     this.session = this.intel.snekclient.session;
     // Begin session
     this.begin();
-
-    // TEMP
-    this.login("Aichnerc", sha256("test123"));
   };
 
   //> Authentication methods
@@ -43,12 +43,15 @@ class App extends React.Component {
    * @description Start a new session based on authentication history.
    *              New site access will lead to a anonymous login.
    */
-  begin = async () => {
-    const whoami = await this.session.begin();
-
+  begin = async (user) => {
+    console.log("BEGIN INIT", user);
+    const whoami = await this.session.begin(user ? user : undefined);
+    console.log(whoami);
     // Check if whoami is not empty
-    if (whoami?.whoami?.username) {
-      const username = whoami.whoami.username;
+    if (whoami?.username || whoami?.whoami?.username) {
+      const username = whoami?.username
+        ? whoami?.username
+        : whoami?.whoami?.username;
 
       // Check if whoami user is not anonymous user
       if (username !== process.env.REACT_APP_ANONYMOUS_USER) {
@@ -61,7 +64,17 @@ class App extends React.Component {
 
         // Real user is logged in
         this.handleLogin(loggedUser);
+
+        return true;
+      } else {
+        this.handleLogin(null);
+
+        return false;
       }
+    } else {
+      this.handleLogin(false);
+
+      return false;
     }
   };
 
@@ -71,22 +84,20 @@ class App extends React.Component {
    */
   login = async (username, password) => {
     console.log(username, password);
-    return this.session
-      .begin({
-        username,
-        password,
-      })
-      .then((res) => {
-        return {
-          username: res.username,
-          avatarUrl:
-            "https://avatars2.githubusercontent.com/u/21159914?u=afab4659183999f1adc85089bb713aefbf085b94",
-        };
-      })
-      .catch((err) => {
-        console.error("LOGIN", err);
-        return false;
-      });
+    this.setState(
+      {
+        loading: true,
+      },
+      () => {
+        return this.begin({
+          username,
+          password: sha256(password),
+        }).catch((err) => {
+          console.error("LOGIN", err);
+          return false;
+        });
+      }
+    );
   };
 
   /**
@@ -94,10 +105,19 @@ class App extends React.Component {
    * @description Handles states for login
    */
   handleLogin = (loggedUser) => {
+    console.log("HANDLE LOGIN", loggedUser);
     if (loggedUser) {
       this.setState({
         loggedUser,
+        loading: false,
       });
+    } else {
+      if (this.state.loggedUser !== null) {
+        this.setState({
+          loggedUser: null,
+          loading: false,
+        });
+      }
     }
   };
 
@@ -110,6 +130,7 @@ class App extends React.Component {
       {
         loggedUser: undefined,
         fetchedUser: undefined,
+        loading: false,
       },
       () => this.session.end().then(() => this.begin())
     );
@@ -357,6 +378,7 @@ class App extends React.Component {
           this.setState(
             {
               fetchedUser: false,
+              loading: false,
             },
             () => console.error("CACHE NOT LOADED")
           );
@@ -406,77 +428,114 @@ class App extends React.Component {
             console.log(fetchedUser);
 
             // Update visible data
-            this.setState(
-              {
-                fetchedUser,
-              },
-              async () => {
-                if (this.state.loggedUser.username === user.username) {
-                  this.appendSourceObjects(sources)
-                    .then(async () => {
-                      await this.intel.generateTalks(sources);
-
-                      let talks = await this.getAllTalks();
-
-                      // Fix duplicates
-                      for (const i in talks) {
-                        let state = true;
-
-                        for (const i2 in platformData.talks) {
-                          if (talks[i].url === platformData.talks[i2].url) {
-                            state = false;
-                          }
-                        }
-                        if (state) {
-                          platformData.talks.push(talks[i]);
-                        }
-                      }
-
-                      talks = platformData.talks;
-
-                      //await this.getData().then((res) => console.log(res));
-                      platformData = { ...(await this.getData()), user, talks };
-
-                      console.log("PLATTFORM DATA AFTER FETCH", platformData);
-
-                      // Override cache
-                      this.session.tasks.user
-                        .cache(JSON.stringify(platformData))
-                        .then(() => {
-                          fetchedUser.platformData = platformData;
-                          this.setState({
-                            fetchedUser,
-                          });
-                        });
-                    })
-                    .then(() => {
-                      console.log("RESET REDUCER");
-                      this.intel.resetReducer();
-                    });
-                }
-              }
-            );
+            this.setState({
+              fetchedUser,
+              loading: false,
+            });
           }
         }
       });
   };
 
+  updateCache = async (fetchedUser) => {
+    let platformData = fetchedUser.platformData;
+
+    if (
+      !this.state.caching &&
+      this.state.loggedUser?.username === platformData.user?.username
+    ) {
+      this.appendSourceObjects(fetchedUser.sources)
+        .then(async () => {
+          await this.intel.generateTalks(fetchedUser.sources);
+
+          let talks = await this.getAllTalks();
+
+          // Fix duplicates
+          for (const i in talks) {
+            let state = true;
+
+            for (const i2 in platformData.talks) {
+              if (talks[i].url === platformData.talks[i2].url) {
+                state = false;
+              }
+            }
+            if (state) {
+              platformData.talks.push(talks[i]);
+            }
+          }
+
+          talks = platformData.talks;
+
+          //await this.getData().then((res) => console.log(res));
+          platformData = {
+            ...(await this.getData()),
+            user: platformData.user,
+            talks,
+          };
+
+          console.log("PLATTFORM DATA AFTER FETCH", platformData);
+
+          // Override cache
+          this.session.tasks.user
+            .cache(JSON.stringify(platformData))
+            .then(() => {
+              fetchedUser.platformData = platformData;
+              this.setState({
+                fetchedUser,
+                caching: true,
+              });
+            });
+        })
+        .then(() => {
+          console.log("RESET REDUCER");
+          this.intel.resetReducer();
+        });
+    } else {
+      console.log(
+        "CACHING NOT ACTIVATED",
+        "Caching done: " + this.state.caching
+      );
+    }
+  };
+
   render() {
     console.log("STATE", this.state);
-    if (this.state.loggedUser) {
+
+    if (!this.state.loading && this.state.loggedUser === null) {
+      //this.login("Aichnerc", sha256("test123"));
+    }
+
+    /*if (this.state.loggedUser) {
       if (!this.state.fetchedUser) {
         this.fetchCacheData(this.state.loggedUser.username).then(() =>
           console.log("CACHE FINISHED")
         );
       }
-    }
+    }*/
     return (
       <Router>
         <ScrollToTop>
           <div className="flyout">
-            {/**<Navbar />*/}
+            <Navbar
+              globalState={this.state}
+              globalFunctions={{
+                logout: this.logout,
+                login: () => this.login("schettn", "test"),
+              }}
+            />
             <main>
-              <h2>Routes</h2>
+              <Routes
+                globalState={this.state}
+                globalFunctions={{
+                  fetchCacheData: this.fetchCacheData,
+                  updateCache: this.updateCache,
+                  saveSettings: this.saveSettings,
+                  uploadTalk: this.uploadTalk,
+                  deleteTalk: this.deleteTalk,
+                  getTalk: this.getTalk,
+                  registerUser: this.registerUser,
+                }}
+              />
             </main>
             <Footer />
           </div>

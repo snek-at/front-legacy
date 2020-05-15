@@ -43,7 +43,7 @@ class Navbar extends React.Component {
   };
 
   render() {
-    const { globalState, location, logout } = this.props;
+    const { globalState, globalFunctions, location } = this.props;
 
     return (
       <MDBNavbar color="light" light expand="md">
@@ -61,11 +61,8 @@ class Navbar extends React.Component {
             </MDBSmoothScroll>
           ) : (
             <>
-              {
-              !globalState.loading &&
-              globalState.logged &&
-              globalState.loggedUser ? (
-                <a href={"/u/" + this.props.loggedUser.username}>
+              {!globalState.loading && globalState.loggedUser ? (
+                <a href={"/u/" + globalState.loggedUser?.username}>
                   <MDBNavbarBrand className="flex-center">
                     <img
                       src={SNEKLogo}
@@ -95,46 +92,45 @@ class Navbar extends React.Component {
               <MDBNavItem>{/* SEARCH */}</MDBNavItem>
             </MDBNavbarNav>
             <MDBNavbarNav right>
-              {globalState.logged ? (
-                !globalState.loading &&
-                globalState.loggedUser && (
-                  <>
-                    <div className="spacer" />
-                    <MDBNavItem>
-                      <MDBDropdown>
-                        <MDBDropdownToggle nav caret>
-                          <img
-                            src={globalState.loggedUser.avatarUrl}
-                            className="z-depth-0"
-                            alt={globalState.loggedUser.username}
-                          />
-                        </MDBDropdownToggle>
-                        <MDBDropdownMenu className="dropdown-default">
-                          <MDBDropdownItem
-                            href={"/u/" + globalState.loggedUser.username}
-                          >
-                            My profile
-                          </MDBDropdownItem>
-                          <Link
-                            to="/"
-                            onClick={logout}
-                            className="dropdown-item"
-                          >
-                            Sign Out
-                          </Link>
-                        </MDBDropdownMenu>
-                      </MDBDropdown>
-                    </MDBNavItem>
-                  </>
-                )
+              {!globalState.loading && globalState.loggedUser ? (
+                <>
+                  <div className="spacer" />
+                  <MDBNavItem>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <img
+                          src={globalState.loggedUser.avatarUrl}
+                          className="z-depth-0"
+                          alt={globalState.loggedUser.username}
+                        />
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu className="dropdown-default">
+                        <MDBDropdownItem
+                          href={"/u/" + globalState.loggedUser.username}
+                        >
+                          My profile
+                        </MDBDropdownItem>
+                        <Link
+                          to="/"
+                          onClick={globalFunctions.logout}
+                          className="dropdown-item"
+                        >
+                          Sign Out
+                        </Link>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
+                  </MDBNavItem>
+                </>
               ) : (
                 <>
                   {location.pathname !== "/" && (
-                    <Link to="/">
-                      <MDBBtn color="green" size="md">
-                        Sign In
-                      </MDBBtn>
-                    </Link>
+                    <MDBBtn
+                      color="green"
+                      size="md"
+                      onClick={globalFunctions.login}
+                    >
+                      Sign In
+                    </MDBBtn>
                   )}
                 </>
               )}
