@@ -392,7 +392,7 @@ class RegisterForm extends React.Component {
             gift_code: promoCode && code !== "" ? code : null,
             password: password1,
           };
-          this.props.registerUser.register(registrationData);
+          this.props.globalFunctions.registerUser(registrationData);
         }
       );
     } else {
@@ -421,7 +421,7 @@ class RegisterForm extends React.Component {
   };
 
   render() {
-    const { globalState, globalFunctions, goTo } = this.props;
+    const { goTo } = this.props;
 
     return (
       <>
@@ -581,6 +581,11 @@ class RegisterForm extends React.Component {
               <MDBBtn
                 color="orange"
                 onClick={() => this.setState({ modalGitLab: true })}
+                disabled={
+                  !this.state.gitlab_servers ||
+                  (this.state.gitlab_server &&
+                    this.state.gitlab_server.length < 1)
+                }
               >
                 <MDBIcon fab icon="gitlab" size="lg" />
               </MDBBtn>
