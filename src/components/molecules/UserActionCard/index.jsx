@@ -31,7 +31,7 @@ import {
 } from "mdbreact";
 
 //> Components
-import { RegisterForm } from "../";
+import { RegisterForm, LoginForm } from "../forms";
 
 //> Images
 import { ReactComponent as SvgSoftware } from "../../../assets/header/dev.svg";
@@ -51,55 +51,6 @@ class UserActionCard extends React.Component {
     this.setState({
       activeItem: item,
     });
-  };
-
-  login = async (event) => {
-    // Prevent page from reloading
-    event.preventDefault();
-    event.stopPropagation();
-
-    let errors = [];
-
-    if (this.state.login_username === "") {
-      errors.push({
-        code: 20,
-        weight: 10,
-      });
-    }
-    if (this.state.login_password === "") {
-      errors.push({
-        code: 21,
-        weight: 10,
-      });
-    }
-
-    // Check if there are any errors
-    if (errors.length > 0) {
-      this.setState({
-        errors,
-      });
-    } else {
-      // Proceed to login
-      const result = await this.props.login(
-        this.state.login_username,
-        this.state.login_password
-      );
-      console.log(result);
-      if (result) {
-        this.setState(
-          {
-            loginFail: false,
-          },
-          () => this.props.handleLogin(result)
-        );
-      } else {
-        // Login fail
-        //handleLogin(false);
-        this.setState({
-          loginFail: true,
-        });
-      }
-    }
   };
 
   render() {
@@ -147,6 +98,9 @@ class UserActionCard extends React.Component {
             </MDBRow>
           </>
         )}
+        {activeItem === 1 && (
+          <LoginForm globalFunctions={globalFunctions} goTo={this.goTo} />
+        )}
         {activeItem === 2 && (
           <RegisterForm globalFunctions={globalFunctions} goTo={this.goTo} />
         )}
@@ -161,9 +115,14 @@ class UserActionCard extends React.Component {
                 Back
               </small>
             </div>
-            <MDBAlert color="danger">
-              <MDBIcon icon="times-circle" className="mr-2" />
-              Media Engineer profiles are not yet supported
+            <MDBAlert color="info">
+              <p className="mb-2">
+                <MDBIcon icon="question" className="mr-2" />
+                Media Engineer profiles are not yet supported
+              </p>
+              <MDBBtn color="white" onClick={() => this.goTo(2)}>
+                Create Software Engineer profile
+              </MDBBtn>
             </MDBAlert>
           </>
         )}

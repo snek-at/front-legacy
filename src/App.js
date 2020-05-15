@@ -84,20 +84,15 @@ class App extends React.Component {
    */
   login = async (username, password) => {
     console.log(username, password);
-    this.setState(
-      {
-        loading: true,
-      },
-      () => {
-        return this.begin({
-          username,
-          password: sha256(password),
-        }).catch((err) => {
-          console.error("LOGIN", err);
-          return false;
-        });
-      }
-    );
+    return this.begin({
+      username,
+      password: sha256(password),
+    })
+      .then()
+      .catch((err) => {
+        console.error("LOGIN", err);
+        return false;
+      });
   };
 
   /**
@@ -131,6 +126,7 @@ class App extends React.Component {
         loggedUser: undefined,
         fetchedUser: undefined,
         loading: false,
+        caching: false,
       },
       () => this.session.end().then(() => this.begin())
     );
@@ -545,6 +541,7 @@ class App extends React.Component {
                   uploadTalk: this.uploadTalk,
                   deleteTalk: this.deleteTalk,
                   getTalk: this.getTalk,
+                  login: this.login,
                   registerUser: this.registerUser,
                   fetchGitLabServers: this.fetchGitLabServers,
                 }}

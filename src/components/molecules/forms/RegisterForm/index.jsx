@@ -53,8 +53,6 @@ class RegisterForm extends React.Component {
     gitlab_username: "",
     gitlab_servers: undefined,
     gitlab_server: "Choose your organisation",
-    login_username: "",
-    login_password: "",
     sourceList: [],
     usernames: [],
     promoCode: true,
@@ -796,7 +794,7 @@ class RegisterForm extends React.Component {
 RegisterForm.propTypes = {
   globalState: PropTypes.object,
   globalFunctions: PropTypes.object,
-  location: PropTypes.object,
+  goto: PropTypes.func,
 };
 //#endregion
 
