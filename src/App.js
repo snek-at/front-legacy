@@ -143,6 +143,7 @@ class App extends React.Component {
   registerUser = async (registrationData) => {
     // Get data from source
     let intelData;
+    const unhashedPassword = registrationData.password;
 
     // Hash password
     registrationData.password = sha256(registrationData.password);
@@ -170,10 +171,7 @@ class App extends React.Component {
                   // Set cache
                   this.session.tasks.user.cache(registrationData.platform_data);
                   // Login user
-                  this.login(
-                    registrationData.username,
-                    registrationData.password
-                  );
+                  this.login(registrationData.username, unhashedPassword);
                 }
               })
               .catch((err) => {
@@ -397,14 +395,19 @@ class App extends React.Component {
           let platformData = profile.platformData
             ? JSON.parse(profile.platformData)
             : {};
-          let user = platformData.user ? platformData.user : null;
+          let user = platformData.user ? platformData.user : {};
           const sources = profile.sources ? JSON.parse(profile.sources) : null;
 
           // Check if data is valid
-          if (!user || !sources) {
-            console.error("USER OR SOURCES IS EMPTY", user, sources);
+          if (!sources) {
+            console.error("SOURCES ARE EMPTY", sources);
           } else {
             // Set settings for first time fetching
+            if (Object.keys(user).length === 0) {
+              user.firstName = profile.firstName;
+              user.lastName = profile.lastName;
+              user.email = profile.email;
+            }
             if (!user.settings) {
               user.settings = {
                 show3DDiagram: true,
