@@ -144,6 +144,9 @@ class App extends React.Component {
     // Get data from source
     let intelData;
 
+    // Hash password
+    registrationData.password = sha256(registrationData.password);
+
     this.appendSourceObjects(registrationData.sources)
       .then(async () => {
         intelData = await this.getData();
@@ -214,7 +217,13 @@ class App extends React.Component {
     return this.session.tasks.general
       .gitlabServer()
       .then(({ data }) => {
-        return data.page.supportedGitlabs;
+        console.log(data);
+        const gitLabServers = data?.page?.supportedGitlabs;
+        if (gitLabServers) {
+          return gitLabServers;
+        } else {
+          return false;
+        }
       })
       .catch((err) => {
         console.error("GET GITLAB SERVERS", err);
@@ -534,6 +543,7 @@ class App extends React.Component {
                   deleteTalk: this.deleteTalk,
                   getTalk: this.getTalk,
                   registerUser: this.registerUser,
+                  fetchGitLabServers: this.fetchGitLabServers,
                 }}
               />
             </main>

@@ -146,8 +146,8 @@ class Navbar extends React.Component {
 //#region > PropTypes
 Navbar.propTypes = {
   globalState: PropTypes.object,
+  globalFunctions: PropTypes.object,
   location: PropTypes.object,
-  logout: PropTypes.func,
 };
 //#endregion
 
