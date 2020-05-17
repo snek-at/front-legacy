@@ -9,6 +9,9 @@ import { Link, withRouter } from "react-router-dom";
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBBtn, MDBIcon } from "mdbreact";
 
+//> JSON Prettier
+import JSONPretty from 'react-json-pretty';
+
 //> Components
 // To be added
 
@@ -72,7 +75,7 @@ class ProfilePage extends React.Component {
       return <p>Error. User can not be fetched.</p>;
     } else if (!globalState.loading && globalState.fetchedUser) {
       console.dir(globalState.fetchedUser);
-      return <p>Show profile</p>;
+      return (<JSONPretty data={globalState.fetchedUser}/>)
     } else {
       return <p>Usecase not mapped</p>;
     }
