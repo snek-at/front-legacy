@@ -5,12 +5,8 @@ import React from "react";
 // DOM bindings for React Router
 import { Link, withRouter } from "react-router-dom";
 
-//> MDB
-// "Material Design for Bootstrap" is a great UI design framework
-import { MDBBtn, MDBIcon } from "mdbreact";
-
 //> Components
-// To be added
+import { SoftwareEngineer } from "../../organisms/profiles";
 
 //> CSS
 // To be added
@@ -70,7 +66,8 @@ class ProfilePage extends React.Component {
       return <p>Error. User can not be fetched.</p>;
     } else if (!globalState.loading && globalState.fetchedUser) {
       console.dir(globalState.fetchedUser);
-      return <p>Show profile</p>;
+
+      return <SoftwareEngineer />;
     } else {
       return <p>Usecase not mapped</p>;
     }
