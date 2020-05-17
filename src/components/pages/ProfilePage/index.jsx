@@ -42,8 +42,6 @@ class ProfilePage extends React.Component {
 
     // Call update cache
     if (globalState.fetchedUser && globalState.loggedUser) {
-      const platformData = globalState.fetchedUser.platformData;
-
       globalFunctions.updateCache(globalState.fetchedUser);
     }
   };
