@@ -1,9 +1,11 @@
 #profile {
   background-color: #ebebeb;
+
   .card {
     box-shadow: none;
     background: white;
   }
+
   .avatar {
     $width: 180px;
     width: $width;
@@ -11,6 +13,7 @@
     margin-top: -$width/2;
     background: lightgrey;
   }
+
   .vcard {
     i {
       color: #666666;
@@ -21,6 +24,7 @@
       display: block;
     }
   }
+
   /* MDB Bug fix for every tab link always active */
   .nav-tabs {
     .active {
@@ -29,6 +33,7 @@
       border-top-right-radius: 0.25rem;
       background-color: transparent;
     }
+
     /* Dynamically set active via JS */
     .seriouslyActive {
       color: #495057;
@@ -42,12 +47,14 @@
       &:active {
         color: #212529;
       }
+
       .badge {
         box-shadow: none;
         &.badge-light {
           background-color: #f2f2f2 !important;
           color: #666666 !important;
         }
+
         &.badge-danger {
           padding: 0.3em !important;
           margin-bottom: 8px;
