@@ -39,9 +39,11 @@ import {
 import "./profile.scss";
 
 class Dashboard extends React.Component {
+
   state = {};
 
   setTabItems = () => {
+
     // Get project count
     const projectcount = this.props.globalStore.data.repos.length;
 
@@ -51,56 +53,54 @@ class Dashboard extends React.Component {
           title: "Overview",
           visible: true,
           pill: false,
-          notification: false,
+          notification: false
         },
         {
           title: "Projects",
           visible: true,
           pill: projectcount,
-          notification: true,
+          notification: true
         },
         {
           title: "Education",
           visible: true,
-          notification: false,
+          notification: false
         },
         {
           title: "Posts",
           visible: true,
           pill: "0",
-          notification: false,
+          notification: false
         },
         {
           title: "Papers",
           visible: true,
           pill: "0",
-          notification: false,
+          notification: false
         },
         {
           title: "Talks",
           visible: true,
           pill: "0",
-          notification: false,
+          notification: false
         },
-      ],
+      ]
     });
-  };
+  }
 
   render() {
     const { globalStore } = this.props;
-
+    
     //> Troubleshooting Point 1
     // Global storage @ rendering of dashboard (Profile\index.jsx)
     //console.log(TSID1, globalStore);
 
-    if (!globalStore.data.logged) {
-      return <Redirect to="/" />;
-    }
+    if(!globalStore.data.logged) { return (<Redirect to="/"/>); }
 
     let data = globalStore.data;
 
     // Get tab items
-    if (data && !this.state.tabitems) {
+    if(data && !this.state.tabitems){
       this.setTabItems();
     }
 
@@ -116,8 +116,8 @@ class Dashboard extends React.Component {
                     <Avatar url={data.user.avatarUrl} alt={data.user.name} />
                     <Socialdata
                       status={{
-                        message: data.user.status,
-                        icon: data.user.statusEmojiHTML,
+                        message: data.user.status, 
+                        icon: data.user.statusEmojiHTML
                       }}
                       name={data.user.name}
                       company={data.user.company}
@@ -132,12 +132,12 @@ class Dashboard extends React.Component {
                 </MDBCol>
                 <MDBCol md="8">
                   <TabContainer items={this.state.tabitems} horizontal>
-                    <OverviewTab
-                      id={0}
-                      contrib={data.contrib}
-                      calendar={data.contribCalendar}
-                      contribTypes={data.contribTypes}
-                      languages={data.languages.slices}
+                    <OverviewTab 
+                    id={0}
+                    contrib={data.contrib}
+                    calendar={data.contribCalendar}
+                    contribTypes={data.contribTypes}
+                    languages={data.languages.slices}
                     />
                     <ProjectsTab id={1} repos={data.repos} />
                     <EducationTab id={2} />

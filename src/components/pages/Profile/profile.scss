@@ -1,6 +1,6 @@
 #profile {
   background-color: #ebebeb;
-  .card {
+  .card{
     box-shadow: none;
     background: white;
   }
@@ -22,15 +22,15 @@
     }
   }
   /* MDB Bug fix for every tab link always active */
-  .nav-tabs {
-    .active {
+  .nav-tabs{
+    .active{
       border: 1px solid transparent;
-      border-top-left-radius: 0.25rem;
-      border-top-right-radius: 0.25rem;
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
       background-color: transparent;
     }
     /* Dynamically set active via JS */
-    .seriouslyActive {
+    .seriouslyActive{
       color: #495057;
       background-color: #fff;
       border-color: #dee2e6 #dee2e6 #fff;
