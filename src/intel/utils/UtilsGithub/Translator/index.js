@@ -115,7 +115,7 @@ const fillPlatform = (objUser) => {
   const username = objUser.profile.login;
 
   db.exec(insert.platform, [
-    "GitHub",
+    "github",
     "https://github.com",
     avatarUrl,
     websiteUrl,
