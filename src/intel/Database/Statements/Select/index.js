@@ -27,6 +27,7 @@ export const repository = `
 SELECT
   repository.id as rId,
   repository.avatarUrl as rAvatarUrl,
+  repository.url as rUrl,
   repository.name as rName,
   repository.languagePie_id as rLanguagePieId,
   owner.avatarUrl as oAvatarUrl,
