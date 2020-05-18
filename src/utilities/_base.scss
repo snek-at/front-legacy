@@ -4,39 +4,39 @@
   min-height: 100vh;
 }
 
-body{
+body {
   background: #262626 !important;
 }
 
 // Buttons
 .btn {
   box-shadow: none !important;
-  &:hover{
+  &:hover {
     box-shadow: none !important;
   }
-  &:active{
+  &:active {
     box-shadow: none !important;
   }
-  &:focus{
+  &:focus {
     box-shadow: none !important;
   }
-  &:visited{
+  &:visited {
     box-shadow: none !important;
   }
 }
-.btn-grey{
+.btn-grey {
   background: #e6e6e6 !important;
   color: #262626;
-  &:hover{
-    background: darken(#e6e6e6,7%) !important;
+  &:hover {
+    background: darken(#e6e6e6, 7%) !important;
     color: #262626;
   }
-  &:active{
-    background: darken(#e6e6e6,10%) !important;
+  &:active {
+    background: darken(#e6e6e6, 10%) !important;
     color: #262626;
   }
-  &:focus{
-    background: darken(#e6e6e6,10%) !important;
+  &:focus {
+    background: darken(#e6e6e6, 10%) !important;
     color: #262626;
   }
 }
