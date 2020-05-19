@@ -14,12 +14,39 @@ import {
   MDBPopoverBody,
   MDBPopoverHeader,
   MDBIcon,
+  MDBTooltip,
 } from "mdbreact";
 //#endregion
 
 //#region > Components
 class SoftwareEngineer extends React.Component {
   state = {};
+
+  componentDidMount = () => {
+    const { globalState } = this.props;
+
+    if (this.props.globalState.fetchedUser && !this.state.sources) {
+      this.displaySources(globalState.fetchedUser.platformData.profile.sources);
+    }
+  };
+
+  displaySources = (sources) => {
+    let res = sources.map((source, i) => {
+      switch (source.source) {
+        case "github":
+          return "github";
+        case "gitlab":
+          return "gitlab";
+        case "bitbucket":
+          return "bitbucket";
+        default:
+          return false;
+      }
+    });
+    this.setState({
+      sources: res,
+    });
+  };
 
   render() {
     const { globalState } = this.props;
@@ -203,12 +230,65 @@ class SoftwareEngineer extends React.Component {
                           </MDBBtn>
                           <div>
                             <MDBPopoverHeader>
-                              {org.name}
-                              <br />
-                              <small>
-                                {org.members ? org.members.length : "Unknown"}{" "}
-                                members
-                              </small>
+                              <div>
+                                {org.platformName}/
+                                <strong className="text-dark">
+                                  {org.name}
+                                </strong>
+                              </div>
+                              <div className="d-flex justify-content-between">
+                                <div>
+                                  <small>
+                                    {org.members
+                                      ? org.members.length
+                                      : "Unknown"}{" "}
+                                    members
+                                  </small>
+                                </div>
+                                <div className="member-list">
+                                  <div>
+                                    {org.members &&
+                                      org.members.length > 0 &&
+                                      org.members
+                                        .slice(0, 8)
+                                        .map((member, m) => {
+                                          return (
+                                            <MDBTooltip
+                                              domElement
+                                              tag="span"
+                                              placement="top"
+                                              key={m}
+                                            >
+                                              <a
+                                                href={member.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                              >
+                                                <img
+                                                  src={member.avatarUrl}
+                                                  alt={member.username}
+                                                />
+                                              </a>
+                                              <span>
+                                                {member.username}
+                                              </span>
+                                            </MDBTooltip>
+                                          );
+                                        })}
+                                  </div>
+                                  <div>
+                                    {org.platformName === "github" && (
+                                      <a
+                                        href={`https://www.github.com/orgs/${org.name}/people`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <small>Show all</small>
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
                             </MDBPopoverHeader>
                             <MDBPopoverBody>
                               <p className="my-2">{org.description}</p>

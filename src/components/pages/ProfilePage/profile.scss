@@ -48,6 +48,18 @@
         overflow: visible;
         margin: 0;
       }
+      .member-list{
+        img{
+          width: 15px;
+          height: auto;
+          border-radius: 50%;
+          margin-left: .1rem;
+          transition: all .2s ease;
+          &:hover{
+            transform: translateY(-4px);
+          }
+        }
+      }
       .org {
         display: inline-block !important;
         position: relative;
