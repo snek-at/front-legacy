@@ -9,7 +9,7 @@ import { Link, withRouter } from "react-router-dom";
 import { SoftwareEngineer } from "../../organisms/profiles";
 
 //> CSS
-// To be added
+import "./profile.scss";
 //#endregion
 
 //#region > Components
@@ -67,7 +67,14 @@ class ProfilePage extends React.Component {
     } else if (!globalState.loading && globalState.fetchedUser) {
       console.dir(globalState.fetchedUser);
 
-      return <SoftwareEngineer />;
+      return (
+        <div id="profile">
+          <SoftwareEngineer
+            globalState={globalState}
+            globalFunctions={globalFunctions}
+          />
+        </div>
+      );
     } else {
       return <p>Usecase not mapped</p>;
     }

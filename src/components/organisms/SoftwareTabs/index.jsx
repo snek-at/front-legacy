@@ -5,10 +5,7 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import { MDBContainer, MDBRow, MDBCol } from "mdbreact";
-
-//> Components
-import { SoftwareTabs, ProfileInfo } from "../../";
+import { MDBContainer } from "mdbreact";
 //#endregion
 
 //#region > Components
@@ -16,18 +13,9 @@ class SoftwareEngineer extends React.Component {
   state = {};
 
   render() {
-    const { globalState, globalFunctions } = this.props;
-
     return (
-      <MDBContainer className="py-5">
-        <MDBRow>
-          <MDBCol lg="3">
-            <ProfileInfo globalState={globalState} />
-          </MDBCol>
-          <MDBCol lg="9">
-            <SoftwareTabs />
-          </MDBCol>
-        </MDBRow>
+      <MDBContainer>
+        <p>Software Tabs</p>
       </MDBContainer>
     );
   }
