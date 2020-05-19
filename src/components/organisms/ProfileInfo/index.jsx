@@ -74,7 +74,16 @@ class SoftwareEngineer extends React.Component {
                 </>
               )}
           </h4>
-
+          {globalState.fetchedUser &&
+            globalState.fetchedUser.platformData.user.settings &&
+            globalState.fetchedUser.platformData.user.settings
+              .showLocalRanking && (
+              <p className="mb-1 text-muted">
+                <small>
+                  <a href="#!">#3</a> in your region
+                </small>
+              </p>
+            )}
           {globalState.fetchedUser &&
             globalState.fetchedUser.platformData.profile.company && (
               <>
@@ -106,6 +115,37 @@ class SoftwareEngineer extends React.Component {
                 </>
               )}
           </div>
+          {globalState.fetchedUser &&
+            globalState.fetchedUser.platformData.profile.statusMessage && (
+              <div className="d-flex pt-3">
+                {globalState.fetchedUser.platformData.profile
+                  .statusEmojiHTML && (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        globalState.fetchedUser.platformData.profile
+                          .statusEmojiHTML,
+                    }}
+                  />
+                )}
+                <small className="px-1">
+                  {globalState.fetchedUser.platformData.profile.statusMessage}
+                </small>
+              </div>
+            )}
+        </div>
+        <div className="py-3 follow text-center">
+          <MDBBtn color="green" size="md">
+            <MDBIcon icon="plus-circle" className="mr-2" />
+            Follow
+          </MDBBtn>
+          <MDBBtn color="primary" outline size="md">
+            <MDBIcon icon="angle-up" className="mr-2" />
+            Upvote
+          </MDBBtn>
+        </div>
+        <div className="bg-light py-3 px-2">
+          <p>Connected accounts</p>
           <div className="connected mt-2 text-muted">
             <MDBIcon
               fab
@@ -138,64 +178,8 @@ class SoftwareEngineer extends React.Component {
               }
             />
           </div>
-          {globalState.fetchedUser &&
-            globalState.fetchedUser.platformData.user.settings &&
-            globalState.fetchedUser.platformData.user.settings
-              .showLocalRanking && (
-              <p className="mb-1 mt-1">
-                <a href="#!">#3</a> in your region
-              </p>
-            )}
-          {globalState.fetchedUser &&
-          globalState.fetchedUser.selectedUser !== globalState.user ? (
-            <div className="mt-2">
-              {true ? (
-                <MDBBtn color="green" className="mx-0 px-4" size="md">
-                  <MDBIcon icon="plus-circle" className="mr-2" />
-                  Follow
-                </MDBBtn>
-              ) : (
-                <MDBBtn color="green" className="mx-0 px-4" size="md">
-                  <MDBIcon icon="check" className="mr-2" />
-                  Following
-                </MDBBtn>
-              )}
-            </div>
-          ) : (
-            <div className="mt-2">
-              <MDBBtn
-                color="grey"
-                className="mx-0 px-4 w-100"
-                size="md"
-                onClick={() => this.setState({ showSettings: true })}
-              >
-                <MDBIcon icon="cogs" className="mr-1" />
-                Settings
-              </MDBBtn>
-            </div>
-          )}
-        </div>
-        <div className="bg-light py-3 px-2">
-          {globalState.fetchedUser &&
-            globalState.fetchedUser.platformData.profile.statusMessage && (
-              <>
-                {globalState.fetchedUser.platformData.profile
-                  .statusEmojiHTML && (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        globalState.fetchedUser.platformData.profile
-                          .statusEmojiHTML,
-                    }}
-                  />
-                )}
-                <small className="px-1">
-                  {globalState.fetchedUser.platformData.profile.statusMessage}
-                </small>
-              </>
-            )}
           <hr />
-          <p>My organisations</p>
+          <p>Organisations</p>
           {globalState.fetchedUser && (
             <div
               className={
@@ -269,24 +253,24 @@ class SoftwareEngineer extends React.Component {
                                                   alt={member.username}
                                                 />
                                               </a>
-                                              <span>
-                                                {member.username}
-                                              </span>
+                                              <span>{member.username}</span>
                                             </MDBTooltip>
                                           );
                                         })}
                                   </div>
-                                  <div>
-                                    {org.platformName === "github" && (
-                                      <a
-                                        href={`https://www.github.com/orgs/${org.name}/people`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        <small>Show all</small>
-                                      </a>
-                                    )}
-                                  </div>
+                                  {org.members && org.members.length > 9 && (
+                                    <div className="text-muted text-right">
+                                      {org.platformName === "github" && (
+                                        <a
+                                          href={`https://www.github.com/orgs/${org.name}/people`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <small>Show all</small>
+                                        </a>
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </MDBPopoverHeader>
@@ -319,7 +303,7 @@ class SoftwareEngineer extends React.Component {
             </div>
           )}
           <hr />
-          <p>My top languages</p>
+          <p>Top languages</p>
           <div className="px-4">
             <p>Language Chart</p>
           </div>

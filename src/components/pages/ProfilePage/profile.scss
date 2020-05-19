@@ -1,15 +1,13 @@
+@import "../../../utilities/variables";
+
 #profile {
   // Left col
   .social {
-    .main-avatar {
-      border-bottom: 5px #77bd43 solid;
-      border-top: 2px #f5f5f5 solid;
-      border-left: 2px #f5f5f5 solid;
-      border-right: 2px #f5f5f5 solid;
+    .follow {
+      background: white;
     }
     .bg-elegant {
       background: #fafafa;
-      border-bottom: 15px white solid;
     }
     .bg-light {
       background: #fafafa !important;
@@ -34,7 +32,7 @@
             content: "\f058";
             font-weight: 900;
             font-size: 12px;
-            color: #77bd43;
+            color: $snekGreen;
             bottom: -8px;
             right: -2px;
           }
@@ -48,14 +46,14 @@
         overflow: visible;
         margin: 0;
       }
-      .member-list{
-        img{
+      .member-list {
+        img {
           width: 15px;
           height: auto;
           border-radius: 50%;
-          margin-left: .1rem;
-          transition: all .2s ease;
-          &:hover{
+          margin-left: 0.1rem;
+          transition: all 0.2s ease;
+          &:hover {
             transform: translateY(-4px);
           }
         }
@@ -130,9 +128,9 @@
       // Active
       &.seriouslyActive {
         color: blue;
-        border-bottom: 3px #77bd43 solid;
+        border-bottom: 3px $snekGreen solid;
         &:hover {
-          border-bottom: 3px #77bd43 solid;
+          border-bottom: 3px $snekGreen solid;
         }
       }
       .badge {
