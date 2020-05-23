@@ -19,7 +19,6 @@ import {
   MDBCard,
   MDBBtn,
   MDBIcon,
-  MDBModal,
 } from "mdbreact";
 
 //> Components
