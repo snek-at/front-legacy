@@ -96,47 +96,14 @@
     }
   }
   // Right col
-  .content {
+  .profile-content {
     background: #fafafa;
-    .classic-tabs .nav li:first-child {
-      margin-left: 0;
-    }
-
-    // Tabs
-    .tabs-grey {
-      background: #ededed !important;
-      a {
-        color: #3b3b3b !important;
-        font-weight: bolder;
-      }
-    }
-    .tab-content {
-      background: #fafafa;
-      padding: 1rem;
-      padding-top: 2rem;
-    }
-    .classic-tabs .nav.tabs-grey li a {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      // Not active
-      &.active {
-        border-bottom: 3px #ededed solid;
-        &:hover {
-          border-bottom: 3px #c9e5b3 solid;
-        }
-      }
-      // Active
-      &.seriouslyActive {
-        color: blue;
-        border-bottom: 3px $snekGreen solid;
-        &:hover {
-          border-bottom: 3px $snekGreen solid;
-        }
-      }
-      .badge {
-        background: white !important;
-        box-shadow: none;
-      }
+    .nav-tabs {
+      background: white;
+      cursor: pointer;
+      border: 1px solid #e9ecef #e9ecef #dee2e6;
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
     }
   }
   // General things

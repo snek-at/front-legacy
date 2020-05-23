@@ -10,13 +10,71 @@ import { MDBContainer } from "mdbreact";
 
 //#region > Components
 class SoftwareEngineer extends React.Component {
-  state = {};
+  state = {
+    activeTab: 0,
+    tabItems: [
+      {
+        title: "Overview",
+        visible: true,
+        pill: false,
+        notification: false,
+      },
+      {
+        title: "Projects",
+        visible: true,
+        pill: this.props.projectCount ? this.props.projectCount : false,
+        notification: false,
+      },
+      {
+        title: "Education",
+        visible: true,
+        notification: false,
+      },
+      {
+        title: "Posts",
+        visible: true,
+        pill: "0",
+        notification: false,
+      },
+      {
+        title: "Papers",
+        visible: true,
+        pill: "0",
+        notification: false,
+      },
+      {
+        title: "Talks",
+        visible: true,
+        notification: false,
+        pill: this.props.talksCount ? this.props.talksCount : false,
+        notification: false,
+      },
+    ],
+  };
 
   render() {
     return (
-      <MDBContainer>
-        <p>Software Tabs</p>
-      </MDBContainer>
+      <div className="profile-content">
+        <ul class="nav nav-tabs">
+          {this.state.tabItems.map((item, i) => {
+            return (
+              <li className="nav-item">
+                <span
+                  className={
+                    this.state.activeTab === i ? "nav-link active" : "nav-link"
+                  }
+                  onClick={() => this.setState({ activeTab: i })}
+                >
+                  {item.title}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="p-3">
+          <p>Test</p>
+        </div>
+      </div>
     );
   }
 }
