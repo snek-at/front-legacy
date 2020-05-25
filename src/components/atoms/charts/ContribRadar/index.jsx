@@ -72,17 +72,21 @@ class ChartsPage extends React.Component {
 
   fillChart = (results) => {
     console.log(results);
-    this.setState({
-      dataRadar: {
-        labels: [
-          `Code Review ${results[0].data[0]}%`,
-          `Issues ${results[0].data[1]}%`,
-          `Pull Request ${results[0].data[2]}%`,
-          `Commits ${results[0].data[3]}%`,
-        ],
-        datasets: results,
-      },
-    });
+    if (results) {
+      this.setState({
+        dataRadar: {
+          labels: [
+            `Code Review ${results[0].data[0]}%`,
+            `Issues ${results[0].data[1]}%`,
+            `Pull Request ${results[0].data[2]}%`,
+            `Commits ${results[0].data[3]}%`,
+          ],
+          datasets: results,
+        },
+      });
+    } else {
+      this.setState({ dataRadar: null });
+    }
   };
 
   calculateSources = (nextPropsYear) => {
@@ -121,22 +125,27 @@ class ChartsPage extends React.Component {
 
     let values = [totalReviews, totalIssues, totalRequests, totalCommits];
 
-    results.push({
-      label: "GitHub",
-      backgroundColor: "rgba(123, 201, 111,.4)",
-      borderColor: "rgba(123, 201, 111)",
-      data: values,
-    });
+    // Check if the values are valid
+    if (values.includes(undefined)) {
+      this.fillChart(null);
+    } else {
+      results.push({
+        label: "GitHub",
+        backgroundColor: "rgba(123, 201, 111,.4)",
+        borderColor: "rgba(123, 201, 111)",
+        data: values,
+      });
 
-    // Calculate averages
-    let avgReviews, avgIssues, avgRequests, avgCommits;
+      // Calculate averages
+      let avgReviews, avgIssues, avgRequests, avgCommits;
 
-    avgReviews = parseInt(totalReviews) / parseInt(totalSources);
-    avgIssues = parseInt(totalIssues) / parseInt(totalSources);
-    avgRequests = parseInt(totalRequests) / parseInt(totalSources);
-    avgCommits = parseInt(totalCommits) / parseInt(totalSources);
+      avgReviews = parseInt(totalReviews) / parseInt(totalSources);
+      avgIssues = parseInt(totalIssues) / parseInt(totalSources);
+      avgRequests = parseInt(totalRequests) / parseInt(totalSources);
+      avgCommits = parseInt(totalCommits) / parseInt(totalSources);
 
-    this.fillChart(results);
+      this.fillChart(results);
+    }
   };
 
   render() {
