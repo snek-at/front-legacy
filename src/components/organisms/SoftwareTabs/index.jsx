@@ -8,7 +8,7 @@ import React from "react";
 import { MDBContainer } from "mdbreact";
 
 //> Components
-import { ProjectTab } from "../tabs";
+import { ProjectTab, OverviewTab } from "../tabs";
 //#endregion
 
 //#region > Components
@@ -61,10 +61,10 @@ class SoftwareEngineer extends React.Component {
 
     return (
       <div className="profile-content">
-        <ul class="nav nav-tabs">
+        <ul className="nav nav-tabs">
           {this.state.tabItems.map((item, i) => {
             return (
-              <li className="nav-item">
+              <li className="nav-item" key={i}>
                 <span
                   className={activeTab === i ? "nav-link active" : "nav-link"}
                   onClick={() => this.setState({ activeTab: i })}
@@ -76,6 +76,13 @@ class SoftwareEngineer extends React.Component {
           })}
         </ul>
         <div className="p-3">
+          {activeTab === 0 && (
+            <OverviewTab
+              platformData={
+                globalState.fetchedUser && globalState.fetchedUser.platformData
+              }
+            />
+          )}
           {activeTab === 1 && (
             <ProjectTab
               repoList={

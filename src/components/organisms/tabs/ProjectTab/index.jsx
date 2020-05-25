@@ -35,7 +35,7 @@ class ProjectTab extends React.Component {
         <MDBRow className="project-list">
           {repoList &&
             repoList.map((repo, i) => {
-              return <Project repo={repo} i={i} />;
+              return <Project repo={repo} key={i} />;
             })}
         </MDBRow>
       </>
@@ -46,7 +46,7 @@ class ProjectTab extends React.Component {
 
 //#region > PropTypes
 ProjectTab.propTypes = {
-  repoList: PropTypes.object.isRequired,
+  repoList: PropTypes.array.isRequired,
 };
 //#endregion
 

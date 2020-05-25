@@ -17,6 +17,8 @@ import { MDBRow, MDBCol } from "mdbreact";
 import "./calendar2d.scss";
 //#endregion
 
+const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
 //#region > Components
 class Calender2D extends React.Component {
   constructor(props) {
@@ -197,7 +199,7 @@ class Calender2D extends React.Component {
                           onMouseOver={() =>
                             this.displayDailyInfo(day, wkey, dkey)
                           }
-                          fill={changeHue(day.color, this.state.hue)}
+                          fill={day.color}
                         ></rect>
                       );
                     } else {
@@ -212,7 +214,7 @@ class Calender2D extends React.Component {
                           onMouseOver={() =>
                             this.displayDailyInfo(day, wkey, dkey)
                           }
-                          fill={changeHue(day.color, this.state.hue)}
+                          fill={day.color}
                         ></rect>
                       );
                     }

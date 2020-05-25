@@ -21,10 +21,10 @@ import {
 //#region > Components
 class Project extends React.Component {
   render() {
-    const { repo, i } = this.props;
+    const { repo } = this.props;
 
     return (
-      <MDBCol md="6" key={i}>
+      <MDBCol md="6">
         <a href={repo.url} target="_blank" rel="noopener noreferrer">
           <li>
             <div>
@@ -63,7 +63,6 @@ class Project extends React.Component {
 //#region > PropTypes
 Project.propTypes = {
   repo: PropTypes.object.isRequired,
-  i: PropTypes.number.isRequired,
 };
 //#endregion
 
