@@ -199,6 +199,7 @@ class Calender2D extends React.Component {
                           onMouseOver={() =>
                             this.displayDailyInfo(day, wkey, dkey)
                           }
+                          onClick={() => this.props.selectDay(day, wkey, dkey)}
                           fill={day.color}
                         ></rect>
                       );
@@ -214,6 +215,7 @@ class Calender2D extends React.Component {
                           onMouseOver={() =>
                             this.displayDailyInfo(day, wkey, dkey)
                           }
+                          onClick={() => this.props.selectDay(day, wkey, dkey)}
                           fill={day.color}
                         ></rect>
                       );

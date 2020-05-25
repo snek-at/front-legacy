@@ -7,10 +7,19 @@ import Project from "./Project";
 import Calendar2D from "./charts/Calendar2D";
 import Calendar3D from "./charts/Calendar3D";
 import ContribRadar from "./charts/ContribRadar";
+import LatestActivity from "./charts/LatestActivity";
 import Pinned from "./Pinned";
 
 // Export the components for easy access from parent components
-export { ScrollToTop, Project, Calendar2D, Calendar3D, ContribRadar, Pinned };
+export {
+  ScrollToTop,
+  Project,
+  Calendar2D,
+  Calendar3D,
+  ContribRadar,
+  LatestActivity,
+  Pinned,
+};
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)

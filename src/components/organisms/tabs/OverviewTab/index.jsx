@@ -22,7 +22,13 @@ import {
 import "./overviewtab.scss";
 
 //> Components
-import { Calendar2D, Calendar3D, ContribRadar, Pinned } from "../../../atoms";
+import {
+  Calendar2D,
+  Calendar3D,
+  ContribRadar,
+  Pinned,
+  LatestActivity,
+} from "../../../atoms";
 //#endregion
 
 //#region > Dummy Data
@@ -58,8 +64,21 @@ class OverviewTab extends React.Component {
     selectedYear: undefined,
   };
 
+  selectDay = (day, wkey, dkey) => {
+    console.log("Day Selected", wkey);
+    this.setState({
+      activity: {
+        day,
+        wkey,
+        dkey,
+      },
+    });
+  };
+
   render() {
     const { platformData } = this.props;
+
+    console.log("OVERVIEW TAB STATE", this.state);
 
     return (
       <>
@@ -95,7 +114,7 @@ class OverviewTab extends React.Component {
             </MDBRow>
             <MDBRow className="pinned">
               {pinned.map((item, i) => {
-                return <Pinned {...item} />;
+                return <Pinned {...item} key={i} />;
               })}
             </MDBRow>
           </>
@@ -143,16 +162,38 @@ class OverviewTab extends React.Component {
           <Calendar2D
             platformData={platformData}
             year={this.state.selectedYear}
+            selectDay={this.selectDay}
           />
         )}
-        {platformData && !platformData.user.settings.showContribDiagram && (
-          <div className="mt-5">
-            <ContribRadar
+        <MDBRow className="mt-4">
+          <MDBCol md="7">
+            <p className="lead">Contribution Types</p>
+            {platformData && !platformData.user.settings.showContribDiagram && (
+              <div className="mt-5">
+                <ContribRadar
+                  statistic={platformData.statistic}
+                  year={this.state.selectedYear}
+                />
+              </div>
+            )}
+          </MDBCol>
+          <MDBCol md="5">
+            <p className="lead">
+              Activity
+              <MDBIcon
+                icon="angle-double-up"
+                className="green-text ml-2"
+                size="md"
+              />
+            </p>
+            <p className="text-muted mb-0">Week overview</p>
+            <LatestActivity
               statistic={platformData.statistic}
               year={this.state.selectedYear}
+              activity={this.state.activity}
             />
-          </div>
-        )}
+          </MDBCol>
+        </MDBRow>
       </>
     );
   }

@@ -18,12 +18,21 @@ class ChartsPage extends React.Component {
           tension: 0,
         },
       },
+      tooltips: {
+        enabled: false,
+      },
       legend: {
         display: false,
       },
+      elements: {
+        point: {
+          radius: 0,
+        },
+      },
       scale: {
         pointLabels: {
-          fontSize: 14,
+          fontSize: 11,
+          color: "grey",
         },
         gridLines: {
           display: false,
@@ -79,7 +88,7 @@ class ChartsPage extends React.Component {
             `Code Review ${results[0].data[0]}%`,
             `Issues ${results[0].data[1]}%`,
             `Pull Request ${results[0].data[2]}%`,
-            `Commits ${results[0].data[3]}%`,
+            `Commits ${results[0].data[3]}%   `,
           ],
           datasets: results,
         },
@@ -154,7 +163,7 @@ class ChartsPage extends React.Component {
         <Radar
           data={this.state.dataRadar}
           options={this.state.dataRadarOptions}
-          height={100}
+          height={150}
         />
       );
     } else {
