@@ -79,8 +79,10 @@ class Calendar3D extends React.Component {
       moment(contributionCalendar.startDate).format("MMM DD, YYYY") +
       " - " +
       moment(contributionCalendar.endDate).format("MMM DD, YYYY");
+    /* Busiest day */
     maxCount = contribData.busiestDay.total;
-    dateBest = moment(contribData.busiestDay.date).format("MMM DD");
+    dateBest = moment(contribData.busiestDay.date);
+    dateBest = dateBest.isValid() ? dateBest.format("MMM DD") : "-";
 
     let html;
 
@@ -131,7 +133,7 @@ class Calendar3D extends React.Component {
         moment(contribData.streak.longest.endDate).format("MMM DD, YYYY");
     } else {
       streakLongest = "0";
-      datesLongest = "";
+      datesLongest = "-";
     }
     if (contribData.streak.current.id !== -1) {
       streakCurrent = contribData.streak.current.totalDays;
@@ -141,7 +143,7 @@ class Calendar3D extends React.Component {
         moment(contribData.streak.current.endDate).format("MMM DD, YYYY");
     } else {
       streakCurrent = "0";
-      datesCurrent = "";
+      datesCurrent = "-";
     }
 
     let html;
