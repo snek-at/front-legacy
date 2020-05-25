@@ -25,12 +25,11 @@ class ChartsPage extends React.Component {
         pointLabels: {
           fontSize: 14,
         },
+        gridLines: {
+          display: false,
+        },
         ticks: {
           display: false,
-          beginAtZero: true,
-          max: 100,
-          min: 0,
-          stepSize: 20,
         },
       },
       scales: {
@@ -72,9 +71,15 @@ class ChartsPage extends React.Component {
   }
 
   fillChart = (results) => {
+    console.log(results);
     this.setState({
       dataRadar: {
-        labels: ["Code review", "Issues", "Pull request", "Commits"],
+        labels: [
+          `Code Review ${results[0].data[0]}%`,
+          `Issues ${results[0].data[1]}%`,
+          `Pull Request ${results[0].data[2]}%`,
+          `Commits ${results[0].data[3]}%`,
+        ],
         datasets: results,
       },
     });
