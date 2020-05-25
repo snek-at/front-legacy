@@ -22,7 +22,34 @@ import {
 import "./overviewtab.scss";
 
 //> Components
-import { Calendar2D, Calendar3D, ContribRadar } from "../../../atoms";
+import { Calendar2D, Calendar3D, ContribRadar, Pinned } from "../../../atoms";
+//#endregion
+
+//#region > Dummy Data
+const pinned = [
+  {
+    category: {
+      color: "green",
+      title: "Test",
+    },
+    pinned: {
+      views: 4,
+      description: "This is the description",
+    },
+    link: "https://www.google.com",
+  },
+  {
+    category: {
+      color: "red",
+      title: "Test",
+    },
+    pinned: {
+      views: 11,
+      description: "This is the description 2",
+    },
+    link: "https://www.google.com",
+  },
+];
 //#endregion
 
 //#region > Components
@@ -67,168 +94,9 @@ class OverviewTab extends React.Component {
               </MDBCol>
             </MDBRow>
             <MDBRow className="pinned">
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="info">Talk</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">
-                        It is okay to love your sister
-                      </p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="eye" className="mr-1" /> 69
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            More
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="info">Talk</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">
-                        How I learned to hide a secret
-                      </p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="eye" className="mr-1" /> 23
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            More
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="info">Talk</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">
-                        How to raise your daughter in Alabama
-                      </p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="eye" className="mr-1" /> 165
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            More
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="primary">Repository</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">snek-at/front</p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="users" className="mr-1" /> 12
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            Open
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="orange">Video</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">My 2020 showreel</p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="eye" className="mr-1" /> 5.430
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            View
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="4">
-                <MDBCard>
-                  <MDBCardBody>
-                    <div className="text-center">
-                      <MDBBadge color="indigo">Photo</MDBBadge>
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="text-muted">The best picture I ever took</p>
-                    </div>
-                    <div>
-                      <MDBRow className="mx-1">
-                        <MDBCol col="6" className="text-left">
-                          <span className="text-muted">
-                            <MDBIcon icon="eye" className="mr-1" /> 404
-                          </span>
-                        </MDBCol>
-                        <MDBCol col="6" className="text-right">
-                          <span className="clickable text-muted blue-text">
-                            View
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-              </MDBCol>
+              {pinned.map((item, i) => {
+                return <Pinned {...item} />;
+              })}
             </MDBRow>
           </>
         )}
