@@ -6,6 +6,9 @@ import React from "react";
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import { MDBContainer } from "mdbreact";
+
+//> Components
+import { ProjectTab } from "../tabs";
 //#endregion
 
 //#region > Components
@@ -53,6 +56,9 @@ class SoftwareEngineer extends React.Component {
   };
 
   render() {
+    const { globalState } = this.props;
+    const { activeTab } = this.state;
+
     return (
       <div className="profile-content">
         <ul class="nav nav-tabs">
@@ -60,9 +66,7 @@ class SoftwareEngineer extends React.Component {
             return (
               <li className="nav-item">
                 <span
-                  className={
-                    this.state.activeTab === i ? "nav-link active" : "nav-link"
-                  }
+                  className={activeTab === i ? "nav-link active" : "nav-link"}
                   onClick={() => this.setState({ activeTab: i })}
                 >
                   {item.title}
@@ -72,7 +76,14 @@ class SoftwareEngineer extends React.Component {
           })}
         </ul>
         <div className="p-3">
-          <p>Test</p>
+          {activeTab === 1 && (
+            <ProjectTab
+              repoList={
+                globalState.fetchedUser &&
+                globalState.fetchedUser.platformData.profile.repositories
+              }
+            />
+          )}
         </div>
       </div>
     );

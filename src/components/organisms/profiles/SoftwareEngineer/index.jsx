@@ -25,7 +25,7 @@ class SoftwareEngineer extends React.Component {
             <ProfileInfo globalState={globalState} />
           </MDBCol>
           <MDBCol lg="9">
-            <SoftwareTabs />
+            <SoftwareTabs globalState={globalState} />
           </MDBCol>
         </MDBRow>
       </MDBContainer>
