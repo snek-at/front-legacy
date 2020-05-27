@@ -49,7 +49,7 @@ class Projects extends React.Component {
               {this.props.repos.map((repo, key) => {
 
                 if(this.state["lastCommit"+key] === undefined){
-                  this.getBadge("lastCommit"+key,"https://cors-anywhere.herokuapp.com/https://img.shields.io/github/last-commit/"+repo.owner.login+"/"+repo.name);
+                  this.getBadge("lastCommit"+key,"https://cors.snek.at/https://img.shields.io/github/last-commit/"+repo.owner.login+"/"+repo.name);
                 }
 
                 return (
