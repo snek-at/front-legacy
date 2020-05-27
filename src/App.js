@@ -60,7 +60,16 @@ const LOGIN_USER = gql`
         }
     }
 `;
-
+// Update Cache
+const UPDATE_CACHE = gql`
+  mutation cache ($token: String!, $platformData: String!) {
+    cacheUser(token: $token, platformData: $platformData){
+      user{
+        platformData
+      }
+    }
+  }
+`;
 class App extends React.Component {
   // Initialize state
   state = {
@@ -210,7 +219,7 @@ class App extends React.Component {
         let platformData = JSON.parse(plattformDataTemp);
         let sourcesTemp = registrationData.sources.replace(/'/g,'"');
         let sources = JSON.parse(sourcesTemp);
-
+        let cache = {};
         this.setState({
           logged: true,
           contrib: platformData.contrib,
@@ -238,6 +247,23 @@ class App extends React.Component {
             orgs: intel.orgs(),
             languages: intel.languages(),
             repos: intel.repos(),
+          });
+          cache = {
+            logged: true,
+            contrib: intel.stats(),
+            contribCalendar: intel.calendar(),
+            contribTypes: intel.contribTypes(),
+            user: intel.user(),
+            orgs: intel.orgs(),
+            languages: intel.languages(),
+            repos: intel.repos(),
+          };
+          platformData = JSON.stringify(cache);
+          this.props.caching({
+            variables: { 
+            token: localStorage.getItem("jwt_snek"),
+            platformData
+          }
           });
         });
       }
@@ -276,6 +302,7 @@ export default compose(
   graphql(VERIFY_TOKEN, { name: "verify" }),
   graphql(REFRESH_TOKEN, { name: "refresh" }),
   graphql(LOGIN_USER, { name: "login" }),
+  graphql(UPDATE_CACHE, { name: "caching" })
 )(withApollo(App));
 
 /**
