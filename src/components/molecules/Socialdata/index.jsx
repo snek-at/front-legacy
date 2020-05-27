@@ -39,13 +39,13 @@ class Socialdata extends React.Component {
     if(platforms){
       platforms.map((platform, i) => {
         switch(platform.platform){
-          case "GitHub":
+          case "github":
             platformsJoined.github = true;
             return true;
-          case "GitLab":
+          case "gitlab":
             platformsJoined.gitlab = true;
             return true;
-          case "BitBucket":
+          case "bitbucket":
             platformsJoined.bitbucket = true;
             return true;
           default:
