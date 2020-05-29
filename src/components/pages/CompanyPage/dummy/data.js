@@ -1,3 +1,5 @@
+//#region > Exports
+// Exports a object containing various dummy data for the company page
 export default {
   milestones: [
     { date: "11.11.2017", name: "First employee", icon: "user-circle" },
@@ -112,3 +114,4 @@ export default {
     },
   },
 };
+//#endregion

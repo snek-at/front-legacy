@@ -32,6 +32,7 @@ import data from "./dummy/data.js";
 import platformData from "./dummy/chart.json";
 //#endregion
 
+/** @todo Change constant variable to uppercase */
 //#region > Configs
 // Base
 const googleMapsBaseURL = "https://www.google.at/maps/place/";
@@ -66,6 +67,7 @@ const contribOptions = {
 //#endregion
 
 //#region > Components
+/** @todo Some parts exceed the maximum line length. Please fix :(  */
 class CompanyPage extends React.Component {
   state = {
     activeTab: 0,
@@ -135,6 +137,7 @@ class CompanyPage extends React.Component {
     });
   };
 
+  /** @todo Remove breaks after returns */
   getGrowth = (growth) => {
     switch (growth) {
       case -2:

@@ -1,3 +1,4 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
@@ -23,7 +24,9 @@ import Routes from "./Routes";
 
 //> Intel
 import { Intel } from "snek-intel";
+//#endregion
 
+//#region > Components
 class App extends React.Component {
   state = {
     loggedUser: undefined,
@@ -564,5 +567,13 @@ class App extends React.Component {
     );
   }
 }
+//#endregion
 
+//#region > Exports
 export default App;
+//#endregion
+
+/**
+ * SPDX-License-Identifier: (EUPL-1.2)
+ * Copyright © Simon Prast
+ */

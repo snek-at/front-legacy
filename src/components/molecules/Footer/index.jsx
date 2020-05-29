@@ -1,3 +1,4 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
@@ -22,16 +23,21 @@ import "./footer.scss";
 //> Images
 // SNEK Logo
 import Logo from "../../../assets/navigation/logo.png";
+//#endregion
 
 //> Local data
 // Slogans
+/** @todo Change to uppercase */
+//#region > Constant Variables
 const slogans = [
   "Become a snek!",
   "Connect with your colleges!",
   "Show the world what you can do!",
   "What are you waiting for?!",
 ];
+//#endregion
 
+//#region > Components
 class Footer extends React.PureComponent {
   state = {
     slogan: "",
@@ -246,8 +252,11 @@ class Footer extends React.PureComponent {
     );
   }
 }
+//#endregion
 
+//#region > Exports
 export default withRouter(Footer);
+//#endregion
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)

@@ -1,3 +1,4 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
@@ -8,7 +9,9 @@ import moment from "moment";
 
 //> CSS
 import "./calendar3d.scss";
+//#endregion
 
+//#region > Components
 class Calendar3D extends React.Component {
   constructor(props) {
     super(props);
@@ -354,8 +357,11 @@ class Calendar3D extends React.Component {
     );
   }
 }
+//#endregion
 
+//#region > Exports
 export default Calendar3D;
+//#endregion
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)

@@ -82,19 +82,15 @@ class LoginForm extends React.Component {
   };
 
   handleChange = (e, id) => {
-    this.setState(
-      {
-        [e.target.name]: e.target.value,
-      }
-    );
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
   };
 
   handleChangeManual = (name, value, id) => {
-    this.setState(
-      {
-        [name]: value,
-      }
-    );
+    this.setState({
+      [name]: value,
+    });
   };
 
   removeError = (id) => {
