@@ -5,10 +5,10 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import { MDBContainer } from "mdbreact";
+import { MDBContainer, MDBBadge } from "mdbreact";
 
 //> Components
-import { ProjectTab, OverviewTab } from "../tabs";
+import { ProjectTab, OverviewTab, TalksTab } from "../tabs";
 //#endregion
 
 //#region > Components
@@ -25,7 +25,11 @@ class SoftwareEngineer extends React.Component {
       {
         title: "Projects",
         visible: true,
-        pill: this.props.projectCount ? this.props.projectCount : false,
+        pill: this.props.globalState?.fetchedUser?.platformData?.profile
+          ?.repositories
+          ? this.props.globalState?.fetchedUser?.platformData?.profile
+              ?.repositories?.length
+          : "0",
         notification: false,
       },
       {
@@ -49,7 +53,9 @@ class SoftwareEngineer extends React.Component {
         title: "Talks",
         visible: true,
         notification: false,
-        pill: this.props.talksCount ? this.props.talksCount : false,
+        pill: this.props.globalState.fetchedUser.platformData.talks
+          ? this.props.globalState.fetchedUser.platformData.talks.length
+          : "0",
         notification: false,
       },
     ],
@@ -70,6 +76,7 @@ class SoftwareEngineer extends React.Component {
                   onClick={() => this.setState({ activeTab: i })}
                 >
                   {item.title}
+                  <MDBBadge color="primary">{item.pill}</MDBBadge>
                 </span>
               </li>
             );
@@ -91,6 +98,12 @@ class SoftwareEngineer extends React.Component {
               }
             />
           )}
+          {activeTab > 1 && activeTab < 5 && (
+            <p className="text-muted">
+              This feature is not available just yet.
+            </p>
+          )}
+          {activeTab === 5 && <TalksTab {...this.props} />}
         </div>
       </div>
     );

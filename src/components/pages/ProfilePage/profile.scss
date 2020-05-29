@@ -104,6 +104,19 @@
       border: 1px solid #e9ecef #e9ecef #dee2e6;
       border-top-left-radius: 0.25rem;
       border-top-right-radius: 0.25rem;
+      .nav-link {
+        &.active {
+          background: #fafafa;
+          border-bottom-color: #fafafa;
+        }
+      }
+      .nav-item {
+        .badge {
+          box-shadow: none;
+          padding: 0.2rem 0.4rem;
+          margin-left: 0.3rem;
+        }
+      }
     }
   }
   // General things
