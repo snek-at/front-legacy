@@ -59,6 +59,16 @@ class Routes extends React.Component {
             />
           )}
         />
+        <Route
+          exact
+          path="/c/:name"
+          component={(props) => (
+            <CompanyPage
+              globalFunctions={globalFunctions}
+              globalState={globalState}
+            />
+          )}
+        />
       </Switch>
     );
   }
