@@ -11,7 +11,7 @@ import moment from "moment";
 //#endregion
 
 //#region > Components
-class LatestAcitivity extends React.Component {
+class LatestActivity extends React.Component {
   state = {
     dataLineOptions: {
       responsive: true,
@@ -158,7 +158,7 @@ class LatestAcitivity extends React.Component {
 //#endregion
 
 //#region > Exports
-export default LatestAcitivity;
+export default LatestActivity;
 //#endregion
 
 /**
