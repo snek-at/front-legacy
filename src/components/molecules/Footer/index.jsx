@@ -105,12 +105,7 @@ class Footer extends React.PureComponent {
             >
               <MDBIcon fab icon="youtube" />
             </MDBBtn>
-            <MDBBtn
-              tag="a"
-              floating
-              social="email"
-              href="mailto:snek@aichner-christian.com"
-            >
+            <MDBBtn tag="a" floating social="email" href="mailto:info@snek.at">
               <MDBIcon far icon="envelope" />
             </MDBBtn>
           </MDBCol>
@@ -135,16 +130,12 @@ class Footer extends React.PureComponent {
                     About
                   </li>
                 </Link>
-                <a
-                  href="https://www.aichner-christian.com/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link to="/privacy">
                   <li className="list-unstyled">
                     <MDBIcon icon="balance-scale" />
                     Privacy
                   </li>
-                </a>
+                </Link>
                 <Link to="/terms">
                   <li className="list-unstyled">
                     <MDBIcon icon="balance-scale" />
@@ -199,10 +190,10 @@ class Footer extends React.PureComponent {
                   <MDBIcon icon="home" />
                   Emailwerkstraße 29, Carinthia, Austria
                 </li>
-                <a href="mailto:snek@aichner-christian.com">
+                <a href="mailto:info@snek.at">
                   <li className="list-unstyled">
                     <MDBIcon far icon="envelope" />
-                    snek@aichner-christian.com
+                    info@snek.at
                   </li>
                 </a>
               </ul>
