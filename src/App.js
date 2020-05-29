@@ -528,9 +528,12 @@ class App extends React.Component {
       <Router>
         <ScrollToTop>
           <div className="flyout">
-            {!this.state.caching && this.state.fetchedUser && (
-              <MDBProgress material preloader className="caching-loader" />
-            )}
+            {!this.state.caching &&
+              this.state.fetchedUser &&
+              this.state.loggedUser?.username ===
+                this.state.fetchedUser.platformData.user?.username && (
+                <MDBProgress material preloader className="caching-loader" />
+              )}
             <Navbar
               globalState={this.state}
               globalFunctions={{
