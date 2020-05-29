@@ -528,7 +528,7 @@ class App extends React.Component {
       <Router>
         <ScrollToTop>
           <div className="flyout">
-            {!this.state.caching && (
+            {!this.state.caching && this.state.fetchedUser && (
               <MDBProgress material preloader className="caching-loader" />
             )}
             <Navbar
