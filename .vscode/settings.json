@@ -42,8 +42,8 @@
     "homescreen",
     "precached",
     "renamer",
-    "webfonts",
-    "webscrap"
+    "webfonts"
   ],
+  "editor.rulers": [80,120],
   "editor.tabSize": 2
 }

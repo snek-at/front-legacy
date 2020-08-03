@@ -1,3 +1,4 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
@@ -33,6 +34,7 @@ import { ApolloProvider } from "react-apollo";
 import App from "./App";
 
 import registerServiceWorker from "./registerServiceWorker";
+//#endregion
 
 // API Link
 const httpLink = createHttpLink({
@@ -57,5 +59,5 @@ registerServiceWorker();
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © 2019 Werbeagentur Christian Aichner
+ * Copyright © Simon Prast
  */

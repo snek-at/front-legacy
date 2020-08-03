@@ -1,38 +1,41 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
-// Router
-import { withRouter } from "react-router-dom";
+// DOM bindings for React Router
+import { Link, withRouter } from "react-router-dom";
+// React PropTypes
+import PropTypes from "prop-types";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
 import {
   MDBNavbar,
-  MDBContainer,
   MDBNavbarBrand,
   MDBNavbarNav,
   MDBNavItem,
-  MDBNavLink,
   MDBNavbarToggler,
   MDBCollapse,
-  MDBFormInline,
-  MDBInput,
-  MDBIcon,
+  MDBContainer,
   MDBDropdown,
+  MDBDropdownItem,
   MDBDropdownToggle,
   MDBDropdownMenu,
-  MDBDropdownItem
+  MDBSmoothScroll,
+  MDBBtn,
 } from "mdbreact";
 
-//> Components
-import { SearchBar } from "../../molecules";
+//> Images
+import SNEKLogo from "../../../assets/navigation/logo.png";
 
 //> CSS
 import "./navbar.scss";
+//#endregion
 
+//#region > Components
 class Navbar extends React.Component {
   state = {
-    isOpen: false
+    isOpen: false,
   };
 
   toggleCollapse = () => {
@@ -47,81 +50,119 @@ class Navbar extends React.Component {
   };
 
   render() {
-    const { location } = this.props;
-    const { data } = this.props;
+    const { globalState, globalFunctions, location } = this.props;
 
     return (
-      <MDBNavbar color="elegant-color" dark expand="md">
+      <MDBNavbar color="light" light expand="md">
         <MDBContainer>
-          <MDBNavbarBrand>
-            <strong className="white-text">SNEK</strong>
-          </MDBNavbarBrand>
+          {location.pathname === "/" ? (
+            <MDBSmoothScroll to="home" className="d-inline">
+              <MDBNavbarBrand className="flex-center">
+                <img
+                  src={SNEKLogo}
+                  alt="SNEK Logo"
+                  className="img-fluid mr-2"
+                />
+                <span className="font-weight-bold">SNEK</span>
+              </MDBNavbarBrand>
+            </MDBSmoothScroll>
+          ) : (
+            <>
+              {!globalState.loading && globalState.loggedUser ? (
+                <a href={"/u/" + globalState.loggedUser?.username}>
+                  <MDBNavbarBrand className="flex-center">
+                    <img
+                      src={SNEKLogo}
+                      alt="SNEK Logo"
+                      className="img-fluid mr-2"
+                    />
+                    <span className="font-weight-bold">SNEK</span>
+                  </MDBNavbarBrand>
+                </a>
+              ) : (
+                <Link to="/">
+                  <MDBNavbarBrand className="flex-center">
+                    <img
+                      src={SNEKLogo}
+                      alt="SNEK Logo"
+                      className="img-fluid mr-2"
+                    />
+                    <span className="font-weight-bold">SNEK</span>
+                  </MDBNavbarBrand>
+                </Link>
+              )}
+            </>
+          )}
           <MDBNavbarToggler onClick={this.toggleCollapse} />
-          <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
-            <SearchBar />
+          <MDBCollapse id="navbarCollapse" isOpen={this.state.isOpen} navbar>
             <MDBNavbarNav left>
-              <MDBNavItem>
-                <MDBNavLink to="#!">Ranking</MDBNavLink>
-              </MDBNavItem>
-              <MDBNavItem>
-                <MDBNavLink to="#!">Developer</MDBNavLink>
-              </MDBNavItem>
-              <MDBNavItem>
-                <MDBNavLink to="#!">Jobs</MDBNavLink>
-              </MDBNavItem>
-              <MDBNavItem>
-                <MDBNavLink to="#!">Trends</MDBNavLink>
-              </MDBNavItem>
+              <MDBNavItem>{/* SEARCH */}</MDBNavItem>
             </MDBNavbarNav>
-            {data.logged ? (
-              <MDBNavbarNav right>
-                <MDBNavItem>
-                  <span
-                    className="nav-link cursor-pointer"
-                    onClick={this.logout}
-                  >
-                    Logout
-                  </span>
-                </MDBNavItem>
-              </MDBNavbarNav>
-            ) : (
-              <MDBNavbarNav right>
-                <MDBNavItem active={data.pageLogin}>
-                  {location.pathname === "/" ? (
-                    <span
-                      className="nav-link cursor-pointer"
-                      onClick={() => this.props.changeState("pageLogin", true)}
+            <MDBNavbarNav right>
+              {!globalState.loading && globalState.loggedUser ? (
+                <>
+                  <div className="spacer" />
+                  <MDBNavItem>
+                    <MDBDropdown>
+                      <MDBDropdownToggle nav caret>
+                        <img
+                          src={globalState.loggedUser.avatarUrl}
+                          className="z-depth-0"
+                          alt={globalState.loggedUser.username}
+                        />
+                      </MDBDropdownToggle>
+                      <MDBDropdownMenu className="dropdown-default">
+                        <MDBDropdownItem
+                          href={"/u/" + globalState.loggedUser.username}
+                        >
+                          My profile
+                        </MDBDropdownItem>
+                        <Link
+                          to="/"
+                          onClick={globalFunctions.logout}
+                          className="dropdown-item"
+                        >
+                          Sign Out
+                        </Link>
+                      </MDBDropdownMenu>
+                    </MDBDropdown>
+                  </MDBNavItem>
+                </>
+              ) : (
+                <>
+                  {location.pathname !== "/" && (
+                    <MDBBtn
+                      color="green"
+                      size="md"
+                      onClick={globalFunctions.login}
                     >
-                      Sign in
-                    </span>
-                  ) : (
-                    <MDBNavLink to="/">Sign in</MDBNavLink>
+                      Sign In
+                    </MDBBtn>
                   )}
-                </MDBNavItem>
-                <MDBNavItem active={!data.pageLogin}>
-                  {location.pathname === "/" ? (
-                    <span
-                      className="nav-link cursor-pointer"
-                      onClick={() => this.props.changeState("pageLogin", false)}
-                    >
-                      Sign up
-                    </span>
-                  ) : (
-                    <MDBNavLink to="/">Sign up</MDBNavLink>
-                  )}
-                </MDBNavItem>
-              </MDBNavbarNav>
-            )}
+                </>
+              )}
+            </MDBNavbarNav>
           </MDBCollapse>
         </MDBContainer>
       </MDBNavbar>
     );
   }
 }
+//#endregion
 
+//#region > PropTypes
+Navbar.propTypes = {
+  globalState: PropTypes.object,
+  globalFunctions: PropTypes.object,
+  location: PropTypes.object,
+};
+//#endregion
+
+//#region > Exports
 export default withRouter(Navbar);
+//#endregion
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © 2019 Werbeagentur Christian Aichner
+ * Copyright © Simon Prast
  */

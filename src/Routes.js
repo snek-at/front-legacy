@@ -1,3 +1,4 @@
+//#region > Imports
 //> React
 // Contains all the functionality necessary to define React components
 import React from "react";
@@ -5,59 +6,80 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 //> Components
-import { 
-  SettingsPage,
+import {
+  HomePage,
   ProfilePage,
-  LandingPage,
+  MessagePage,
   RedirectPage,
-  GitLabPage,
+  SearchPage,
+  CompanyPage,
+  TalkPage,
 } from "./components/pages";
+//#endregion
 
+//#region > Components
 class Routes extends React.Component {
   render() {
+    const { globalState, globalFunctions } = this.props;
+
     return (
       <Switch>
         <Route
           exact
           path="/"
           component={(props) => (
-            <LandingPage 
-            globalStore={this.props}
-            login={this.props.login}
-            {...props}
+            <HomePage
+              globalFunctions={globalFunctions}
+              globalState={globalState}
+              {...props}
             />
           )}
         />
-        <Route exact path="/settings" component={SettingsPage} />
         <Route
           exact
-          path="/me"
+          path="/redirect"
+          render={() => {
+            // Get name of window which was set by the parent to be the unique
+            // request key
+            const requestKey = window.name;
+            // Update corresponding entry with the redirected url which should
+            // contain either access token or failure reason in the query
+            // parameter / hash
+            localStorage.setItem(requestKey, window.location.href);
+            window.close();
+          }}
+        />
+        <Route
+          exact
+          path="/u/:username"
           component={(props) => (
-            <ProfilePage 
-            globalStore={this.props} {...props}
+            <ProfilePage
+              globalFunctions={globalFunctions}
+              globalState={globalState}
             />
           )}
         />
-        <Route exact path="/redirect" component={RedirectPage} />
-        <Route exact path="/gitlab" component={GitLabPage} />
-        <Route 
-        exact
-        path="/about"
-        component={() => window.location = "https://www.aichner-christian.com/about"}
-        />
         <Route
-          render={function() {
-            return <h1>Not Found</h1>;
-          }}
+          exact
+          path="/c/:name"
+          component={(props) => (
+            <CompanyPage
+              globalFunctions={globalFunctions}
+              globalState={globalState}
+            />
+          )}
         />
       </Switch>
     );
   }
 }
+//#endregion
 
+//#region > Exports
 export default Routes;
+//#endregion
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © 2019 Werbeagentur Christian Aichner
+ * Copyright © Simon Prast
  */
