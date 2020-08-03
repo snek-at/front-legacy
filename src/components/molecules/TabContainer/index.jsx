@@ -110,7 +110,7 @@ class TabContainer extends React.Component {
     } else if (this.props.horizontal) {
       return (
         <>
-          <MDBNav className="nav-tabs mt-5">
+          <MDBNav className="nav-tabs">
             {this.props.items &&
               this.props.items.map((item, key) => {
                 if (item.visible) {
@@ -120,6 +120,7 @@ class TabContainer extends React.Component {
                         to="#"
                         active={this.state.activeHorizontalItem === key}
                         onClick={this.toggleHorizontal(key)}
+                        className={this.state.activeHorizontalItem === key && "seriouslyActive"}
                         role="tab"
                       >
                         {item.title}
