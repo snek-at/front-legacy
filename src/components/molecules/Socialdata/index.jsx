@@ -4,7 +4,12 @@ import React from "react";
 
 //> MDB
 // "Material Design for Bootstrap" is a great UI design framework
-import { MDBCardBody, MDBIcon } from "mdbreact";
+import { 
+  MDBCardBody,
+  MDBIcon,
+  MDBBadge,
+  MDBBtn,
+} from "mdbreact";
 
 //> Components
 import { LanguageChart } from "../";
@@ -21,12 +26,50 @@ class Socialdata extends React.Component {
       location,
       email,
       website,
-      accounts
+      accounts,
+      platforms,
+      organisations,
     } = this.props;
+
+    let platformsJoined = {
+      github: false,
+      gitlab: false,
+      bitbucket: false,
+    };
+    if(platforms){
+      platforms.map((platform, i) => {
+        switch(platform.platform){
+          case "github":
+            platformsJoined.github = true;
+            return true;
+          case "gitlab":
+            platformsJoined.gitlab = true;
+            return true;
+          case "bitbucket":
+            platformsJoined.bitbucket = true;
+            return true;
+          default:
+            return false;
+        }
+      });
+    }
 
     return (
       <MDBCardBody id="socialdata">
         <h4 className="font-weight-bold mb-4">{name}</h4>
+        <hr/>
+        <div className="text-left mb-2">
+          <div>
+          <MDBBadge color="secondary">Pro</MDBBadge>
+          </div>
+          <a href="https://www.x.com">#32</a> in your region
+        </div>
+        <MDBBtn
+        color="grey"
+        className="w-100 mx-0"
+        >
+        Edit profile
+        </MDBBtn>
         {status && (status.message || status.icon) && (
           <>
             <hr />
@@ -62,7 +105,7 @@ class Socialdata extends React.Component {
           )}
           {website && (
             <a
-              href={"https://" + website}
+              href={website}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -72,6 +115,42 @@ class Socialdata extends React.Component {
               </span>
             </a>
           )}
+          <div className="platform-list my-3 py-3">
+          {platformsJoined.gitlab &&
+            <MDBIcon fab icon="gitlab" size="lg" />
+          }
+          {platformsJoined.github &&
+            <MDBIcon fab icon="github" size="lg" />
+          }
+          {platformsJoined.bitbucket &&
+            <MDBIcon fab icon="bitbucket" size="lg" />
+          }
+          </div>
+          <div className="organisation-list my-3 pb-3">
+            {organisations.map((item, i) => {
+              if(item.avatarUrl){
+                return(
+                  <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >
+                  <img src={item.avatarUrl} alt={item.name+" logo"}/>
+                  </a>
+                );
+              }else{
+                return(
+                  <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >
+                  <i class="fas fa-sitemap fa-lg"></i>
+                  </a>
+                );
+              }
+            })}
+          </div>
           <LanguageChart languages={this.props.languages} />
         </div>
       </MDBCardBody>
@@ -79,7 +158,6 @@ class Socialdata extends React.Component {
   }
 }
 export default Socialdata;
-
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
  * Copyright © 2019 Werbeagentur Christian Aichner

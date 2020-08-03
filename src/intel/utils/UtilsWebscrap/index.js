@@ -1,6 +1,6 @@
 //> Send request functions
 // Proxy to bypass CORS
-const proxy = "https://cors-anywhere.herokuapp.com/";
+const proxy = "https://cors.snek.at/";
 
 // Fetch JSON from url
 export const fetchJson = (urlIn) => {

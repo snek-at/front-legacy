@@ -33,6 +33,9 @@ import {
 //> CSS
 import "./register.scss";
 
+//> Intel
+import * as intel from "../../../../intel";
+
 //> Auth
 import { githubProvider } from "../../../../intel/OAuthGithub/providers/github";
 import { gitlabProvider } from "../../../../intel/AuthGitLab/providers/gitlab";
@@ -139,51 +142,84 @@ class Register extends React.Component{
     });
   }
 
+  logMeIn = (event) => {
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleSubmit();
+    }
+  }
+
   handleUserNamePick = (username) => {
     this.setState({
       username
     });
   }
   // Handle sumbit with JWT, send to engine.snek.at/api/graphiql
-  handleSubmit = () => {
+  handleSubmit = async () => {
     // JWT token
     let token = this.props.token;
-    let values = {
-      sources: JSON.stringify(this.state.sourceList),
-      username: this.state.username,
-      email: this.state.email,
-      password: sha256(this.state.password),
-      "platform_data": JSON.stringify(this.state.sourceList),
-    };
-    this.props.register({
-      variables: { 
-      token,
-      values 
-    }
+
+    // Cache data
+    let cache = {};
+    intel
+    .fill(this.state.sourceList)
+    .then(() => {
+      intel.calendar();
+      intel.stats();
+      intel.repos();
     })
-    .then((result) => {
-        if (result.message === "FAIL")
-        {
-          this.notify("warn","All fields have to be filled!");
-        }
-        else 
-        {
-          this.notify("success"," Welcome to SNEK!");
-        }
+    .then(() => {
+      cache = {
+        logged: true,
+        contrib: intel.stats(),
+        contribCalendar: intel.calendar(),
+        contribTypes: intel.contribTypes(),
+        user: intel.user(),
+        orgs: intel.orgs(),
+        languages: intel.languages(),
+        repos: intel.repos(),
+      };
     })
-    .catch((error) => {
-        if (error.message.includes("Authentication Required"))
-        {
-          this.notify("success"," Welcome to SNEK!");
-        }
-        else if (error.message.includes("Duplicate entry"))
-        {
-          this.notify("warn"," Username already taken!");
-        }
-        else
-        {
-          this.notify("error", "Something went wrong!");
-        }
+    .then(() => {
+      let values = {
+        sources: JSON.stringify(this.state.sourceList),
+        username: this.state.username,
+        email: this.state.email,
+        password: sha256(this.state.password),
+        "platform_data": JSON.stringify(cache)
+      };
+      this.props.register({
+        variables: { 
+        token,
+        values
+      }
+      })
+      .then((result) => {
+          if (result.message === "FAIL")
+          {
+            this.notify("warn","All fields have to be filled!");
+          }
+          else 
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+      })
+      .catch((error) => {
+          if (error.message.includes("Authentication required"))
+          {
+            this.notify("success"," Welcome to SNEK!");
+          }
+          else if (error.message.includes("Duplicate entry"))
+          {
+            this.notify("warn"," Username already taken!");
+          }
+          else
+          {
+            this.notify("error", "Something went wrong!");
+          }
+      });
     });
   }
 
@@ -378,6 +414,7 @@ class Register extends React.Component{
           name="password2"
           outline
           value={this.state.password2}
+          onKeyDown={this.logMeIn}
           onChange={this.changeHandler}
           size="lg"
           />

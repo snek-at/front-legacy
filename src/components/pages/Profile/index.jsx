@@ -20,7 +20,8 @@ import {
   MDBCardText,
   MDBAnimation,
   MDBAvatar,
-  MDBCardUp
+  MDBCardUp,
+  MDBSpinner,
 } from "mdbreact";
 
 //> Components
@@ -37,36 +38,56 @@ import {
 //> CSS
 import "./profile.scss";
 
-//> Dummy data
-// Tab headers
-const tabitems = [
-  {
-    title: "Overview",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Resume",
-    visible: true,
-    pill: false,
-    notification: false
-  },
-  {
-    title: "Projects",
-    visible: true,
-    pill: "22",
-    notification: false
-  },
-  {
-    title: "Education",
-    visible: true,
-    pill: "0",
-    notification: true
-  }
-];
-
 class Dashboard extends React.Component {
+
+  state = {};
+
+  setTabItems = () => {
+
+    // Get project count
+    const projectcount = this.props.globalStore.data.repos.length;
+
+    this.setState({
+      tabitems: [
+        {
+          title: "Overview",
+          visible: true,
+          pill: false,
+          notification: false
+        },
+        {
+          title: "Projects",
+          visible: true,
+          pill: projectcount,
+          notification: true
+        },
+        {
+          title: "Education",
+          visible: true,
+          notification: false
+        },
+        {
+          title: "Posts",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+        {
+          title: "Papers",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+        {
+          title: "Talks",
+          visible: true,
+          pill: "0",
+          notification: false
+        },
+      ]
+    });
+  }
+
   render() {
     const { globalStore } = this.props;
     
@@ -78,51 +99,59 @@ class Dashboard extends React.Component {
 
     let data = globalStore.data;
 
-    if (data) {
-      return (
-        <div id="profile">
-          <MDBContainer className="pt-5">
-            <MDBRow>
-              <MDBCol md="4" className="text-center">
-                <MDBCard testimonial>
-                  <MDBCardUp color="info" />
-                  <Avatar url={data.user.avatarUrl} alt={data.user.name} />
-                  <Socialdata
-                    status={{
-                      message: data.user.status, 
-                      icon: data.user.statusEmojiHTML
-                    }}
-                    name={data.user.name}
-                    company={data.user.company}
-                    location={data.user.location}
-                    email={data.user.email}
-                    languages={data.languages}
-                    website={data.user.websiteUrl}
-                    accounts={{
-                      github: data.user
-                    }}
-                  />
-                </MDBCard>
-              </MDBCol>
-              <MDBCol md="8">
-                <TabContainer items={tabitems} horizontal>
-                  <OverviewTab 
-                  id={0}
-                  contrib={data.contrib}
-                  calendar={data.contribCalendar}
-                  contribTypes={data.contribTypes}
-                  />
-                  <ResumeTab id={1} />
-                  <ProjectsTab id={2} repos={data.repos} />
-                  <EducationTab id={3} />
-                </TabContainer>
-              </MDBCol>
-            </MDBRow>
-          </MDBContainer>
-        </div>
-      );
+    // Get tab items
+    if(data && !this.state.tabitems){
+      this.setTabItems();
+    }
+
+    if (data && this.state.tabitems) {
+      if (data.user) {
+        return (
+          <div id="profile">
+            <MDBContainer className="py-5">
+              <MDBRow>
+                <MDBCol md="4" className="text-center">
+                  <MDBCard testimonial>
+                    <MDBCardUp color="info" />
+                    <Avatar url={data.user.avatarUrl} alt={data.user.name} />
+                    <Socialdata
+                      status={{
+                        message: data.user.status, 
+                        icon: data.user.statusEmojiHTML
+                      }}
+                      name={data.user.name}
+                      company={data.user.company}
+                      location={data.user.location}
+                      email={data.user.email}
+                      languages={data.languages}
+                      website={data.user.websiteUrl}
+                      organisations={data.orgs}
+                      platforms={data.user.platforms}
+                    />
+                  </MDBCard>
+                </MDBCol>
+                <MDBCol md="8">
+                  <TabContainer items={this.state.tabitems} horizontal>
+                    <OverviewTab 
+                    id={0}
+                    contrib={data.contrib}
+                    calendar={data.contribCalendar}
+                    contribTypes={data.contribTypes}
+                    languages={data.languages.slices}
+                    />
+                    <ProjectsTab id={1} repos={data.repos} />
+                    <EducationTab id={2} />
+                  </TabContainer>
+                </MDBCol>
+              </MDBRow>
+            </MDBContainer>
+          </div>
+        );
+      } else {
+        return <MDBSpinner />;
+      }
     } else {
-      return null;
+      return <MDBSpinner />;
     }
   }
 }

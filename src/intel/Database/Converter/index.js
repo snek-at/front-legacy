@@ -19,11 +19,23 @@ export function getUser(data) {
   user.username = platform.username;
   user.email = platform.email;
   user.websiteUrl = platform.websiteUrl;
-  user.status = platform.status;
+  user.status = platform.statusMessage;
   user.statusEmojiHTML = platform.statusEmojiHTML;
   user.isEmployee = false;
   user.isHireable = false;
   user.location = platform.location;
+  user.platforms = {};
+
+  // Add a list of unique platforms to the user
+  platforms.forEach((p) => {
+    user.platforms[p.platformName] = {
+      platform: p.platformName,
+      username: p.username,
+      url: p.platformUrl
+    };
+  });
+
+  user.platforms = Object.values(user.platforms);
 
   return user;
 }
@@ -68,6 +80,7 @@ export function getRepositories(data) {
       let repo = {};
       repo.name = repoWithExtras.rName;
       repo.avatarUrl = repoWithExtras.oAvatarUrl;
+      repo.url = repoWithExtras.rUrl;
 
       repo.owner = {};
       repo.owner.name = repoWithExtras.oName;
@@ -134,6 +147,10 @@ export function getLanguages(data) {
         ) / 100;
     }
   });
+
+  // Sort dict by size of language slice
+  pie.slices = Object.values(pie.slices).sort((a,b) => b.size - a.size);
+
   return pie;
 }
 

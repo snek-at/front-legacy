@@ -28,22 +28,19 @@ const fillPlatform = async (user) => {
       return html;
     })
   );
-  const status = html.getElementsByTagName("gl-emoji")[0];
-  const coverDesc = html
-    .getElementsByClassName("cover-desc")[0]
-    .getElementsByTagName("span");
 
-  const coverTitle = html.getElementsByClassName("cover-title")[0];
+  const userInfo = html.getElementsByClassName("user-info")[0];
+  const fullName = html.getElementsByClassName("cover-title")[0].innerText;
+
   let avatarUrl = html
     .getElementsByClassName("avatar-holder")[0]
     .getElementsByTagName("a")[0]
     .getAttribute("href");
 
   const links = html.getElementsByClassName("profile-link-holder")[0];
-  const message = null;
+  const message = html.getElementsByTagName("gl-emoji")[0];
   const emojiHTML = null;
-  const fullName = coverDesc[0].innerHTML.trim().substring(1);
-  const date = coverDesc[1].innerHTML;
+  const date = new Date(userInfo.getElementsByTagName("span")[1].innerText.split(" ").slice(2).join(" "));
 
   if (avatarUrl) {
     if (!avatarUrl.includes("https://") || !avatarUrl.includes("http://")) {
@@ -164,6 +161,7 @@ const fillContribution = (user, item) => {
 
   const repository = fillRepositories(user, nameWithOwner);
   const calendarId = db.exec("SELECT id FROM calendar").pop()["id"];
+
   db.exec(insert.contrib, [
     datetime,
     nameWithOwner,
@@ -174,6 +172,51 @@ const fillContribution = (user, item) => {
     type,
     calendarId
   ]);
+};
+
+const fillStreaks = (contribs) => {
+  contribs.sort((a,b) => (a.datetime > b.datetime) ? 1 : -1);
+
+  const uniqueContribs = Array.from(new Set(contribs.map((a) => a.datetime.toISOString().split("T")[0])))
+  .map((datetime) => {
+    return contribs.find((a) => a.datetime.toISOString().split("T")[0] === datetime);
+  });
+
+  let streak = false;
+  let count;
+  let dateFrom;
+
+  for(let i = 0; i < uniqueContribs.length; i++) {
+    const prevDay = new Date(uniqueContribs[i].datetime.getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    if(i>0) {
+      if(prevDay === uniqueContribs[i-1].datetime.toISOString().split("T")[0]) {
+        if(!streak){
+          dateFrom = uniqueContribs[i-1].datetime.toISOString().split("T")[0];
+          count = 2;
+          streak = true;
+        }
+        else {
+          count++;
+        }
+      }
+      else if(count > 0) {
+        const statisticId = db.exec(`SELECT id FROM statistic WHERE year=${new Date(dateFrom)
+          .getFullYear()}`)
+          .pop()["id"];
+
+        db.exec(insert.streak, [
+          new Date(dateFrom),
+          new Date(uniqueContribs[i-1].datetime.toISOString().split("T")[0]),
+          count,
+          statisticId
+        ]);
+
+        streak = false;
+        count = 0;
+        dateFrom = null;
+      }
+    }
+  }
 };
 
 const fillCalendar = async (user) => {
@@ -202,11 +245,12 @@ const fillCalendar = async (user) => {
       let weekday = datetime.getDay().toString();
 
       const platformId = db.exec("SELECT id FROM platform").pop()["id"];
-      const statYear = db.exec("SELECT year FROM statistic").pop();
-
+      const statYears = db.exec("SELECT year FROM statistic");
       let year = datetime.getFullYear();
 
-      if(!statYear){
+      const uniqueYears = Array.from(new Set(statYears.map((a) => a.year)));
+      
+      if(!uniqueYears.includes(year)) {
         db.exec(insert.statistic, [year,platformId]);
       }
 
@@ -224,6 +268,7 @@ const fillCalendar = async (user) => {
       fillContribution(user, item);
     }
   }
+  fillStreaks(db.exec("SELECT * FROM contrib"));
 };
 
 //> Export functions

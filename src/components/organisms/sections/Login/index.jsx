@@ -111,6 +111,15 @@ class Login extends React.Component{
     }
   };
 
+  logMeIn = (event) => {
+    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handleSubmit();
+    }
+  }
+
   render(){
     return(
       <MDBCard id="login" className="text-dark">
@@ -128,6 +137,7 @@ class Login extends React.Component{
           outline
           value={this.state.username}
           onChange={this.changeHandler}
+          onKeyDown={this.logMeIn}
           size="lg"
           />
           <MDBInput 
@@ -137,6 +147,7 @@ class Login extends React.Component{
           outline
           value={this.state.password}
           onChange={this.changeHandler}
+          onKeyDown={this.logMeIn}
           size="lg"
           />
           <MDBBtn

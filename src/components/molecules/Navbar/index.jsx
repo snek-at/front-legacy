@@ -42,6 +42,13 @@ class Navbar extends React.Component {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
+  logout = () => {
+    // Remove the JSON Web Token
+    localStorage.removeItem("jwt_snek");
+    // Redirect to login
+    window.location.href = "/";
+  };
+
   render() {
     const { globalState, globalFunctions, location } = this.props;
 

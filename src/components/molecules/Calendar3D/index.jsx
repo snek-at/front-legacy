@@ -49,7 +49,7 @@ class Calender3D extends React.Component {
 
   renderTopStats() {
     let countTotal, averageCount, datesTotal, maxCount, dateBest;
-    let contribData = this.props.contrib[2019];
+    let contribData = this.props.contrib[this.props.contrib.length-1];
     let contributionCalendar = this.props.calendar.currentYear;
 
     countTotal = contributionCalendar.total;

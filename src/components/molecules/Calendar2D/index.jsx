@@ -50,7 +50,7 @@ class Calender2D extends React.Component {
     );
 
     // Color RGB cycling
-    let intervalID = window.setInterval(this.cycleHue, 70);
+    //let intervalID = window.setInterval(this.cycleHue, 70);
   };
 
   cycleHue = () => {
@@ -66,7 +66,7 @@ class Calender2D extends React.Component {
 
   countContribs = () => {
     if (this.state.contributionsList) {
-      return this.state.contributionsList.totalContributions;
+      return this.state.contributionsList.total;
     } else {
       return null;
     }
