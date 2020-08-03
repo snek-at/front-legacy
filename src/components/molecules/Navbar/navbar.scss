@@ -1,44 +1,72 @@
+// Import variables
+@import "../../../utilities/variables";
+
 .navbar {
-	.md-form {
-		margin-top: 0.4em;
-    margin-bottom: 0.4em;
-		input {
-			margin: 0;
-      color: white;
+  box-shadow: none;
+  background: #f0f0f0;
+  li {
+    align-self: center;
+    .dropdown {
+      img {
+        max-height: 30px;
+        width: auto;
+        border-radius: 0.2em;
+      }
+      .dropdown-toggle::after {
+        vertical-align: initial;
+      }
+      .dropdown-menu {
+        padding: 0;
+        .dropdown-item {
+          transition: all 0.2s ease;
+          box-shadow: none !important;
+          &:focus {
+            box-shadow: none !important;
+            background-color: lightgrey !important;
+            color: red !important;
+          }
+          &:hover {
+            box-shadow: none !important;
+            background-color: #f0f0f0 !important;
+            color: initial !important;
+          }
+        }
+      }
     }
-    i{
-      position: absolute;
-      right: 10px;
-      top: 35%;
-      color: white;
+    a {
+      font-weight: bold;
     }
-	.md-form.md-outline input[type="text"]:focus:not([readonly]),
-	.md-form.md-outline input[type="password"]:focus:not([readonly]),
-	.md-form.md-outline input[type="email"]:focus:not([readonly]),
-	.md-form.md-outline input[type="url"]:focus:not([readonly]),
-	.md-form.md-outline input[type="time"]:focus:not([readonly]),
-	.md-form.md-outline input[type="date"]:focus:not([readonly]),
-	.md-form.md-outline input[type="datetime-local"]:focus:not([readonly]),
-	.md-form.md-outline input[type="tel"]:focus:not([readonly]),
-	.md-form.md-outline input[type="number"]:focus:not([readonly]),
-	.md-form.md-outline input[type="search-md"]:focus:not([readonly]),
-	.md-form.md-outline input[type="search"]:focus:not([readonly]),
-	.md-form.md-outline textarea.md-textarea:focus:not([readonly]) {
-      border-color: #00e25b;
-      box-shadow: inset 0 0 0 1px #00e25b;
+    &.active {
+      a {
+        background-color: inherit !important;
+        border-bottom: solid $snekGreen 2px;
+      }
     }
   }
-  .search-results{
-    position: absolute;
-    top: 60px;
-    width: 250px;
-    z-index: 999;
-    height: auto;
-    background: white;
+  input[type="search"] {
+    &:focus {
+      color: #495057;
+      background-color: #fff;
+      border-color: $snekGreen;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(119, 189, 67, 0.25);
+    }
+  }
+  // Remove search field delete button
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+  .spacer {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: solid $snekGreen 2px;
   }
 }
 
 /**
  * SPDX-License-Identifier: (EUPL-1.2)
- * Copyright © 2019 Werbeagentur Christian Aichner
+ * Copyright © Simon Prast
  */
