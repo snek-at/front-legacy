@@ -1,20 +1,20 @@
 <p align="center">
-  <a href="https://www.aichner-christian.com/" target="_blank" rel="noopener noreferrer">
-    <img src="https://www.aichner-christian.com/img/logo/logo_web.png" alt="Agency Logo" height="150">
+  <a href="https://snek.at/" target="_blank" rel="noopener noreferrer">
+    <img src="https://avatars2.githubusercontent.com/u/55870326?s=400&u=c6c7f06305ddc94747d474850fde7b2044f53838&v=4" alt="Agency Logo" height="150">
   </a>
 </p>
 
 <h3 align="center">Official contributing guidelines</h3>
 
 <p align="center">
-  A code of conduct is a set of rules outlining the norms, rules, and responsibilities of, 
+  A code of conduct is a set of rules outlining the norms, rules, and responsibilities of,
   and or proper practices for, an individual.
 </p>
 
 ## Table of contents
 - [Table of contents](#table-of-contents)
-- [[](#commits)Commits](#commitscommits)
-- [[](#pull-requests)Pull Requests](#pull-requestspull-requests)
+- [Commits](#commits)
+- [Pull Requests](#pull-requests)
 
 
 ## [](#commits)Commits

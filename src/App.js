@@ -14,8 +14,14 @@ import sha256 from "js-sha256";
 import { MDBProgress } from "mdbreact";
 
 //> Components
-// Navbar and Footer
-import { Navbar, Footer } from "./components/molecules";
+/**
+ * Footer: Global Footer
+ * Navbar: Global navigation bar
+ */
+import { 
+  Navbar,
+  Footer,
+} from "./components/molecules";
 // Starts the page on top when reloaded or redirected
 import { ScrollToTop } from "./components/atoms";
 
